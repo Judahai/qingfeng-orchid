@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>慶豐蘭業 - 蝴蝶蘭訂購 | 雲林農場直送</title>
+    <meta name="description" content="慶豐蘭業提供優質蝴蝶蘭，農場直送、品質保證。開幕送禮、春節佈置、居家擺設，一站式服務。">
+    <meta name="keywords" content="蝴蝶蘭,蝴蝶蘭訂購,開幕蘭花,送禮蘭花,雲林蝴蝶蘭,蝴蝶蘭批發">
+
+    <!-- Open Graph for social sharing -->
+    <meta property="og:title" content="慶豐蘭業 - 蝴蝶蘭訂購">
+    <meta property="og:description" content="雲林農場直送，專業品質保證">
+    <meta property="og:type" content="website">
+
+    <!-- Structured Data for Google -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": "慶豐蘭業",
+        "description": "專業蝴蝶蘭農場，提供優質蘭花批發零售",
+        "address": {
+            "@type": "PostalAddress",
+            "addressRegion": "雲林縣"
+        },
+        "priceRange": "$$"
+    }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a472a;
+            --primary-light: #2d5a3d;
+            --accent: #d4af37;
+            --accent-light: #f4d03f;
+            --bg-cream: #faf8f5;
+            --bg-dark: #1a1a1a;
+            --text-dark: #2c2c2c;
+            --text-light: #ffffff;
+            --white: #ffffff;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.15);
+            --radius: 20px;
+            --radius-lg: 32px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background: var(--bg-cream);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 50%, #3d7a4a 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0);
+            }
+
+            100% {
+                transform: translate(40px, 40px);
+            }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-emoji {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--white);
+            margin-bottom: 16px;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 40px;
+        }
+
+        .hero-badges {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 50px;
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 12px 24px;
+            border-radius: 50px;
+            color: var(--white);
+            font-weight: 500;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--accent);
+            color: var(--bg-dark);
+            padding: 20px 48px;
+            border-radius: 50px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s;
+            box-shadow: 0 8px 30px rgba(212, 175, 55, 0.4);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(212, 175, 55, 0.5);
+        }
+
+        /* ===== SCENE SELECTION (GAMIFICATION) ===== */
+        .scene-section {
+            padding: 80px 20px;
+            background: var(--white);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 16px;
+        }
+
+        .section-desc {
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        .scene-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .scene-card {
+            background: linear-gradient(145deg, #ffffff, #f5f5f5);
+            border-radius: var(--radius-lg);
+            padding: 40px 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 3px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scene-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .scene-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--accent);
+        }
+
+        .scene-card:hover::before {
+            opacity: 0.05;
+        }
+
+        .scene-card.selected {
+            border-color: var(--accent);
+            background: linear-gradient(145deg, #fffbf0, #fff8e8);
+        }
+
+        .scene-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            display: block;
+            position: relative;
+            z-index: 1;
+        }
+
+        .scene-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .scene-desc-text {
+            font-size: 1rem;
+            color: #666;
+            position: relative;
+            z-index: 1;
+        }
+
+        .scene-price-hint {
+            margin-top: 16px;
+            padding: 8px 16px;
+            background: var(--accent);
+            color: var(--bg-dark);
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-block;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== RECOMMENDATION RESULT ===== */
+        .recommendation {
+            display: none;
+            padding: 80px 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+        .recommendation.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .rec-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .rec-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .rec-title {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .rec-subtitle {
+            color: #666;
+        }
+
+        .rec-products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+        }
+
+        .rec-product {
+            background: var(--white);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+        }
+
+        .rec-product:hover {
+            transform: translateY(-8px);
+        }
+
+        .rec-product-image {
+            height: 180px;
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+        }
+
+        .rec-product-info {
+            padding: 24px;
+        }
+
+        .rec-product-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .rec-product-desc {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 16px;
+        }
+
+        .rec-product-price {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--accent);
+        }
+
+        .rec-product-unit {
+            font-size: 0.9rem;
+            color: #999;
+            margin-left: 4px;
+        }
+
+        /* ===== CONTACT SECTION ===== */
+        .contact-section {
+            padding: 80px 20px;
+            background: var(--primary);
+            color: var(--white);
+            text-align: center;
+        }
+
+        .contact-section .section-title {
+            color: var(--white);
+        }
+
+        .contact-methods {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+            max-width: 800px;
+            margin: 40px auto 0;
+        }
+
+        .contact-method {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: var(--radius);
+            min-width: 280px;
+            transition: transform 0.3s;
+        }
+
+        .contact-method:hover {
+            transform: translateY(-8px);
+        }
+
+        .contact-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+
+        .contact-label {
+            font-size: 1rem;
+            opacity: 0.8;
+            margin-bottom: 8px;
+        }
+
+        .contact-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .contact-cta {
+            display: inline-block;
+            margin-top: 16px;
+            background: var(--accent);
+            color: var(--bg-dark);
+            padding: 12px 32px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+
+        .contact-cta:hover {
+            transform: scale(1.05);
+        }
+
+        /* ===== FEATURES ===== */
+        .features {
+            padding: 80px 20px;
+            background: var(--bg-cream);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 32px;
+            max-width: 1000px;
+            margin: 40px auto 0;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 32px;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .feature-desc {
+            color: #666;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: var(--bg-dark);
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .footer-links {
+            margin-bottom: 20px;
+        }
+
+        .footer-link {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            margin: 0 16px;
+            transition: color 0.2s;
+        }
+
+        .footer-link:hover {
+            color: var(--accent);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .scene-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-value {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-emoji">🌸</div>
+            <h1 class="hero-title">慶豐蘭業</h1>
+            <p class="hero-subtitle">雲林專業蘭園 ‧ 農場直送 ‧ 品質保證</p>
+            <div class="hero-badges">
+                <span class="badge">🌱 產地直送</span>
+                <span class="badge">💰 批發價格</span>
+                <span class="badge">📦 全台配送</span>
+            </div>
+            <a href="#scene" class="cta-button">開始選購 →</a>
+        </div>
+    </section>
+
+    <!-- Scene Selection (Gamification) -->
+    <section class="scene-section" id="scene">
+        <div class="section-header">
+            <h2 class="section-title">🎯 您的蘭花用途是？</h2>
+            <p class="section-desc">選擇場合，我們為您推薦最適合的蘭花組合</p>
+        </div>
+
+        <div class="scene-grid">
+            <div class="scene-card" data-scene="opening" onclick="selectScene('opening')">
+                <span class="scene-icon">🎊</span>
+                <div class="scene-name">開幕送禮</div>
+                <div class="scene-desc-text">新店開張、公司喬遷<br>給對方最好的祝福</div>
+                <span class="scene-price-hint">NT$ 3,000 起</span>
+            </div>
+
+            <div class="scene-card" data-scene="festival" onclick="selectScene('festival')">
+                <span class="scene-icon">🧧</span>
+                <div class="scene-name">春節佈置</div>
+                <div class="scene-desc-text">年節裝飾、迎春納福<br>喜氣洋洋過好年</div>
+                <span class="scene-price-hint">NT$ 2,500 起</span>
+            </div>
+
+            <div class="scene-card" data-scene="gift" onclick="selectScene('gift')">
+                <span class="scene-icon">🎁</span>
+                <div class="scene-name">贈禮祝賀</div>
+                <div class="scene-desc-text">生日、升遷、各種慶祝<br>送花傳遞心意</div>
+                <span class="scene-price-hint">NT$ 1,500 起</span>
+            </div>
+
+            <div class="scene-card" data-scene="home" onclick="selectScene('home')">
+                <span class="scene-icon">🏠</span>
+                <div class="scene-name">居家擺設</div>
+                <div class="scene-desc-text">美化空間、療癒心情<br>為生活增添綠意</div>
+                <span class="scene-price-hint">NT$ 800 起</span>
+            </div>
+
+            <div class="scene-card" data-scene="wholesale" onclick="selectScene('wholesale')">
+                <span class="scene-icon">📦</span>
+                <div class="scene-name">大量採購</div>
+                <div class="scene-desc-text">企業活動、批發合作<br>享專屬優惠價格</div>
+                <span class="scene-price-hint">來電洽詢</span>
+            </div>
+
+            <div class="scene-card" data-scene="custom" onclick="selectScene('custom')">
+                <span class="scene-icon">✨</span>
+                <div class="scene-name">客製需求</div>
+                <div class="scene-desc-text">特殊品種、指定規格<br>專人為您服務</div>
+                <span class="scene-price-hint">來電洽詢</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recommendation Results -->
+    <section class="recommendation" id="recommendation">
+        <div class="rec-container">
+            <div class="rec-header">
+                <h2 class="rec-title" id="recTitle">為您推薦</h2>
+                <p class="rec-subtitle" id="recSubtitle">以下是最適合您的蘭花選擇</p>
+            </div>
+
+            <div class="rec-products" id="recProducts">
+                <!-- Products will be rendered by JS -->
+            </div>
+
+            <div style="text-align: center; margin-top: 40px;">
+                <a href="tel:05-XXX-XXXX" class="cta-button">📞 立即來電訂購</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features">
+        <div class="section-header">
+            <h2 class="section-title">為什麼選擇慶豐蘭業？</h2>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature">
+                <div class="feature-icon">🌱</div>
+                <div class="feature-title">農場直送</div>
+                <div class="feature-desc">雲林自有農場，從產地直接出貨，新鮮度最佳</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">💰</div>
+                <div class="feature-title">批發價格</div>
+                <div class="feature-desc">省去中間商，直接提供最優惠的價格</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🏆</div>
+                <div class="feature-title">專業品質</div>
+                <div class="feature-desc">多年蘭園經驗，嚴選每一株健康飽滿的蘭花</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">📦</div>
+                <div class="feature-title">全台配送</div>
+                <div class="feature-desc">專業包裝，安全送達指定地點</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section" id="contact">
+        <div class="section-header">
+            <h2 class="section-title">聯絡我們</h2>
+            <p class="section-desc" style="color: rgba(255,255,255,0.8);">歡迎來電洽詢，專人為您服務</p>
+        </div>
+
+        <div class="contact-methods">
+            <div class="contact-method">
+                <div class="contact-icon">📞</div>
+                <div class="contact-label">服務電話</div>
+                <div class="contact-value">05-XXX-XXXX</div>
+                <a href="tel:05-XXX-XXXX" class="contact-cta">立即撥打</a>
+            </div>
+
+            <div class="contact-method">
+                <div class="contact-icon">💬</div>
+                <div class="contact-label">LINE 諮詢</div>
+                <div class="contact-value">@qingfeng</div>
+                <a href="#" class="contact-cta">加入好友</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="#" class="footer-link">關於我們</a>
+            <a href="#scene" class="footer-link">商品選購</a>
+            <a href="#contact" class="footer-link">聯絡方式</a>
+        </div>
+        <p>© 2025 慶豐蘭業 版權所有</p>
+        <p style="margin-top: 8px; font-size: 0.9rem;">雲林縣 ‧ 專業蝴蝶蘭農場</p>
+    </footer>
+
+    <script>
+        // ===== 商品資料（依場景分類） =====
+        const productsByScene = {
+            opening: {
+                title: '🎊 開幕送禮推薦',
+                subtitle: '大方得體，送禮首選',
+                products: [
+                    { name: '紅花組合盆 (8株)', desc: '喜氣洋洋，開幕必備', price: 4500, emoji: '🌺' },
+                    { name: '紫白雙色組合 (6株)', desc: '典雅大方，高級感十足', price: 3800, emoji: '💜' },
+                    { name: '大紅花落地盆', desc: '氣派豪華，吸睛焦點', price: 6000, emoji: '🎆' }
+                ]
+            },
+            festival: {
+                title: '🧧 春節佈置推薦',
+                subtitle: '迎春納福，年味滿滿',
+                products: [
+                    { name: '春節紅花組合 (10株)', desc: '喜慶紅色，年節必備', price: 5980, emoji: '🧧' },
+                    { name: '金黃招財蘭', desc: '金黃色系，招財進寶', price: 4200, emoji: '💛' },
+                    { name: '粉紅賀年組', desc: '粉嫩喜氣，溫馨滿屋', price: 3500, emoji: '🌸' }
+                ]
+            },
+            gift: {
+                title: '🎁 贈禮祝賀推薦',
+                subtitle: '送花傳情，表達心意',
+                products: [
+                    { name: '粉色蝴蝶蘭 (3株)', desc: '優雅浪漫，適合各種場合', price: 1800, emoji: '💗' },
+                    { name: '白花純淨組', desc: '純潔典雅，祝福滿滿', price: 2200, emoji: '🤍' },
+                    { name: '香奈兒粉', desc: '獨特品種，送禮有面子', price: 2800, emoji: '🌷' }
+                ]
+            },
+            home: {
+                title: '🏠 居家擺設推薦',
+                subtitle: '療癒空間，增添生活質感',
+                products: [
+                    { name: '單株迷你蘭', desc: '小巧可愛，適合桌面', price: 800, emoji: '🌱' },
+                    { name: '雙株白花盆', desc: '簡約優雅，百搭任何空間', price: 1200, emoji: '🪴' },
+                    { name: '療癒組合盆', desc: '多色搭配，心情愉悅', price: 1500, emoji: '🌈' }
+                ]
+            },
+            wholesale: {
+                title: '📦 大量採購專區',
+                subtitle: '如企業活動、批發合作，歡迎來電洽詢專屬優惠',
+                products: []
+            },
+            custom: {
+                title: '✨ 客製需求服務',
+                subtitle: '特殊品種、指定規格，專人為您安排',
+                products: []
+            }
+        };
+
+        // ===== 場景選擇 =====
+        function selectScene(scene) {
+            // 更新選中狀態
+            document.querySelectorAll('.scene-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.querySelector(`[data-scene="${scene}"]`).classList.add('selected');
+
+            // 顯示推薦
+            const data = productsByScene[scene];
+            const recSection = document.getElementById('recommendation');
+            const recTitle = document.getElementById('recTitle');
+            const recSubtitle = document.getElementById('recSubtitle');
+            const recProducts = document.getElementById('recProducts');
+
+            recTitle.textContent = data.title;
+            recSubtitle.textContent = data.subtitle;
+
+            if (data.products.length === 0) {
+                recProducts.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px;">
+                        <div style="font-size: 4rem; margin-bottom: 20px;">📞</div>
+                        <h3 style="font-size: 1.5rem; color: var(--primary); margin-bottom: 12px;">請直接來電洽詢</h3>
+                        <p style="color: #666; margin-bottom: 24px;">我們將根據您的需求提供最適合的方案</p>
+                        <a href="tel:05-XXX-XXXX" style="display: inline-block; background: var(--primary); color: white; padding: 16px 40px; border-radius: 50px; text-decoration: none; font-weight: 600;">
+                            📞 05-XXX-XXXX
+                        </a>
+                    </div>
+                `;
+            } else {
+                recProducts.innerHTML = data.products.map(p => `
+                    <div class="rec-product">
+                        <div class="rec-product-image">${p.emoji}</div>
+                        <div class="rec-product-info">
+                            <div class="rec-product-name">${p.name}</div>
+                            <div class="rec-product-desc">${p.desc}</div>
+                            <div>
+                                <span class="rec-product-price">NT$ ${p.price.toLocaleString()}</span>
+                                <span class="rec-product-unit">起</span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            recSection.classList.add('show');
+
+            // 滾動到推薦區
+            setTimeout(() => {
+                recSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+    </script>
+</body>
+
+</html>
