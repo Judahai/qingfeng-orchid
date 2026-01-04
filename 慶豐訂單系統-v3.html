@@ -1,0 +1,1480 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>慶豐蘭業 - 花禮訂購系統 v3</title>
+    <meta name="description" content="慶豐蘭業 - 雲林專業蝴蝶蘭農場，開幕花籃、喪禮花籃、蘭花盆栽訂購">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #1a472a;
+            --primary-light: #2d5a3d;
+            --accent: #d4af37;
+            --bg-cream: #faf8f5;
+            --text-dark: #2c2c2c;
+            --white: #ffffff;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --radius: 20px;
+            --funeral-dark: #2c2c2c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background: var(--bg-cream);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: var(--primary);
+            color: var(--white);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 900;
+        }
+
+        .header p {
+            opacity: 0.8;
+            font-size: 0.95rem;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: var(--white);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #e0e0e0;
+            z-index: 0;
+        }
+
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .progress-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #999;
+            transition: all 0.3s;
+        }
+
+        .progress-step.active .progress-dot {
+            background: var(--accent);
+            color: var(--primary);
+            transform: scale(1.2);
+        }
+
+        .progress-step.done .progress-dot {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .progress-label {
+            font-size: 0.75rem;
+            color: #999;
+            margin-top: 8px;
+        }
+
+        .progress-step.active .progress-label,
+        .progress-step.done .progress-label {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Main */
+        .main-content {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .order-step {
+            display: none;
+            animation: fadeSlide 0.4s ease;
+        }
+
+        .order-step.active {
+            display: block;
+        }
+
+        @keyframes fadeSlide {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .step-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .step-icon {
+            font-size: 4rem;
+            margin-bottom: 16px;
+        }
+
+        .step-title {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .step-desc {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        /* Option Cards */
+        .option-grid {
+            display: grid;
+            gap: 16px;
+        }
+
+        .option-grid.two-col {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .option-grid.three-col {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .option-card {
+            background: var(--white);
+            border: 3px solid #e8e8e8;
+            border-radius: var(--radius);
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .option-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow);
+        }
+
+        .option-card.selected {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, #f0fff4 0%, #e8f5e9 100%);
+        }
+
+        .option-card.funeral-style {
+            background: linear-gradient(135deg, #f5f5f5 0%, #eeeeee 100%);
+        }
+
+        .option-card.funeral-style.selected {
+            background: linear-gradient(135deg, #e8e8e8 0%, #d5d5d5 100%);
+            border-color: var(--funeral-dark);
+        }
+
+        .option-card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+        }
+
+        .option-card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .option-card-desc {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        /* Tag Selection (for age/religion) */
+        .tag-section {
+            margin-top: 32px;
+            padding: 24px;
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .tag-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 16px;
+        }
+
+        .tag-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tag-btn {
+            padding: 10px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            background: var(--white);
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .tag-btn:hover {
+            border-color: var(--accent);
+        }
+
+        .tag-btn.selected {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        /* Phrase Cards */
+        .phrase-grid {
+            display: grid;
+            gap: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .phrase-card {
+            background: var(--white);
+            border: 2px solid #e8e8e8;
+            border-radius: 16px;
+            padding: 16px 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .phrase-card:hover {
+            border-color: var(--accent);
+            background: #fffbf0;
+        }
+
+        .phrase-card.selected {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, #f0fff4 0%, #e8f5e9 100%);
+        }
+
+        .phrase-card-check {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .phrase-card.selected .phrase-card-check {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .phrase-card-main {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .form-label .required {
+            color: #e74c3c;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 1.1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1);
+        }
+
+        textarea.form-input {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-hint {
+            font-size: 0.85rem;
+            color: #888;
+            margin-top: 6px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* Buttons */
+        .btn-row {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .btn {
+            padding: 16px 40px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--primary);
+            box-shadow: 0 8px 24px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #666;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-line {
+            background: #06C755;
+            color: white;
+        }
+
+        /* Card Preview */
+        .card-preview {
+            background: linear-gradient(135deg, #fff9e6 0%, #fff5d6 100%);
+            border: 3px solid var(--accent);
+            border-radius: var(--radius);
+            padding: 32px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .card-preview-label {
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 16px;
+        }
+
+        .card-preview-phrase {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 16px;
+            letter-spacing: 4px;
+        }
+
+        .card-preview-to {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .card-preview-from {
+            font-size: 1.1rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Summary */
+        .summary-section {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .summary-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .summary-label {
+            color: #666;
+        }
+
+        .summary-value {
+            font-weight: 600;
+            color: var(--primary);
+            text-align: right;
+        }
+
+        .summary-total {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--accent);
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 2px solid var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .option-grid.two-col,
+            .option-grid.three-col {
+                grid-template-columns: 1fr;
+            }
+
+            .progress-label {
+                display: none;
+            }
+        }
+
+        /* ===== 購物車樣式 ===== */
+        .cart-fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 64px;
+            height: 64px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            z-index: 800;
+            transition: transform 0.3s;
+        }
+
+        .cart-fab:hover {
+            transform: scale(1.1);
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #e74c3c;
+            color: white;
+            min-width: 24px;
+            height: 24px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 6px;
+        }
+
+        .cart-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 900;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .cart-overlay.show {
+            display: flex;
+        }
+
+        .cart-panel {
+            background: white;
+            width: 95%;
+            max-width: 480px;
+            max-height: 90vh;
+            border-radius: var(--radius);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .cart-header {
+            background: var(--primary);
+            color: white;
+            padding: 16px 20px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-close {
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .cart-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            background: #f5f5f5;
+        }
+
+        .cart-item {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .cart-item-delete {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 28px;
+            height: 28px;
+            background: #fee;
+            color: #e74c3c;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .cart-item-title {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .cart-item-price {
+            color: var(--accent);
+            font-weight: 900;
+        }
+
+        .cart-item-details {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 8px;
+            line-height: 1.6;
+        }
+
+        .cart-footer {
+            padding: 16px;
+            background: white;
+            border-top: 2px solid #eee;
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.3rem;
+            font-weight: 900;
+            margin-bottom: 16px;
+        }
+
+        .cart-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .cart-actions .btn {
+            flex: 1;
+        }
+
+        .cart-contact {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px dashed #ddd;
+            font-size: 0.85rem;
+            color: #666;
+            text-align: center;
+        }
+
+        .cart-contact a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <h1>🌸 慶豐蘭業</h1>
+        <p>雲林專業蘭園 ‧ 農場直送</p>
+    </header>
+
+    <!-- 購物車浮動按鈕 -->
+    <div class="cart-fab" onclick="toggleCart()">
+        🛒
+        <div class="cart-badge" id="cartBadge">0</div>
+    </div>
+
+    <!-- 購物車彈窗 -->
+    <div class="cart-overlay" id="cartOverlay" onclick="if(event.target===this)toggleCart()">
+        <div class="cart-panel">
+            <div class="cart-header">
+                <span>🛒 購物車</span>
+                <span class="cart-close" onclick="toggleCart()">✕</span>
+            </div>
+            <div class="cart-body" id="cartBody">
+                <div style="text-align:center;color:#999;padding:30px;">購物車是空的</div>
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>小計</span>
+                    <span id="cartTotal">NT$ 0</span>
+                </div>
+                <div class="cart-actions">
+                    <button class="btn btn-secondary" onclick="toggleCart();goToStep(1);">+ 再加一筆</button>
+                    <button class="btn btn-primary" onclick="checkoutFromCart()">前往結帳 →</button>
+                </div>
+                <div class="cart-contact">
+                    📞 <a href="tel:0988811607">0988-811-607</a> ｜
+                    <a href="https://line.me/ti/p/~0988811607" target="_blank">LINE 聯繫</a><br>
+                    📍 雲林縣北港鎮179號
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="progress-container">
+        <div class="progress-bar">
+            <div class="progress-step active" data-step="1">
+                <div class="progress-dot">1</div>
+                <div class="progress-label">場合</div>
+            </div>
+            <div class="progress-step" data-step="2">
+                <div class="progress-dot">2</div>
+                <div class="progress-label">對象</div>
+            </div>
+            <div class="progress-step" data-step="3">
+                <div class="progress-dot">3</div>
+                <div class="progress-label">用詞</div>
+            </div>
+            <div class="progress-step" data-step="4">
+                <div class="progress-dot">4</div>
+                <div class="progress-label">落款</div>
+            </div>
+            <div class="progress-step" data-step="5">
+                <div class="progress-dot">5</div>
+                <div class="progress-label">規格</div>
+            </div>
+            <div class="progress-step" data-step="6">
+                <div class="progress-dot">6</div>
+                <div class="progress-label">配送</div>
+            </div>
+            <div class="progress-step" data-step="7">
+                <div class="progress-dot">7</div>
+                <div class="progress-label">確認</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <!-- Step 1: 場合 -->
+        <div class="order-step active" id="step1">
+            <div class="step-header">
+                <div class="step-icon">🎯</div>
+                <h2 class="step-title">您需要什麼場合的花禮？</h2>
+                <p class="step-desc">選擇場合，我們為您推薦最適合的用詞與花禮</p>
+            </div>
+            <div class="option-grid two-col">
+                <div class="option-card" onclick="selectOccasion('celebration')">
+                    <div class="option-card-icon">🎊</div>
+                    <div class="option-card-title">喜慶祝賀</div>
+                    <div class="option-card-desc">開幕、喬遷、升官</div>
+                </div>
+                <div class="option-card funeral-style" onclick="selectOccasion('funeral')">
+                    <div class="option-card-icon">🕯️</div>
+                    <div class="option-card-title">追思致哀</div>
+                    <div class="option-card-desc">告別式、追思會</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: 對象資訊 (喪禮) -->
+        <div class="order-step" id="step2-funeral">
+            <div class="step-header">
+                <div class="step-icon">👥</div>
+                <h2 class="step-title">往生者資訊</h2>
+                <p class="step-desc">幫助我們推薦最適合的敬輓用詞</p>
+            </div>
+
+            <!-- 性別 -->
+            <div class="tag-section">
+                <div class="tag-title">往生者性別 <span class="required">*</span></div>
+                <div class="tag-group">
+                    <button class="tag-btn" onclick="selectTag('gender', 'male', this)">男性</button>
+                    <button class="tag-btn" onclick="selectTag('gender', 'female', this)">女性</button>
+                </div>
+            </div>
+
+            <!-- 年齡 -->
+            <div class="tag-section">
+                <div class="tag-title">往生者年齡 <span class="required">*</span></div>
+                <div class="tag-group">
+                    <button class="tag-btn" onclick="selectTag('age', '40', this)">49歲以下</button>
+                    <button class="tag-btn" onclick="selectTag('age', '60', this)">50-69歲</button>
+                    <button class="tag-btn" onclick="selectTag('age', '75', this)">70-79歲</button>
+                    <button class="tag-btn" onclick="selectTag('age', '85', this)">80歲以上</button>
+                </div>
+            </div>
+
+            <!-- 宗教 -->
+            <div class="tag-section">
+                <div class="tag-title">宗教信仰</div>
+                <div class="tag-group">
+                    <button class="tag-btn selected" onclick="selectTag('religion', 'general', this)">一般/佛道教</button>
+                    <button class="tag-btn" onclick="selectTag('religion', 'buddhist', this)">佛教</button>
+                    <button class="tag-btn" onclick="selectTag('religion', 'christian', this)">基督教</button>
+                    <button class="tag-btn" onclick="selectTag('religion', 'catholic', this)">天主教</button>
+                    <button class="tag-btn" onclick="selectTag('religion', 'yiguandao', this)">一貫道</button>
+                </div>
+            </div>
+
+            <!-- 關係 -->
+            <div class="tag-section">
+                <div class="tag-title">與往生者的關係 <span class="required">*</span></div>
+                <div class="option-grid two-col">
+                    <div class="option-card funeral-style" onclick="selectRelation('parents')">
+                        <div class="option-card-title">父母/長輩</div>
+                    </div>
+                    <div class="option-card funeral-style" onclick="selectRelation('siblings')">
+                        <div class="option-card-title">兄弟姊妹</div>
+                    </div>
+                    <div class="option-card funeral-style" onclick="selectRelation('spouse')">
+                        <div class="option-card-title">配偶</div>
+                    </div>
+                    <div class="option-card funeral-style" onclick="selectRelation('friend')">
+                        <div class="option-card-title">朋友/同事</div>
+                    </div>
+                    <div class="option-card funeral-style" onclick="selectRelation('business')">
+                        <div class="option-card-title">客戶/商業</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-row">
+                <button class="btn btn-secondary" onclick="goToStep(1)">← 上一步</button>
+            </div>
+        </div>
+
+        <!-- Step 2: 對象資訊 (喜慶) -->
+        <div class="order-step" id="step2-celebration">
+            <div class="step-header">
+                <div class="step-icon">🎉</div>
+                <h2 class="step-title">這是什麼喜事？</h2>
+                <p class="step-desc">選擇場合，推薦最適合的賀詞</p>
+            </div>
+            <div class="option-grid two-col">
+                <div class="option-card" onclick="selectCelebType('opening')">
+                    <div class="option-card-icon">🏪</div>
+                    <div class="option-card-title">開幕誌慶</div>
+                </div>
+                <div class="option-card" onclick="selectCelebType('moving')">
+                    <div class="option-card-icon">🏠</div>
+                    <div class="option-card-title">喬遷之喜</div>
+                </div>
+                <div class="option-card" onclick="selectCelebType('promotion')">
+                    <div class="option-card-icon">📈</div>
+                    <div class="option-card-title">升官榮調</div>
+                </div>
+                <div class="option-card" onclick="selectCelebType('exhibition')">
+                    <div class="option-card-icon">🎨</div>
+                    <div class="option-card-title">展覽發表</div>
+                </div>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-secondary" onclick="goToStep(1)">← 上一步</button>
+            </div>
+        </div>
+
+        <!-- Step 3: 選擇用詞 -->
+        <div class="order-step" id="step3">
+            <div class="step-header">
+                <div class="step-icon">✍️</div>
+                <h2 class="step-title">選擇卡片用詞</h2>
+                <p class="step-desc" id="step3Subtitle">根據您的選擇，推薦以下用詞</p>
+            </div>
+            <div class="phrase-grid" id="phraseOptions"></div>
+            <div class="form-group" style="margin-top: 24px;">
+                <label class="form-label">或自訂用詞</label>
+                <input type="text" class="form-input" id="customPhrase" placeholder="輸入您想要的用詞（可空白）">
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-secondary" onclick="goBack()">← 上一步</button>
+                <button class="btn btn-primary" onclick="goToStep(4)">下一步 →</button>
+            </div>
+        </div>
+
+        <!-- Step 4: 落款資訊 -->
+        <div class="order-step" id="step4">
+            <div class="step-header">
+                <div class="step-icon">📝</div>
+                <h2 class="step-title">卡片落款</h2>
+                <p class="step-desc">填寫卡片上的資訊</p>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">往生者姓 <span class="required">*</span></label>
+                    <input type="text" class="form-input" id="deceasedLastName" placeholder="例：王">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">往生者名 <span class="required">*</span></label>
+                    <input type="text" class="form-input" id="deceasedFirstName" placeholder="例：大明">
+                </div>
+            </div>
+            <div class="form-group" id="husbandNameGroup" style="display: none;">
+                <label class="form-label">夫姓（已婚女性用）</label>
+                <input type="text" class="form-input" id="husbandName" placeholder="例：陳">
+                <p class="form-hint">傳統上已婚女性冠夫姓，現代可選填</p>
+            </div>
+            <div class="form-group">
+                <label class="form-label">送禮人姓名 <span class="required">*</span></label>
+                <input type="text" class="form-input" id="senderName" placeholder="例：慶豐股份有限公司">
+            </div>
+            <div class="form-group">
+                <label class="form-label">下款敬辭</label>
+                <div class="tag-group" id="footerOptions">
+                    <button class="tag-btn selected" onclick="selectFooter('敬輓', this)">敬輓</button>
+                    <button class="tag-btn" onclick="selectFooter('泣輓', this)">泣輓</button>
+                    <button class="tag-btn" onclick="selectFooter('拜輓', this)">拜輓</button>
+                </div>
+                <p class="form-hint">晚輩送長輩用「泣輓」，一般用「敬輓」</p>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-secondary" onclick="goToStep(3)">← 上一步</button>
+                <button class="btn btn-primary" onclick="goToStep(5)">下一步 →</button>
+            </div>
+        </div>
+
+        <!-- Step 5: 花卉規格 -->
+        <div class="order-step" id="step5">
+            <div class="step-header">
+                <div class="step-icon">🌸</div>
+                <h2 class="step-title">選擇花禮規格</h2>
+                <p class="step-desc">所有蘭花皆為農場直送</p>
+            </div>
+            <div class="option-grid" id="productOptions"></div>
+            <div class="btn-row">
+                <button class="btn btn-secondary" onclick="goToStep(4)">← 上一步</button>
+                <button class="btn btn-primary" style="background:#27ae60;color:white;" onclick="goToStep5Next()">🛒
+                    加入購物車</button>
+            </div>
+        </div>
+
+        <!-- Step 6: 配送資訊 -->
+        <div class="order-step" id="step6">
+            <div class="step-header">
+                <div class="step-icon">🚚</div>
+                <h2 class="step-title">配送資訊</h2>
+                <p class="step-desc">請填寫送達地點與時間</p>
+            </div>
+            <div class="form-group">
+                <label class="form-label">配送區域 <span class="required">*</span></label>
+                <select class="form-input" id="deliveryArea">
+                    <option value="">-- 請選擇 --</option>
+                    <optgroup label="🟢 免運區域（雲林）">
+                        <option value="北港">北港</option>
+                        <option value="水林">水林</option>
+                        <option value="土庫">土庫</option>
+                        <option value="虎尾">虎尾</option>
+                        <option value="元長">元長</option>
+                        <option value="四湖">四湖</option>
+                        <option value="崙背">崙背</option>
+                        <option value="東勢">東勢</option>
+                    </optgroup>
+                    <optgroup label="🟢 免運區域（嘉義）">
+                        <option value="新港">新港</option>
+                        <option value="六腳">六腳</option>
+                    </optgroup>
+                    <optgroup label="🟡 運費另計">
+                        <option value="其他">其他地區（需另議）</option>
+                    </optgroup>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">詳細地址 <span class="required">*</span></label>
+                <input type="text" class="form-input" id="deliveryAddress" placeholder="例：雲林縣北港鎮中山路 100 號">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">送達日期 <span class="required">*</span></label>
+                    <input type="date" class="form-input" id="deliveryDate">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">儀式時間</label>
+                    <input type="time" class="form-input" id="eventTime">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">收花人電話 <span class="required">*</span></label>
+                <input type="tel" class="form-input" id="recipientPhone" placeholder="0912-345-678">
+            </div>
+            <hr style="margin: 32px 0; border: none; border-top: 2px solid #f0f0f0;">
+            <h3 style="font-weight: 700; color: var(--primary); margin-bottom: 20px;">📞 您的聯絡資訊</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">您的姓名 <span class="required">*</span></label>
+                    <input type="text" class="form-input" id="customerName">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">您的電話 <span class="required">*</span></label>
+                    <input type="tel" class="form-input" id="customerPhone">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">LINE ID</label>
+                <input type="text" class="form-input" id="customerLine" placeholder="方便聯繫確認">
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-secondary" onclick="goToStep(5)">← 上一步</button>
+                <button class="btn btn-primary" onclick="showSummary()">確認訂單 →</button>
+            </div>
+        </div>
+
+        <!-- Step 7: 確認 -->
+        <div class="order-step" id="step7">
+            <div class="step-header">
+                <div class="step-icon">✅</div>
+                <h2 class="step-title">訂單確認</h2>
+                <p class="step-desc">請確認資訊是否正確</p>
+            </div>
+            <div class="card-preview">
+                <div class="card-preview-label">卡片預覽</div>
+                <div class="card-preview-phrase" id="previewPhrase">永念親恩</div>
+                <div class="card-preview-to" id="previewTo">敬悼 王公大明 老先生 千古</div>
+                <div class="card-preview-from" id="previewFrom">慶豐股份有限公司 敬輓</div>
+            </div>
+            <div class="summary-section">
+                <h3 class="summary-title">📦 訂單明細</h3>
+                <div class="summary-row">
+                    <span class="summary-label">花禮</span>
+                    <span class="summary-value" id="summaryProduct">-</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">送達地點</span>
+                    <span class="summary-value" id="summaryAddress">-</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">送達日期</span>
+                    <span class="summary-value" id="summaryDate">-</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">付款</span>
+                    <span class="summary-value">貨到付款</span>
+                </div>
+                <div class="summary-total">
+                    總計：<span id="summaryTotal">NT$ 2,500</span>
+                </div>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-secondary" onclick="goToStep(6)">← 修改</button>
+                <button class="btn btn-primary btn-line" onclick="submitOrder()">💬 送出訂單</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入成語資料庫 -->
+    <script src="phrase-database.js"></script>
+
+    <script>
+        // ===== 訂單資料 =====
+        const orderData = {
+            occasion: '',
+            gender: '',
+            age: 60,
+            religion: 'general',
+            relation: '',
+            celebType: '',
+            selectedPhrase: '',
+            customPhrase: '',
+            deceasedLastName: '',
+            deceasedFirstName: '',
+            husbandName: '',
+            senderName: '',
+            footerSuffix: '敬輓',
+            productId: '',
+            productName: '',
+            productPrice: 0,
+            deliveryArea: '',
+            deliveryAddress: '',
+            deliveryDate: '',
+            eventTime: '',
+            recipientPhone: '',
+            customerName: '',
+            customerPhone: '',
+            customerLine: ''
+        };
+
+        // ===== 購物車 =====
+        let cart = [];
+
+        function toggleCart() {
+            const overlay = document.getElementById('cartOverlay');
+            overlay.classList.toggle('show');
+        }
+
+        function updateCartBadge() {
+            document.getElementById('cartBadge').textContent = cart.length;
+        }
+
+        function renderCartItems() {
+            const body = document.getElementById('cartBody');
+            if (cart.length === 0) {
+                body.innerHTML = '<div style="text-align:center;color:#999;padding:30px;">購物車是空的 🍃</div>';
+                document.getElementById('cartTotal').textContent = 'NT$ 0';
+                return;
+            }
+
+            let total = 0;
+            body.innerHTML = cart.map((item, i) => {
+                total += item.price;
+                return `
+                <div class="cart-item">
+                    <div class="cart-item-delete" onclick="removeFromCart(${i})">✕</div>
+                    <div class="cart-item-title">${item.productName}</div>
+                    <div class="cart-item-price">NT$ ${item.price.toLocaleString()}</div>
+                    <div class="cart-item-details">
+                        📝「${item.phrase}」<br>
+                        👤 上款：${item.recipient}<br>
+                        ✍️ 落款：${item.sender} ${item.suffix}<br>
+                        📍 ${item.address || '待填寫'}
+                    </div>
+                </div>`;
+            }).join('');
+
+            document.getElementById('cartTotal').textContent = 'NT$ ' + total.toLocaleString();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartBadge();
+            renderCartItems();
+        }
+
+        function addToCart() {
+            // 收集當前訂單資料
+            const finalPhrase = orderData.customPhrase || orderData.selectedPhrase || '敬輓';
+            const recipient = orderData.deceasedLastName + orderData.deceasedFirstName +
+                (orderData.occasion === 'funeral' ? (orderData.age >= 80 ? '老先生' : '先生') : '');
+
+            const item = {
+                id: Date.now(),
+                occasion: orderData.occasion,
+                productId: orderData.productId,
+                productName: orderData.productName,
+                price: orderData.productPrice,
+                phrase: finalPhrase,
+                recipient: recipient || '待填寫',
+                sender: orderData.senderName || '待填寫',
+                suffix: orderData.footerSuffix,
+                address: orderData.deliveryAddress || ''
+            };
+
+            cart.push(item);
+            updateCartBadge();
+            renderCartItems();
+            toggleCart(); // 顯示購物車
+        }
+
+        function checkoutFromCart() {
+            if (cart.length === 0) {
+                alert('購物車是空的！');
+                return;
+            }
+            toggleCart();
+            // 跳到配送資訊頁（Step 6）或直接結帳
+            goToStep(6);
+        }
+
+        // 修改 Step 5 的「下一步」按鈕行為
+        function goToStep5Next() {
+            // 確保商品已選
+            if (!orderData.productId) {
+                alert('請選擇花禮規格！');
+                return;
+            }
+            // 收集落款資料
+            orderData.deceasedLastName = document.getElementById('deceasedLastName').value;
+            orderData.deceasedFirstName = document.getElementById('deceasedFirstName').value;
+            orderData.husbandName = document.getElementById('husbandName').value;
+            orderData.senderName = document.getElementById('senderName').value;
+            orderData.deliveryAddress = document.getElementById('deliveryAddress')?.value || '';
+
+            addToCart();
+        }
+
+        // 商品
+        const products = {
+            funeral: [
+                { id: 'f7', name: '白蝴蝶蘭 7株', price: 2500, emoji: '🤍' },
+                { id: 'f10', name: '白蝴蝶蘭 10株', price: 3500, emoji: '🤍' },
+                { id: 'f12', name: '白蝴蝶蘭 12株落地盆', price: 4500, emoji: '🤍' }
+            ],
+            celebration: [
+                { id: 'c7', name: '紅花蝴蝶蘭 7株', price: 2500, emoji: '🌺' },
+                { id: 'c10', name: '紅花蝴蝶蘭 10株', price: 3500, emoji: '🌺' },
+                { id: 'c12', name: '紅花蝴蝶蘭 12株落地盆', price: 4500, emoji: '🌺' }
+            ]
+        };
+
+        let currentStep = 1;
+
+        function updateProgress() {
+            document.querySelectorAll('.progress-step').forEach((step, i) => {
+                step.classList.remove('active', 'done');
+                if (i + 1 < currentStep) step.classList.add('done');
+                else if (i + 1 === currentStep) step.classList.add('active');
+            });
+        }
+
+        function goToStep(step) {
+            document.querySelectorAll('.order-step').forEach(s => s.classList.remove('active'));
+            currentStep = step;
+            updateProgress();
+
+            if (step === 1) {
+                document.getElementById('step1').classList.add('active');
+            } else if (step === 2) {
+                if (orderData.occasion === 'funeral') {
+                    document.getElementById('step2-funeral').classList.add('active');
+                } else {
+                    document.getElementById('step2-celebration').classList.add('active');
+                }
+            } else if (step === 3) {
+                renderPhraseOptions();
+                document.getElementById('step3').classList.add('active');
+            } else if (step === 4) {
+                // 顯示夫姓欄位（如果是女性）
+                document.getElementById('husbandNameGroup').style.display =
+                    orderData.gender === 'female' ? 'block' : 'none';
+                document.getElementById('step4').classList.add('active');
+            } else if (step === 5) {
+                renderProductOptions();
+                document.getElementById('step5').classList.add('active');
+            } else if (step === 6) {
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                document.getElementById('deliveryDate').min = tomorrow.toISOString().split('T')[0];
+                document.getElementById('step6').classList.add('active');
+            } else if (step === 7) {
+                document.getElementById('step7').classList.add('active');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goBack() {
+            goToStep(2);
+        }
+
+        function selectOccasion(type) {
+            orderData.occasion = type;
+            document.querySelectorAll('#step1 .option-card').forEach(c => c.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+            setTimeout(() => goToStep(2), 300);
+        }
+
+        function selectTag(type, value, element) {
+            // 取消同組其他選取
+            element.parentElement.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('selected'));
+            element.classList.add('selected');
+
+            if (type === 'gender') orderData.gender = value;
+            else if (type === 'age') orderData.age = parseInt(value);
+            else if (type === 'religion') orderData.religion = value;
+        }
+
+        function selectRelation(relation) {
+            orderData.relation = relation;
+            document.querySelectorAll('#step2-funeral .option-card').forEach(c => c.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+
+            // 驗證必填
+            if (!orderData.gender || !orderData.age) {
+                alert('請先選擇往生者的性別和年齡');
+                return;
+            }
+            setTimeout(() => goToStep(3), 300);
+        }
+
+        function selectCelebType(type) {
+            orderData.celebType = type;
+            document.querySelectorAll('#step2-celebration .option-card').forEach(c => c.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+            setTimeout(() => goToStep(3), 300);
+        }
+
+        function renderPhraseOptions() {
+            const container = document.getElementById('phraseOptions');
+            let phraseList = [];
+
+            if (orderData.occasion === 'funeral' && typeof getFuneralPhrases === 'function') {
+                // 使用新的資料庫
+                phraseList = getFuneralPhrases({
+                    gender: orderData.gender,
+                    age: orderData.age,
+                    religion: orderData.religion
+                });
+            } else {
+                // 喜慶用詞（簡化版）
+                const celebPhrases = {
+                    opening: ['開幕誌慶', '駿業宏開', '鴻圖大展', '生意興隆'],
+                    moving: ['喬遷之喜', '華廈生輝', '德門仁第'],
+                    promotion: ['步步高升', '鵬程萬里', '高升志喜'],
+                    exhibition: ['藝壇生輝', '璀璨奪目']
+                };
+                phraseList = celebPhrases[orderData.celebType] || celebPhrases.opening;
+            }
+
+            container.innerHTML = phraseList.slice(0, 15).map(p => {
+                const text = typeof p === 'string' ? p : p;
+                return `
+                    <div class="phrase-card" onclick="selectPhrase('${text}', this)">
+                        <div class="phrase-card-check">${orderData.selectedPhrase === text ? '✓' : ''}</div>
+                        <div class="phrase-card-main">${text}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function selectPhrase(phrase, element) {
+            orderData.selectedPhrase = phrase;
+            document.querySelectorAll('.phrase-card').forEach(c => {
+                c.classList.remove('selected');
+                c.querySelector('.phrase-card-check').textContent = '';
+            });
+            element.classList.add('selected');
+            element.querySelector('.phrase-card-check').textContent = '✓';
+        }
+
+        function selectFooter(suffix, element) {
+            orderData.footerSuffix = suffix;
+            document.querySelectorAll('#footerOptions .tag-btn').forEach(b => b.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+
+        function renderProductOptions() {
+            const container = document.getElementById('productOptions');
+            const list = orderData.occasion === 'funeral' ? products.funeral : products.celebration;
+
+            container.innerHTML = list.map(p => `
+                <div class="option-card${p.id === orderData.productId ? ' selected' : ''}" 
+                     onclick="selectProduct('${p.id}', '${p.name}', ${p.price}, this)">
+                    <div class="option-card-icon">${p.emoji}</div>
+                    <div>
+                        <div class="option-card-title">${p.name}</div>
+                        <div style="font-size: 1.3rem; font-weight: 900; color: var(--accent); margin-top: 8px;">
+                            NT$ ${p.price.toLocaleString()}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectProduct(id, name, price, element) {
+            orderData.productId = id;
+            orderData.productName = name;
+            orderData.productPrice = price;
+            document.querySelectorAll('#productOptions .option-card').forEach(c => c.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+
+        function showSummary() {
+            // 收集資料
+            orderData.deceasedLastName = document.getElementById('deceasedLastName').value;
+            orderData.deceasedFirstName = document.getElementById('deceasedFirstName').value;
+            orderData.husbandName = document.getElementById('husbandName').value;
+            orderData.senderName = document.getElementById('senderName').value;
+            orderData.customPhrase = document.getElementById('customPhrase').value;
+            orderData.deliveryArea = document.getElementById('deliveryArea').value;
+            orderData.deliveryAddress = document.getElementById('deliveryAddress').value;
+            orderData.deliveryDate = document.getElementById('deliveryDate').value;
+            orderData.eventTime = document.getElementById('eventTime').value;
+            orderData.recipientPhone = document.getElementById('recipientPhone').value;
+            orderData.customerName = document.getElementById('customerName').value;
+            orderData.customerPhone = document.getElementById('customerPhone').value;
+            orderData.customerLine = document.getElementById('customerLine').value;
+
+            // 驗證
+            if (!orderData.deliveryArea || !orderData.deliveryAddress || !orderData.deliveryDate ||
+                !orderData.recipientPhone || !orderData.customerName || !orderData.customerPhone) {
+                alert('請填寫所有必填欄位！');
+                return;
+            }
+            if (!orderData.productId) {
+                alert('請選擇花禮規格！');
+                goToStep(5);
+                return;
+            }
+
+            // 產生卡片預覽
+            const finalPhrase = orderData.customPhrase || orderData.selectedPhrase || '敬輓';
+            document.getElementById('previewPhrase').textContent = finalPhrase;
+
+            // 使用資料庫產生格式（如果有）
+            let topLine = '';
+            if (orderData.occasion === 'funeral' && typeof generateCardFormat === 'function') {
+                const card = generateCardFormat({
+                    gender: orderData.gender,
+                    age: orderData.age,
+                    lastName: orderData.deceasedLastName,
+                    firstName: orderData.deceasedFirstName,
+                    husbandName: orderData.husbandName,
+                    isMarried: !!orderData.husbandName,
+                    isBaptized: false,
+                    religion: orderData.religion,
+                    senderName: orderData.senderName,
+                    phrase: finalPhrase,
+                    relation: orderData.relation
+                });
+                topLine = card.topLine;
+                document.getElementById('previewFrom').textContent = card.bottomLine;
+            } else {
+                topLine = `敬悼 ${orderData.deceasedLastName}${orderData.deceasedFirstName}`;
+                document.getElementById('previewFrom').textContent = `${orderData.senderName} ${orderData.footerSuffix}`;
+            }
+            document.getElementById('previewTo').textContent = topLine;
+
+            // 更新摘要
+            document.getElementById('summaryProduct').textContent = orderData.productName;
+            document.getElementById('summaryAddress').textContent = orderData.deliveryArea + ' ' + orderData.deliveryAddress;
+            document.getElementById('summaryDate').textContent = orderData.deliveryDate + (orderData.eventTime ? ' ' + orderData.eventTime : '');
+            document.getElementById('summaryTotal').textContent = 'NT$ ' + orderData.productPrice.toLocaleString();
+
+            goToStep(7);
+        }
+
+        function submitOrder() {
+            const finalPhrase = orderData.customPhrase || orderData.selectedPhrase || '敬輓';
+            const msg = `【慶豐蘭業 - 新訂單】
+📋 場合：${orderData.occasion === 'funeral' ? '追思致哀' : '喜慶祝賀'}
+🌸 花禮：${orderData.productName}
+💰 金額：NT$ ${orderData.productPrice.toLocaleString()}
+
+📝 卡片內容：
+「${finalPhrase}」
+敬悼 ${orderData.deceasedLastName}${orderData.deceasedFirstName}
+${orderData.senderName} ${orderData.footerSuffix}
+
+🚚 配送：
+${orderData.deliveryArea} ${orderData.deliveryAddress}
+日期：${orderData.deliveryDate} ${orderData.eventTime || ''}
+電話：${orderData.recipientPhone}
+
+👤 訂購人：${orderData.customerName}
+📞 ${orderData.customerPhone}
+LINE：${orderData.customerLine || '無'}
+
+💳 貨到付款`;
+
+            const encoded = encodeURIComponent(msg);
+            window.open(`https://line.me/R/ti/p/@qingfeng?text=${encoded}`, '_blank');
+            alert('訂單資訊已準備好！請在 LINE 傳送確認。');
+        }
+    </script>
+</body>
+
+</html>
