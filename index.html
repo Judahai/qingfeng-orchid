@@ -916,21 +916,35 @@
                 <h2 class="step-title">卡片落款</h2>
                 <p class="step-desc">填寫卡片上的資訊</p>
             </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="form-label">往生者姓 <span class="required">*</span></label>
-                    <input type="text" class="form-input" id="deceasedLastName" placeholder="例：王">
+
+            <!-- 喪禮用：往生者姓名 -->
+            <div id="funeralRecipientFields">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">往生者姓 <span class="required">*</span></label>
+                        <input type="text" class="form-input" id="deceasedLastName" placeholder="例：王">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">往生者名 <span class="required">*</span></label>
+                        <input type="text" class="form-input" id="deceasedFirstName" placeholder="例：大明">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">往生者名 <span class="required">*</span></label>
-                    <input type="text" class="form-input" id="deceasedFirstName" placeholder="例：大明">
+                <div class="form-group" id="husbandNameGroup" style="display: none;">
+                    <label class="form-label">夫姓（已婚女性用）</label>
+                    <input type="text" class="form-input" id="husbandName" placeholder="例：陳">
+                    <p class="form-hint">傳統上已婚女性冠夫姓，現代可選填</p>
                 </div>
             </div>
-            <div class="form-group" id="husbandNameGroup" style="display: none;">
-                <label class="form-label">夫姓（已婚女性用）</label>
-                <input type="text" class="form-input" id="husbandName" placeholder="例：陳">
-                <p class="form-hint">傳統上已婚女性冠夫姓，現代可選填</p>
+
+            <!-- 喜慶用：收禮人/公司名 -->
+            <div id="celebrationRecipientFields" style="display: none;">
+                <div class="form-group">
+                    <label class="form-label">收禮人/公司名稱 <span class="required">*</span></label>
+                    <input type="text" class="form-input" id="recipientName" placeholder="例：王小明先生、慶豐股份有限公司">
+                    <p class="form-hint">卡片上款會顯示的名稱</p>
+                </div>
             </div>
+
             <div class="form-group">
                 <label class="form-label">送禮人姓名 <span class="required">*</span></label>
                 <input type="text" class="form-input" id="senderName" placeholder="例：慶豐股份有限公司">
@@ -938,11 +952,9 @@
             <div class="form-group">
                 <label class="form-label">下款敬辭</label>
                 <div class="tag-group" id="footerOptions">
-                    <button class="tag-btn selected" onclick="selectFooter('敬輓', this)">敬輓</button>
-                    <button class="tag-btn" onclick="selectFooter('泣輓', this)">泣輓</button>
-                    <button class="tag-btn" onclick="selectFooter('拜輓', this)">拜輓</button>
+                    <!-- 動態載入，根據場合 -->
                 </div>
-                <p class="form-hint">晚輩送長輩用「泣輓」，一般用「敬輓」</p>
+                <p class="form-hint" id="footerHint">晚輩送長輩用「泣輓」，一般用「敬輓」</p>
             </div>
             <div class="btn-row">
                 <button class="btn btn-secondary" onclick="goToStep(3)">← 上一步</button>
@@ -1208,7 +1220,11 @@
         }
 
         // 商品
-        const products = {
+        // ===== 後端 API =====
+        const API_URL = 'https://script.google.com/macros/s/AKfycbzgfKVNFk55QQr5D0numdYYCRTshgZBBm005_MelTr9aWE9O-gt270x90yFfhrenz4uRg/exec';
+
+        // 商品（從後端載入，這是備用）
+        let products = {
             funeral: [
                 { id: 'f7', name: '白蝴蝶蘭 7株', price: 2500, emoji: '🤍' },
                 { id: 'f10', name: '白蝴蝶蘭 10株', price: 3500, emoji: '🤍' },
@@ -1220,6 +1236,29 @@
                 { id: 'c12', name: '紅花蝴蝶蘭 12株落地盆', price: 4500, emoji: '🌺' }
             ]
         };
+
+        // 從後端載入商品
+        async function loadProductsFromAPI() {
+            try {
+                const res = await fetch(API_URL + '?action=getProducts');
+                const data = await res.json();
+                // 整理成前端格式
+                products.funeral = data.filter(p => p.category === 'funeral').map(p => ({
+                    id: p.id, name: p.name, price: p.price,
+                    emoji: '🤍', imageUrl: p.imageUrl
+                }));
+                products.celebration = data.filter(p => p.category === 'celebration').map(p => ({
+                    id: p.id, name: p.name, price: p.price,
+                    emoji: '🌺', imageUrl: p.imageUrl
+                }));
+                console.log('✅ 商品已從後台載入', products);
+            } catch (e) {
+                console.warn('⚠️ 無法載入後台商品，使用預設', e);
+            }
+        }
+
+        // 頁面載入時讀取商品
+        loadProductsFromAPI();
 
         let currentStep = 1;
 
@@ -1248,9 +1287,19 @@
                 renderPhraseOptions();
                 document.getElementById('step3').classList.add('active');
             } else if (step === 4) {
-                // 顯示夫姓欄位（如果是女性）
-                document.getElementById('husbandNameGroup').style.display =
-                    orderData.gender === 'female' ? 'block' : 'none';
+                // 根據場合顯示不同欄位
+                if (orderData.occasion === 'funeral') {
+                    document.getElementById('funeralRecipientFields').style.display = 'block';
+                    document.getElementById('celebrationRecipientFields').style.display = 'none';
+                    // 顯示夫姓欄位（如果是女性）
+                    document.getElementById('husbandNameGroup').style.display =
+                        orderData.gender === 'female' ? 'block' : 'none';
+                } else {
+                    document.getElementById('funeralRecipientFields').style.display = 'none';
+                    document.getElementById('celebrationRecipientFields').style.display = 'block';
+                }
+                // 動態載入下款選項
+                renderFooterOptions();
                 document.getElementById('step4').classList.add('active');
             } else if (step === 5) {
                 renderProductOptions();
@@ -1356,6 +1405,30 @@
             element.classList.add('selected');
         }
 
+        function renderFooterOptions() {
+            const container = document.getElementById('footerOptions');
+            const hint = document.getElementById('footerHint');
+
+            if (orderData.occasion === 'funeral') {
+                // 喪禮
+                container.innerHTML = `
+                    <button class="tag-btn selected" onclick="selectFooter('敬輓', this)">敬輓</button>
+                    <button class="tag-btn" onclick="selectFooter('泣輓', this)">泣輓</button>
+                    <button class="tag-btn" onclick="selectFooter('拜輓', this)">拜輓</button>
+                `;
+                hint.textContent = '晚輩送長輩用「泣輓」，一般用「敬輓」';
+                orderData.footerSuffix = '敬輓';
+            } else {
+                // 喜慶
+                container.innerHTML = `
+                    <button class="tag-btn selected" onclick="selectFooter('敬賀', this)">敬賀</button>
+                    <button class="tag-btn" onclick="selectFooter('敬祝', this)">敬祝</button>
+                `;
+                hint.textContent = '一般用「敬賀」';
+                orderData.footerSuffix = '敬賀';
+            }
+        }
+
         function renderProductOptions() {
             const container = document.getElementById('productOptions');
             const list = orderData.occasion === 'funeral' ? products.funeral : products.celebration;
@@ -1363,6 +1436,7 @@
             container.innerHTML = list.map(p => `
                 <div class="option-card${p.id === orderData.productId ? ' selected' : ''}" 
                      onclick="selectProduct('${p.id}', '${p.name}', ${p.price}, this)">
+                    ${p.imageUrl ? `<img src="${p.imageUrl}" style="width:100%; height:150px; object-fit:cover; border-radius:12px; margin-bottom:12px;" onerror="this.style.display='none'">` : ''}
                     <div class="option-card-icon">${p.emoji}</div>
                     <div>
                         <div class="option-card-title">${p.name}</div>
@@ -1383,10 +1457,17 @@
         }
 
         function showSummary() {
-            // 收集資料
-            orderData.deceasedLastName = document.getElementById('deceasedLastName').value;
-            orderData.deceasedFirstName = document.getElementById('deceasedFirstName').value;
-            orderData.husbandName = document.getElementById('husbandName').value;
+            // 收集資料 - 根據場合收集不同欄位
+            if (orderData.occasion === 'funeral') {
+                orderData.deceasedLastName = document.getElementById('deceasedLastName').value;
+                orderData.deceasedFirstName = document.getElementById('deceasedFirstName').value;
+                orderData.husbandName = document.getElementById('husbandName').value;
+                orderData.recipientName = orderData.deceasedLastName + orderData.deceasedFirstName;
+            } else {
+                orderData.recipientName = document.getElementById('recipientName').value;
+                orderData.deceasedLastName = '';
+                orderData.deceasedFirstName = '';
+            }
             orderData.senderName = document.getElementById('senderName').value;
             orderData.customPhrase = document.getElementById('customPhrase').value;
             orderData.deliveryArea = document.getElementById('deliveryArea').value;
@@ -1411,29 +1492,36 @@
             }
 
             // 產生卡片預覽
-            const finalPhrase = orderData.customPhrase || orderData.selectedPhrase || '敬輓';
+            const finalPhrase = orderData.customPhrase || orderData.selectedPhrase ||
+                (orderData.occasion === 'funeral' ? '敬輓' : '誌慶');
             document.getElementById('previewPhrase').textContent = finalPhrase;
 
-            // 使用資料庫產生格式（如果有）
+            // 根據場合產生上款
             let topLine = '';
-            if (orderData.occasion === 'funeral' && typeof generateCardFormat === 'function') {
-                const card = generateCardFormat({
-                    gender: orderData.gender,
-                    age: orderData.age,
-                    lastName: orderData.deceasedLastName,
-                    firstName: orderData.deceasedFirstName,
-                    husbandName: orderData.husbandName,
-                    isMarried: !!orderData.husbandName,
-                    isBaptized: false,
-                    religion: orderData.religion,
-                    senderName: orderData.senderName,
-                    phrase: finalPhrase,
-                    relation: orderData.relation
-                });
-                topLine = card.topLine;
-                document.getElementById('previewFrom').textContent = card.bottomLine;
+            if (orderData.occasion === 'funeral') {
+                if (typeof generateCardFormat === 'function') {
+                    const card = generateCardFormat({
+                        gender: orderData.gender,
+                        age: orderData.age,
+                        lastName: orderData.deceasedLastName,
+                        firstName: orderData.deceasedFirstName,
+                        husbandName: orderData.husbandName,
+                        isMarried: !!orderData.husbandName,
+                        isBaptized: false,
+                        religion: orderData.religion,
+                        senderName: orderData.senderName,
+                        phrase: finalPhrase,
+                        relation: orderData.relation
+                    });
+                    topLine = card.topLine;
+                    document.getElementById('previewFrom').textContent = card.bottomLine;
+                } else {
+                    topLine = `敬悼 ${orderData.deceasedLastName}${orderData.deceasedFirstName}`;
+                    document.getElementById('previewFrom').textContent = `${orderData.senderName} ${orderData.footerSuffix}`;
+                }
             } else {
-                topLine = `敬悼 ${orderData.deceasedLastName}${orderData.deceasedFirstName}`;
+                // 喜慶場合
+                topLine = `祝 ${orderData.recipientName}`;
                 document.getElementById('previewFrom').textContent = `${orderData.senderName} ${orderData.footerSuffix}`;
             }
             document.getElementById('previewTo').textContent = topLine;
@@ -1447,35 +1535,65 @@
             goToStep(7);
         }
 
-        function submitOrder() {
+        async function submitOrder() {
             const finalPhrase = orderData.customPhrase || orderData.selectedPhrase || '敬輓';
-            const msg = `【慶豐蘭業 - 新訂單】
-📋 場合：${orderData.occasion === 'funeral' ? '追思致哀' : '喜慶祝賀'}
-🌸 花禮：${orderData.productName}
-💰 金額：NT$ ${orderData.productPrice.toLocaleString()}
 
-📝 卡片內容：
-「${finalPhrase}」
-敬悼 ${orderData.deceasedLastName}${orderData.deceasedFirstName}
-${orderData.senderName} ${orderData.footerSuffix}
+            // 準備訂單資料
+            const orderPayload = {
+                cart: [{
+                    id: orderData.productId,
+                    name: orderData.productName,
+                    price: orderData.productPrice,
+                    phrase: finalPhrase,
+                    recipient: `${orderData.deceasedLastName}${orderData.deceasedFirstName}`,
+                    sender: orderData.senderName,
+                    suffix: orderData.footerSuffix
+                }],
+                customer: {
+                    name: orderData.customerName,
+                    phone: orderData.customerPhone,
+                    line: orderData.customerLine
+                },
+                delivery: {
+                    date: orderData.deliveryDate,
+                    time: orderData.eventTime,
+                    area: orderData.deliveryArea,
+                    address: `${orderData.deliveryArea} ${orderData.deliveryAddress}`,
+                    recipientPhone: orderData.recipientPhone
+                }
+            };
 
-🚚 配送：
-${orderData.deliveryArea} ${orderData.deliveryAddress}
-日期：${orderData.deliveryDate} ${orderData.eventTime || ''}
-電話：${orderData.recipientPhone}
+            // 顯示送出中狀態
+            const submitBtn = document.querySelector('#step7 .btn-line');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = '⏳ 訂單送出中...';
+            submitBtn.disabled = true;
 
-👤 訂購人：${orderData.customerName}
-📞 ${orderData.customerPhone}
-LINE：${orderData.customerLine || '無'}
+            try {
+                // 呼叫後端 API
+                const response = await fetch(API_URL + '?action=saveOrder', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(orderPayload)
+                });
 
-💳 貨到付款`;
+                const result = await response.json();
 
-            const encoded = encodeURIComponent(msg);
-            window.open(`https://line.me/R/ti/p/@qingfeng?text=${encoded}`, '_blank');
-            alert('訂單資訊已準備好！請在 LINE 傳送確認。');
+                if (result.success) {
+                    alert(`✅ 訂單已送出！\n訂單編號：${result.orderId}\n\n我們的員工會盡快與您聯繫確認。`);
+                    // 重置頁面
+                    location.reload();
+                } else {
+                    throw new Error(result.error || '訂單送出失敗');
+                }
+            } catch (error) {
+                console.error('訂單送出失敗:', error);
+                alert('❌ 訂單送出失敗，請稍後再試或直接聯繫我們。\n\n電話：0988-811-607');
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
         }
     </script>
 </body>
-
 
 </html>
