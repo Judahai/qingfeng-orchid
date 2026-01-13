@@ -1570,16 +1570,22 @@
             submitBtn.disabled = true;
 
             try {
-                // 呼叫後端 API（Google Apps Script 需要特殊處理）
-                const response = await fetch(API_URL + '?action=saveOrder', {
-                    method: 'POST',
-                    mode: 'cors',
-                    redirect: 'follow',
-                    headers: { 'Content-Type': 'text/plain' },
-                    body: JSON.stringify(orderPayload)
-                });
+                // 呼叫後端 API（使用 GET 繞過 CORS）
+                console.log('📤 送出訂單:', orderPayload);
+                const dataParam = encodeURIComponent(JSON.stringify(orderPayload));
+                const response = await fetch(API_URL + '?action=saveOrder&data=' + dataParam);
 
-                const result = await response.json();
+                console.log('📥 回應狀態:', response.status, response.ok);
+                const responseText = await response.text();
+                console.log('📥 回應內容:', responseText);
+
+                let result;
+                try {
+                    result = JSON.parse(responseText);
+                } catch (parseError) {
+                    console.error('❌ JSON 解析失敗:', parseError);
+                    throw new Error('伺服器回應格式錯誤');
+                }
 
                 if (result.success) {
                     alert(`✅ 訂單已送出！\n訂單編號：${result.orderId}\n\n我們的員工會盡快與您聯繫確認。`);
@@ -1589,8 +1595,8 @@
                     throw new Error(result.error || '訂單送出失敗');
                 }
             } catch (error) {
-                console.error('訂單送出失敗:', error);
-                alert('❌ 訂單送出失敗，請稍後再試或直接聯繫我們。\n\n電話：0988-811-607');
+                console.error('❌ 訂單送出失敗:', error);
+                alert(`❌ 訂單送出失敗\n\n錯誤原因：${error.message}\n\n請稍後再試或直接聯繫我們。\n電話：0988-811-607`);
                 submitBtn.textContent = originalText;
                 submitBtn.disabled = false;
             }
