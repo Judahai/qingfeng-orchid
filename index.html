@@ -4,22 +4,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>慶豐蘭業 - 花禮訂購系統 v3</title>
+    <title>慶豐蘭業 - 花禮訂購系統</title>
     <meta name="description" content="慶豐蘭業 - 雲林專業蝴蝶蘭農場，開幕花籃、喪禮花籃、蘭花盆栽訂購">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap"
+    <!-- 新增 Noto Serif TC 標題字體 -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700&display=swap"
         rel="stylesheet">
 
     <style>
+        /* ===== Nordic Orchid Style - 極簡白設計系統 ===== */
         :root {
-            --primary: #1a472a;
-            --primary-light: #2d5a3d;
-            --accent: #d4af37;
-            --bg-cream: #faf8f5;
-            --text-dark: #2c2c2c;
-            --white: #ffffff;
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            --radius: 20px;
+            /* 主色系 - 極簡 */
+            --bg-white: #ffffff;
+            --bg-light: #f8f9fa;
+            --text-dark: #1a1a1a;
+            --text-gray: #6c757d;
+            --text-light: #999999;
+
+            /* 強調色 - 柔和 */
+            --accent-gold: #c9a87c;
+            --accent-pink: #f5e6e0;
+            --accent-gold-light: rgba(201, 168, 124, 0.15);
+
+            /* 功能色 */
+            --success: #2d5a3d;
             --funeral-dark: #2c2c2c;
+
+            /* 邊框與陰影 - 極淡 */
+            --border: #e9ecef;
+            --border-light: #f0f0f0;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.08);
+
+            /* 圓角 - 現代感 */
+            --radius: 12px;
+            --radius-lg: 16px;
+
+            /* 保留舊變數以兼容 */
+            --primary: #1a1a1a;
+            --primary-light: #333333;
+            --accent: #c9a87c;
+            --bg-cream: #ffffff;
+            --white: #ffffff;
         }
 
         * {
@@ -30,27 +56,39 @@
 
         body {
             font-family: 'Noto Sans TC', sans-serif;
-            background: var(--bg-cream);
+            background: var(--bg-white);
             color: var(--text-dark);
-            line-height: 1.6;
+            line-height: 1.7;
             min-height: 100vh;
         }
 
+        /* 標題使用襯線體 */
+        h1,
+        h2,
+        h3,
+        .step-title {
+            font-family: 'Noto Serif TC', serif;
+        }
+
         .header {
-            background: var(--primary);
-            color: var(--white);
-            padding: 20px;
+            background: var(--bg-white);
+            color: var(--text-dark);
+            padding: 32px 20px;
             text-align: center;
+            border-bottom: 1px solid var(--border);
         }
 
         .header h1 {
-            font-size: 1.8rem;
-            font-weight: 900;
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--text-dark);
         }
 
         .header p {
-            opacity: 0.8;
-            font-size: 0.95rem;
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            margin-top: 4px;
         }
 
         /* Progress Bar */
@@ -392,33 +430,37 @@
         }
 
         .btn {
-            padding: 16px 40px;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 700;
+            padding: 16px 36px;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.25s ease;
             border: none;
             font-family: inherit;
         }
 
         .btn-primary {
-            background: var(--accent);
-            color: var(--primary);
-            box-shadow: 0 8px 24px rgba(212, 175, 55, 0.3);
+            background: var(--accent-gold);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(201, 168, 124, 0.25);
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
+            background: #b89a6e;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(201, 168, 124, 0.35);
         }
 
         .btn-secondary {
-            background: #f0f0f0;
-            color: #666;
+            background: var(--bg-light);
+            color: var(--text-gray);
+            border: 1px solid var(--border);
         }
 
         .btn-secondary:hover {
-            background: #e0e0e0;
+            background: var(--border);
+            color: var(--text-dark);
         }
 
         .btn-line {
@@ -868,7 +910,11 @@
                 <h2 class="step-title">這是什麼喜事？</h2>
                 <p class="step-desc">選擇場合，推薦最適合的賀詞</p>
             </div>
-            <div class="option-grid two-col">
+            <div class="option-grid three-col">
+                <div class="option-card" onclick="selectCelebType('newyear')">
+                    <div class="option-card-icon">🧧</div>
+                    <div class="option-card-title">春節送禮</div>
+                </div>
                 <div class="option-card" onclick="selectCelebType('opening')">
                     <div class="option-card-icon">🏪</div>
                     <div class="option-card-title">開幕誌慶</div>
@@ -880,6 +926,18 @@
                 <div class="option-card" onclick="selectCelebType('promotion')">
                     <div class="option-card-icon">📈</div>
                     <div class="option-card-title">升官榮調</div>
+                </div>
+                <div class="option-card" onclick="selectCelebType('wedding')">
+                    <div class="option-card-icon">💒</div>
+                    <div class="option-card-title">婚禮訂婚</div>
+                </div>
+                <div class="option-card" onclick="selectCelebType('birthday')">
+                    <div class="option-card-icon">🎂</div>
+                    <div class="option-card-title">生日壽宴</div>
+                </div>
+                <div class="option-card" onclick="selectCelebType('graduation')">
+                    <div class="option-card-icon">🎓</div>
+                    <div class="option-card-title">畢業升學</div>
                 </div>
                 <div class="option-card" onclick="selectCelebType('exhibition')">
                     <div class="option-card-icon">🎨</div>
@@ -1009,7 +1067,7 @@
             </div>
             <div class="form-group">
                 <label class="form-label">詳細地址 <span class="required">*</span></label>
-                <input type="text" class="form-input" id="deliveryAddress" placeholder="例：雲林縣北港鎮中山路 100 號">
+                <input type="text" class="form-input" id="deliveryAddress" placeholder="例：雲林縣北港鎮中正路蘭花廣場0號">
             </div>
             <div class="form-row">
                 <div class="form-group">
@@ -1017,8 +1075,9 @@
                     <input type="date" class="form-input" id="deliveryDate">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">儀式時間</label>
-                    <input type="time" class="form-input" id="eventTime">
+                    <label class="form-label">活動結束日期（回收用）</label>
+                    <input type="date" class="form-input" id="eventEndDate">
+                    <p class="form-hint">若需回收花禮，請填寫活動結束時間</p>
                 </div>
             </div>
             <div class="form-group">
@@ -1367,12 +1426,21 @@
                     age: orderData.age,
                     religion: orderData.religion
                 });
+            } else if (typeof getCelebrationPhrases === 'function') {
+                // 使用新的喜慶成語資料庫
+                phraseList = getCelebrationPhrases({
+                    category: orderData.celebType
+                });
             } else {
-                // 喜慶用詞（簡化版）
+                // 備用：如果資料庫沒載入，使用基本成語
                 const celebPhrases = {
+                    newyear: ['恭賀新禧', '新年快樂', '萬事如意', '心想事成'],
                     opening: ['開幕誌慶', '駿業宏開', '鴻圖大展', '生意興隆'],
                     moving: ['喬遷之喜', '華廈生輝', '德門仁第'],
                     promotion: ['步步高升', '鵬程萬里', '高升志喜'],
+                    wedding: ['百年好合', '永浴愛河', '佳偶天成'],
+                    birthday: ['生日快樂', '福如東海', '壽比南山'],
+                    graduation: ['畢業快樂', '學業有成', '前程似錦'],
                     exhibition: ['藝壇生輝', '璀璨奪目']
                 };
                 phraseList = celebPhrases[orderData.celebType] || celebPhrases.opening;
