@@ -287,6 +287,35 @@ const celebrationPhraseDB = {
         guandi: [
             '義薄雲天', '忠義千秋', '浩然正氣'
         ]
+    },
+
+    // ===== 春節送禮 =====
+    newyear: {
+        general: [
+            '恭賀新禧', '新年快樂', '萬事如意', '心想事成', '大吉大利',
+            '吉祥如意', '財源廣進', '招財進寶', '金玉滿堂', '福星高照',
+            '迎春納福', '春到福到', '龍馬精神', '蛇年行大運', '富貴吉祥'
+        ],
+        business: [
+            '生意興隆', '日進斗金', '財源滾滾', '鴻圖大展', '事業蒸蒸日上'
+        ],
+        family: [
+            '闔家平安', '闔家歡樂', '天倫之樂', '福壽雙全', '百福齊臻'
+        ]
+    },
+
+    // ===== 畢業升學 =====
+    graduation: {
+        general: [
+            '畢業快樂', '學業有成', '前程似錦', '鵬程萬里', '一帆風順',
+            '展翅高飛', '百尺竿頭', '更進一步', '學海無涯', '青雲直上'
+        ],
+        admission: [
+            '金榜題名', '魚躍龍門', '蟾宮折桂', '及第登科', '龍門高跳'
+        ],
+        doctorate: [
+            '學富五車', '博學多才', '學術精深', '卓越成就'
+        ]
     }
 };
 
@@ -294,8 +323,8 @@ const celebrationPhraseDB = {
 // ===== 喜慶成語推薦函數 =====
 function getCelebrationPhrases(options) {
     const {
-        category,    // 'opening', 'moving', 'promotion', 'exhibition', 'wedding', 'birthday', 'temple'
-        subCategory, // 'restaurant', 'medical', 'legal', 'election', 'elderly', 'longevity', 'mazu', 'guandi'
+        category,    // 'opening', 'moving', 'promotion', 'exhibition', 'wedding', 'birthday', 'temple', 'newyear', 'graduation'
+        subCategory, // 'restaurant', 'medical', 'legal', 'election', 'elderly', 'longevity', 'mazu', 'guandi', 'business', 'family', 'admission', 'doctorate'
         isElderly    // boolean
     } = options;
 
