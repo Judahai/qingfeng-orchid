@@ -1536,16 +1536,16 @@
                 orderData.deceasedLastName = '';
                 orderData.deceasedFirstName = '';
             }
-            orderData.senderName = document.getElementById('senderName').value;
-            orderData.customPhrase = document.getElementById('customPhrase').value;
-            orderData.deliveryArea = document.getElementById('deliveryArea').value;
-            orderData.deliveryAddress = document.getElementById('deliveryAddress').value;
-            orderData.deliveryDate = document.getElementById('deliveryDate').value;
-            orderData.eventEndDate = document.getElementById('eventEndDate').value;
-            orderData.recipientPhone = document.getElementById('recipientPhone').value;
-            orderData.customerName = document.getElementById('customerName').value;
-            orderData.customerPhone = document.getElementById('customerPhone').value;
-            orderData.customerLine = document.getElementById('customerLine').value;
+            orderData.senderName = document.getElementById('senderName')?.value || '';
+            orderData.customPhrase = document.getElementById('customPhrase')?.value || '';
+            orderData.deliveryArea = document.getElementById('deliveryArea')?.value || '';
+            orderData.deliveryAddress = document.getElementById('deliveryAddress')?.value || '';
+            orderData.deliveryDate = document.getElementById('deliveryDate')?.value || '';
+            orderData.eventEndDate = document.getElementById('eventEndDate')?.value || '';
+            orderData.recipientPhone = document.getElementById('recipientPhone')?.value || '';
+            orderData.customerName = document.getElementById('customerName')?.value || '';
+            orderData.customerPhone = document.getElementById('customerPhone')?.value || '';
+            orderData.customerLine = document.getElementById('customerLine')?.value || '';
 
             // 驗證
             if (!orderData.deliveryArea || !orderData.deliveryAddress || !orderData.deliveryDate ||
