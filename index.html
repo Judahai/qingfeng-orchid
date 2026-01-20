@@ -1075,9 +1075,9 @@
                     <input type="date" class="form-input" id="deliveryDate">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">活動結束日期（回收用）</label>
+                    <label class="form-label">最晚送達日期</label>
                     <input type="date" class="form-input" id="eventEndDate">
-                    <p class="form-hint">若需回收花禮，請填寫活動結束時間</p>
+                    <p class="form-hint">若日期可彈性，請填寫最晚可接受的送達日期</p>
                 </div>
             </div>
             <div class="form-group">
@@ -1541,7 +1541,7 @@
             orderData.deliveryArea = document.getElementById('deliveryArea').value;
             orderData.deliveryAddress = document.getElementById('deliveryAddress').value;
             orderData.deliveryDate = document.getElementById('deliveryDate').value;
-            orderData.eventTime = document.getElementById('eventTime').value;
+            orderData.eventEndDate = document.getElementById('eventEndDate').value;
             orderData.recipientPhone = document.getElementById('recipientPhone').value;
             orderData.customerName = document.getElementById('customerName').value;
             orderData.customerPhone = document.getElementById('customerPhone').value;
@@ -1597,7 +1597,7 @@
             // 更新摘要
             document.getElementById('summaryProduct').textContent = orderData.productName;
             document.getElementById('summaryAddress').textContent = orderData.deliveryArea + ' ' + orderData.deliveryAddress;
-            document.getElementById('summaryDate').textContent = orderData.deliveryDate + (orderData.eventTime ? ' ' + orderData.eventTime : '');
+            document.getElementById('summaryDate').textContent = orderData.deliveryDate + (orderData.eventEndDate ? ' ～ ' + orderData.eventEndDate : '');
             document.getElementById('summaryTotal').textContent = 'NT$ ' + orderData.productPrice.toLocaleString();
 
             goToStep(7);
@@ -1624,7 +1624,7 @@
                 },
                 delivery: {
                     date: orderData.deliveryDate,
-                    time: orderData.eventTime,
+                    endDate: orderData.eventEndDate,
                     area: orderData.deliveryArea,
                     address: `${orderData.deliveryArea} ${orderData.deliveryAddress}`,
                     recipientPhone: orderData.recipientPhone
