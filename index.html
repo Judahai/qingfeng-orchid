@@ -1606,17 +1606,35 @@
         async function submitOrder() {
             const finalPhrase = orderData.customPhrase || orderData.selectedPhrase || '敬輓';
 
-            // 準備訂單資料
-            const orderPayload = {
-                cart: [{
+            // 準備訂單資料 - 使用購物車或當前單品
+            let orderCart = [];
+
+            if (cart.length > 0) {
+                // 使用購物車中的商品
+                orderCart = cart.map(item => ({
+                    id: item.productId,
+                    name: item.productName,
+                    price: item.price,
+                    phrase: item.phrase,
+                    recipient: item.recipient,
+                    sender: item.sender,
+                    suffix: item.suffix
+                }));
+            } else {
+                // 沒有購物車，使用當前選擇的單品
+                orderCart = [{
                     id: orderData.productId,
                     name: orderData.productName,
                     price: orderData.productPrice,
                     phrase: finalPhrase,
-                    recipient: `${orderData.deceasedLastName}${orderData.deceasedFirstName}`,
+                    recipient: `${orderData.deceasedLastName || ''}${orderData.deceasedFirstName || ''}` || orderData.recipientName || '',
                     sender: orderData.senderName,
                     suffix: orderData.footerSuffix
-                }],
+                }];
+            }
+
+            const orderPayload = {
+                cart: orderCart,
                 customer: {
                     name: orderData.customerName,
                     phone: orderData.customerPhone,
@@ -1626,7 +1644,8 @@
                     date: orderData.deliveryDate,
                     endDate: orderData.eventEndDate,
                     area: orderData.deliveryArea,
-                    address: `${orderData.deliveryArea} ${orderData.deliveryAddress}`,
+                    detailAddress: orderData.deliveryAddress,
+                    fullAddress: `${orderData.deliveryArea} ${orderData.deliveryAddress}`,
                     recipientPhone: orderData.recipientPhone
                 }
             };
