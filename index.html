@@ -18,7 +18,7 @@
             --bg-white: #ffffff;
             --bg-light: #f8f9fa;
             --text-dark: #1a1a1a;
-            --text-gray: #6c757d;
+            --text-gray: #1d89e7;
             --text-light: #999999;
 
             /* 強調色 - 柔和 */
@@ -468,40 +468,99 @@
             color: white;
         }
 
-        /* Card Preview */
+        /* Card Preview - 直式卡片樣式 */
         .card-preview {
-            background: linear-gradient(135deg, #fff9e6 0%, #fff5d6 100%);
+            background: linear-gradient(135deg, #fffef5 0%, #fff9e6 100%);
             border: 3px solid var(--accent);
             border-radius: var(--radius);
-            padding: 32px;
-            text-align: center;
-            margin-bottom: 24px;
+            padding: 16px;
+            margin-bottom: 20px;
+            min-height: 200px;
+            max-width: 360px;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 4px 16px rgba(201, 168, 124, 0.12);
         }
 
         .card-preview-label {
-            font-size: 0.9rem;
-            color: #888;
-            margin-bottom: 16px;
-        }
-
-        .card-preview-phrase {
-            font-size: 2rem;
-            font-weight: 900;
-            color: var(--primary);
-            margin-bottom: 16px;
-            letter-spacing: 4px;
-        }
-
-        .card-preview-to {
-            font-size: 1.2rem;
-            color: #666;
+            font-size: 0.8rem;
+            color: #999;
+            text-align: center;
             margin-bottom: 8px;
         }
 
+        .card-preview-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            min-height: 160px;
+            padding: 8px 4px;
+        }
+
+        /* 上款 - 右側（直書從右到左） */
+        .card-preview-to {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            font-size: 0.9rem;
+            color: #444;
+            font-weight: 500;
+            line-height: 1.6;
+            text-align: start;
+            order: 3;
+        }
+
+        /* 中款 - 中間大字（直書） */
+        .card-preview-phrase {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: var(--primary);
+            letter-spacing: 6px;
+            line-height: 1.3;
+            text-align: center;
+            order: 2;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 8px;
+        }
+
+        /* 下款 - 左側（直書） */
         .card-preview-from {
-            font-size: 1.1rem;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            font-size: 0.85rem;
             color: var(--primary);
             font-weight: 600;
+            line-height: 1.6;
+            text-align: end;
+            order: 1;
+            align-self: flex-end;
+        }
+
+        /* 手機版調整 */
+        @media (max-width: 480px) {
+            .card-preview {
+                min-height: 180px;
+                padding: 12px;
+                max-width: 100%;
+            }
+
+            .card-preview-inner {
+                min-height: 140px;
+            }
+
+            .card-preview-phrase {
+                font-size: 1.4rem;
+                letter-spacing: 4px;
+            }
+
+            .card-preview-to,
+            .card-preview-from {
+                font-size: 0.8rem;
+            }
         }
 
         /* Summary */
@@ -773,8 +832,7 @@
                 </div>
                 <div class="cart-contact">
                     📞 <a href="tel:0988811607">0988-811-607</a> ｜
-                    <a href="https://line.me/ti/p/~0988811607" target="_blank">LINE 聯繫</a><br>
-                    📍 雲林縣北港鎮179號
+                    <a href="https://line.me/ti/p/K2LFf7aucm" target="_blank">LINE 聯繫</a>
                 </div>
             </div>
         </div>
@@ -1045,40 +1103,54 @@
             <div class="form-group">
                 <label class="form-label">配送區域 <span class="required">*</span></label>
                 <select class="form-input" id="deliveryArea">
-                    <option value="">-- 請選擇 --</option>
-                    <optgroup label="🟢 免運區域（雲林）">
-                        <option value="北港">北港</option>
-                        <option value="水林">水林</option>
-                        <option value="土庫">土庫</option>
-                        <option value="虎尾">虎尾</option>
-                        <option value="元長">元長</option>
-                        <option value="四湖">四湖</option>
-                        <option value="崙背">崙背</option>
-                        <option value="東勢">東勢</option>
+                    <option value="">-- 請選擇配送區域 --</option>
+                    <optgroup label="雲林縣">
+                        <option value="北港">北港鎮</option>
+                        <option value="水林">水林鄉</option>
+                        <option value="土庫">土庫鎮</option>
+                        <option value="虎尾">虎尾鎮</option>
+                        <option value="元長">元長鄉</option>
+                        <option value="四湖">四湖鄉</option>
+                        <option value="崙背">崙背鄉</option>
+                        <option value="東勢">東勢鄉</option>
+                        <option value="口湖">口湖鄉</option>
+                        <option value="褒忠">褒忠鄉</option>
+                        <option value="斗六">斗六市</option>
+                        <option value="斗南">斗南鎮</option>
+                        <option value="西螺">西螺鎮</option>
                     </optgroup>
-                    <optgroup label="🟢 免運區域（嘉義）">
-                        <option value="新港">新港</option>
-                        <option value="六腳">六腳</option>
+                    <optgroup label="嘉義">
+                        <option value="新港">新港鄉</option>
+                        <option value="六腳">六腳鄉</option>
+                        <option value="朴子">朴子市</option>
+                        <option value="民雄">民雄鄉</option>
+                        <option value="嘉義市">嘉義市</option>
                     </optgroup>
-                    <optgroup label="🟡 運費另計">
-                        <option value="其他">其他地區（需另議）</option>
+                    <optgroup label="其他地區">
+                        <option value="其他">其他（請於備註說明）</option>
                     </optgroup>
                 </select>
             </div>
             <div class="form-group">
                 <label class="form-label">詳細地址 <span class="required">*</span></label>
-                <input type="text" class="form-input" id="deliveryAddress" placeholder="例：雲林縣北港鎮中正路蘭花廣場0號">
+                <input type="text" class="form-input" id="deliveryAddress" placeholder="例：雲林縣北港鎮中正路100號（北港朝天宮對面）">
+                <p class="form-hint">請填寫完整地址，包含樓層或收件備註</p>
             </div>
             <div class="form-row">
                 <div class="form-group">
-                    <label class="form-label">送達日期 <span class="required">*</span></label>
+                    <label class="form-label">希望送達日期 <span class="required">*</span></label>
                     <input type="date" class="form-input" id="deliveryDate">
+                    <p class="form-hint">請選擇您希望花禮送達的日期</p>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">最晚送達日期</label>
+                    <label class="form-label">最晚可接受日期</label>
                     <input type="date" class="form-input" id="eventEndDate">
-                    <p class="form-hint">若日期可彈性，請填寫最晚可接受的送達日期</p>
+                    <p class="form-hint">如日期有彈性空間，請填寫最晚可接受的送達日</p>
                 </div>
+            </div>
+            <div class="form-hint"
+                style="background: #fffbeb; border: 1px solid #f59e0b; border-radius: 8px; padding: 12px; margin-bottom: 16px;">
+                💡 <strong>配送說明：</strong>我們會盡力於希望日期當天送達。如遇農忙時節或特殊狀況，將優先與您聯繫確認，確保花禮準時送達。
             </div>
             <div class="form-group">
                 <label class="form-label">收花人電話 <span class="required">*</span></label>
@@ -1113,18 +1185,14 @@
                 <h2 class="step-title">訂單確認</h2>
                 <p class="step-desc">請確認資訊是否正確</p>
             </div>
-            <div class="card-preview">
-                <div class="card-preview-label">卡片預覽</div>
-                <div class="card-preview-phrase" id="previewPhrase">永念親恩</div>
-                <div class="card-preview-to" id="previewTo">敬悼 王公大明 老先生 千古</div>
-                <div class="card-preview-from" id="previewFrom">慶豐股份有限公司 敬輓</div>
-            </div>
+
+            <!-- 卡片預覽區 - 動態生成 -->
+            <div id="cardPreviewArea"></div>
+
             <div class="summary-section">
                 <h3 class="summary-title">📦 訂單明細</h3>
-                <div class="summary-row">
-                    <span class="summary-label">花禮</span>
-                    <span class="summary-value" id="summaryProduct">-</span>
-                </div>
+                <!-- 商品清單 - 動態生成 -->
+                <div id="summaryItemsList"></div>
                 <div class="summary-row">
                     <span class="summary-label">送達地點</span>
                     <span class="summary-value" id="summaryAddress">-</span>
@@ -1138,7 +1206,7 @@
                     <span class="summary-value">貨到付款</span>
                 </div>
                 <div class="summary-total">
-                    總計：<span id="summaryTotal">NT$ 2,500</span>
+                    總計：<span id="summaryTotal">NT$ 0</span>
                 </div>
             </div>
             <div class="btn-row">
@@ -1211,8 +1279,7 @@
                     <div class="cart-item-details">
                         📝「${item.phrase}」<br>
                         👤 上款：${item.recipient}<br>
-                        ✍️ 落款：${item.sender} ${item.suffix}<br>
-                        📍 ${item.address || '待填寫'}
+                        ✍️ 落款：${item.sender} ${item.suffix}
                     </div>
                 </div>`;
             }).join('');
@@ -1553,52 +1620,98 @@
                 alert('請填寫所有必填欄位！');
                 return;
             }
-            if (!orderData.productId) {
+
+            // 檢查是否有商品（購物車或當前選擇）
+            if (cart.length === 0 && !orderData.productId) {
                 alert('請選擇花禮規格！');
                 goToStep(5);
                 return;
             }
 
-            // 產生卡片預覽
-            const finalPhrase = orderData.customPhrase || orderData.selectedPhrase ||
-                (orderData.occasion === 'funeral' ? '敬輓' : '誌慶');
-            document.getElementById('previewPhrase').textContent = finalPhrase;
+            // ===== 動態生成卡片預覽區 =====
+            const cardPreviewArea = document.getElementById('cardPreviewArea');
+            const summaryItemsList = document.getElementById('summaryItemsList');
+            let totalPrice = 0;
 
-            // 根據場合產生上款
-            let topLine = '';
-            if (orderData.occasion === 'funeral') {
-                if (typeof generateCardFormat === 'function') {
-                    const card = generateCardFormat({
-                        gender: orderData.gender,
-                        age: orderData.age,
-                        lastName: orderData.deceasedLastName,
-                        firstName: orderData.deceasedFirstName,
-                        husbandName: orderData.husbandName,
-                        isMarried: !!orderData.husbandName,
-                        isBaptized: false,
-                        religion: orderData.religion,
-                        senderName: orderData.senderName,
-                        phrase: finalPhrase,
-                        relation: orderData.relation
-                    });
-                    topLine = card.topLine;
-                    document.getElementById('previewFrom').textContent = card.bottomLine;
-                } else {
-                    topLine = `敬悼 ${orderData.deceasedLastName}${orderData.deceasedFirstName}`;
-                    document.getElementById('previewFrom').textContent = `${orderData.senderName} ${orderData.footerSuffix}`;
-                }
+            if (cart.length > 0) {
+                // 有購物車：顯示所有購物車項目的卡片
+                cardPreviewArea.innerHTML = cart.map((item, idx) => `
+                    <div class="card-preview" style="margin-bottom: 16px;">
+                        <div class="card-preview-label">📜 卡片 ${idx + 1}：${item.productName}</div>
+                        <div class="card-preview-inner">
+                            <div class="card-preview-from">${item.sender} ${item.suffix}</div>
+                            <div class="card-preview-phrase">${item.phrase}</div>
+                            <div class="card-preview-to">${item.recipient}</div>
+                        </div>
+                    </div>
+                `).join('');
+
+                // 商品清單
+                summaryItemsList.innerHTML = cart.map(item => {
+                    totalPrice += item.price;
+                    return `
+                        <div class="summary-row">
+                            <span class="summary-label">🌸 ${item.productName}</span>
+                            <span class="summary-value">NT$ ${item.price.toLocaleString()}</span>
+                        </div>
+                    `;
+                }).join('');
             } else {
-                // 喜慶場合
-                topLine = `祝 ${orderData.recipientName}`;
-                document.getElementById('previewFrom').textContent = `${orderData.senderName} ${orderData.footerSuffix}`;
+                // 沒有購物車：使用當前填寫的單品資料
+                const finalPhrase = orderData.customPhrase || orderData.selectedPhrase ||
+                    (orderData.occasion === 'funeral' ? '敬輓' : '誌慶');
+
+                let topLine = '';
+                let bottomLine = `${orderData.senderName} ${orderData.footerSuffix}`;
+
+                if (orderData.occasion === 'funeral') {
+                    if (typeof generateCardFormat === 'function') {
+                        const card = generateCardFormat({
+                            gender: orderData.gender,
+                            age: orderData.age,
+                            lastName: orderData.deceasedLastName,
+                            firstName: orderData.deceasedFirstName,
+                            husbandName: orderData.husbandName,
+                            isMarried: !!orderData.husbandName,
+                            isBaptized: false,
+                            religion: orderData.religion,
+                            senderName: orderData.senderName,
+                            phrase: finalPhrase,
+                            relation: orderData.relation
+                        });
+                        topLine = card.topLine;
+                        bottomLine = card.bottomLine;
+                    } else {
+                        topLine = `敬悼 ${orderData.deceasedLastName}${orderData.deceasedFirstName}`;
+                    }
+                } else {
+                    topLine = `祝 ${orderData.recipientName}`;
+                }
+
+                cardPreviewArea.innerHTML = `
+                    <div class="card-preview">
+                        <div class="card-preview-label">📜 卡片預覽（直式）</div>
+                        <div class="card-preview-inner">
+                            <div class="card-preview-from">${bottomLine}</div>
+                            <div class="card-preview-phrase">${finalPhrase}</div>
+                            <div class="card-preview-to">${topLine}</div>
+                        </div>
+                    </div>
+                `;
+
+                totalPrice = orderData.productPrice || 0;
+                summaryItemsList.innerHTML = `
+                    <div class="summary-row">
+                        <span class="summary-label">🌸 ${orderData.productName || '未選擇'}</span>
+                        <span class="summary-value">NT$ ${totalPrice.toLocaleString()}</span>
+                    </div>
+                `;
             }
-            document.getElementById('previewTo').textContent = topLine;
 
             // 更新摘要
-            document.getElementById('summaryProduct').textContent = orderData.productName;
             document.getElementById('summaryAddress').textContent = orderData.deliveryArea + ' ' + orderData.deliveryAddress;
             document.getElementById('summaryDate').textContent = orderData.deliveryDate + (orderData.eventEndDate ? ' ～ ' + orderData.eventEndDate : '');
-            document.getElementById('summaryTotal').textContent = 'NT$ ' + orderData.productPrice.toLocaleString();
+            document.getElementById('summaryTotal').textContent = 'NT$ ' + totalPrice.toLocaleString();
 
             goToStep(7);
         }
