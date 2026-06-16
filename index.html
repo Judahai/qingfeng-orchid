@@ -832,7 +832,7 @@
                 </div>
                 <div class="cart-contact">
                     📞 <a href="tel:0988811607">0988-811-607</a> ｜
-                    <a href="https://line.me/ti/p/" target="_blank">LINE 聯繫</a>
+                    <a href="https://lin.ee/W4oObNt" target="_blank">LINE 聯繫</a>
                 </div>
             </div>
         </div>
@@ -1788,9 +1788,7 @@
                 }
 
                 if (result.success) {
-                    alert(`✅ 訂單已送出！\n訂單編號：${result.orderId}\n\n我們的員工會盡快與您聯繫確認。`);
-                    // 重置頁面
-                    location.reload();
+                   document.querySelector('.main-content').innerHTML = '<div style="text-align:center;padding:40px 20px;"><div style="font-size:4rem;margin-bottom:16px;">✅</div><h2 style="font-family:Noto Serif TC,serif;color:#1a1a1a;margin-bottom:8px;">訂單已送出</h2><p style="color:#666;margin-bottom:8px;">訂單編號：' + result.orderId + '</p><p style="color:#666;margin-bottom:32px;line-height:1.8;">我們會盡快與您確認花況與配送細節。<br><strong>請加入官方 LINE，方便即時聯繫與付款。</strong></p><a href="https://lin.ee/W4oObNt" target="_blank" style="display:inline-block;background:#06C755;color:#fff;padding:18px 48px;border-radius:12px;font-size:1.2rem;font-weight:700;text-decoration:none;box-shadow:0 4px 12px rgba(6,199,85,0.3);">💬 加入官方 LINE</a><p style="color:#999;font-size:0.9rem;margin-top:24px;">或來電 <a href="tel:0988811607" style="color:#1a1a1a;">0988-811-607</a></p></div>';
                 } else {
                     throw new Error(result.error || '訂單送出失敗');
                 }
