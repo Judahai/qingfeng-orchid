@@ -1,7 +1,6 @@
 // ===============================================
 // 慶豐蘭業 - 喪禮卡片用詞資料庫 v2
 // ===============================================
-// 資料來源：名門花藝設計坊
 // 卡片格式：上款 + 中款(輓詞) + 下款
 // ===============================================
 
@@ -16,7 +15,7 @@ const funeralPhraseDB = {
                 adult: '敬悼 {姓}{名} 先生 千古'           // 一般
             },
             female: {
-                senior: '敬悼 {夫姓}{本姓}媽{名} 老夫人 靈右',  // 長輩已婚
+                senior: '敬悼 {夫姓}媽{本姓} 老夫人 靈右',  // 長輩已婚
                 seniorSingle: '敬悼 {姓}{名} 老夫人 靈右',      // 長輩未婚或不冠夫姓
                 adult: '敬悼 {姓}{名} 女士 靈右'                // 一般
             },
@@ -540,4 +539,5 @@ function getValidEndings(religion) {
 if (typeof module !== 'undefined') {
     module.exports = { funeralPhraseDB, getFuneralPhrases, generateCardFormat, getValidEndings };
 }
+
 
