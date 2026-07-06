@@ -32,30 +32,41 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700&display=swap"
+        rel="stylesheet">
 
     <style>
         /* ===== Design System ===== */
         :root {
-            --bg-white: #ffffff;
-            --bg-light: #f8f9fa;
-            --text-dark: #1a1a1a;
-            --text-mid: #555;
-            --text-light: #999;
-            --accent-gold: #c9a87c;
-            --accent-gold-hover: #b89a6e;
-            --success: #2d5a3d;
+            --bg-white: #FAF8F3;
+            /* Cream color */
+            --bg-light: #F4F1E9;
+            /* Slightly darker cream for alternating */
+            --text-dark: #1A1A1A;
+            --text-mid: #555555;
+            --text-light: #999999;
+            --accent-gold: #B8860B;
+            /* Accent Gold */
+            --accent-gold-hover: #997009;
+            --primary-green: #1B4332;
+            /* Primary Dark Green */
+            --primary-green-hover: #143527;
             --funeral-dark: #2c2c2c;
-            --funeral-bg: #1a1a1a;
+            --funeral-bg: #1B4332;
             --line-green: #06C755;
-            --border: #e9ecef;
-            --shadow: 0 2px 8px rgba(0,0,0,0.06);
-            --shadow-hover: 0 8px 24px rgba(0,0,0,0.1);
+            --border: #E8E6DF;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            --shadow-hover: 0 10px 25px rgba(27, 67, 50, 0.08);
             --radius: 12px;
             --radius-lg: 16px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             font-family: 'Noto Sans TC', sans-serif;
@@ -64,208 +75,657 @@
             line-height: 1.7;
         }
 
-        h1, h2, h3, .step-title { font-family: 'Noto Serif TC', serif; }
+        h1,
+        h2,
+        h3,
+        .step-title {
+            font-family: 'Noto Serif TC', serif;
+        }
 
         /* ===== Hero ===== */
         .hero {
             min-height: 60vh;
-            background: var(--funeral-bg);
-            display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-            text-align: center; padding: 80px 24px 60px;
-            position: relative; overflow: hidden;
+            background: var(--primary-green);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 80px 24px 60px;
+            position: relative;
+            overflow: hidden;
         }
+
         .hero-photo-placeholder {
-            position: absolute; inset: 0;
-            background: linear-gradient(135deg, #1a472a 0%, #0d2818 60%, #1a1a1a 100%);
-            opacity: 0.9;
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--primary-green) 0%, #0d2818 100%);
+            opacity: 1;
         }
-        .hero-content { position: relative; z-index: 1; max-width: 700px; }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+        }
+
         .hero-badge {
-            display: inline-block; background: rgba(201,168,124,0.2);
-            color: var(--accent-gold); padding: 6px 20px; border-radius: 50px;
-            font-size: 0.85rem; font-weight: 500; margin-bottom: 20px;
-            border: 1px solid rgba(201,168,124,0.3);
+            display: inline-block;
+            background: rgba(184, 134, 11, 0.2);
+            color: var(--accent-gold);
+            padding: 6px 20px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+            border: 1px solid rgba(184, 134, 11, 0.3);
         }
+
         .hero h1 {
-            font-size: 3rem; font-weight: 700; color: #fff;
-            margin-bottom: 12px; letter-spacing: 4px;
+            font-size: 3rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 12px;
+            letter-spacing: 4px;
         }
+
         .hero-subtitle {
-            font-size: 1.15rem; color: rgba(255,255,255,0.8);
-            margin-bottom: 36px; font-weight: 400;
+            font-size: 1.15rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 36px;
+            font-weight: 400;
         }
+
         .hero-cta {
-            display: inline-block; background: var(--accent-gold); color: var(--text-dark);
-            padding: 16px 40px; border-radius: 50px; font-size: 1.1rem; font-weight: 700;
-            text-decoration: none; transition: all 0.3s;
-            box-shadow: 0 6px 20px rgba(201,168,124,0.3);
+            display: inline-block;
+            background: var(--accent-gold);
+            color: #fff;
+            padding: 16px 40px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s;
+            box-shadow: 0 6px 20px rgba(184, 134, 11, 0.3);
         }
-        .hero-cta:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(201,168,124,0.4); }
+
+        .hero-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(184, 134, 11, 0.4);
+        }
 
         /* ===== Main Content ===== */
-        .main-content { max-width: 680px; margin: 0 auto; padding: 0 16px; }
+        .main-content {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
 
         /* ===== Step Container ===== */
-        .order-step { display: none; padding: 48px 0; }
-        .order-step.active { display: block; animation: fadeUp 0.4s ease; }
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(16px); }
-            to { opacity: 1; transform: translateY(0); }
+        .order-step {
+            display: none;
+            padding: 40px 24px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
         }
 
-        .step-header { text-align: center; margin-bottom: 36px; }
-        .step-number {
-            display: inline-flex; align-items: center; justify-content: center;
-            width: 32px; height: 32px; border-radius: 50%;
-            background: var(--text-dark); color: #fff;
-            font-size: 0.85rem; font-weight: 700; margin-bottom: 12px;
+        .order-step.active {
+            display: block;
+            animation: fadeUp 0.4s ease;
         }
-        .step-title { font-size: 1.6rem; font-weight: 700; color: var(--text-dark); margin-bottom: 6px; }
-        .step-desc { color: var(--text-mid); font-size: 0.95rem; }
+
+        .order-step:nth-of-type(odd) {
+            background-color: var(--bg-white);
+        }
+
+        .order-step:nth-of-type(even) {
+            background-color: var(--bg-light);
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .step-header {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary-green);
+            color: #fff;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .step-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+
+        .step-desc {
+            color: var(--text-mid);
+            font-size: 0.95rem;
+        }
 
         /* ===== Scene Cards (Step 1) ===== */
         .scene-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
         }
-        .scene-card {
-            background: var(--bg-white); border: 2px solid var(--border);
-            border-radius: var(--radius-lg); padding: 28px 16px;
-            text-align: center; cursor: pointer; transition: all 0.25s;
-        }
-        .scene-card:hover { border-color: var(--accent-gold); box-shadow: var(--shadow-hover); transform: translateY(-2px); }
-        .scene-card.selected { border-color: var(--text-dark); background: #f9f9f7; }
-        .scene-card-icon { margin-bottom: 12px; color: var(--text-mid); }
-        .scene-card-icon svg { width: 36px; height: 36px; }
-        .scene-card-title { font-family: 'Noto Serif TC', serif; font-size: 1.1rem; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; }
-        .scene-card-desc { font-size: 0.8rem; color: var(--text-light); }
 
-        /* Funeral scene dark variant */
-        .scene-card.funeral-variant { background: #fafafa; border-color: #ddd; }
-        .scene-card.funeral-variant.selected { background: var(--funeral-bg); border-color: var(--funeral-bg); color: #fff; }
+        .scene-card {
+            background: var(--bg-white);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 28px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+        }
+
+        .scene-card:hover {
+            border-color: var(--primary-green);
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+        }
+
+        .scene-card.selected {
+            border-color: var(--primary-green);
+            background: var(--bg-light);
+        }
+
+        .scene-card-icon {
+            margin-bottom: 12px;
+            color: var(--text-mid);
+        }
+
+        .scene-card-icon svg {
+            width: 36px;
+            height: 36px;
+        }
+
+        .scene-card-title {
+            font-family: 'Noto Serif TC', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .scene-card-desc {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        /* Funeral scene variant */
+        .scene-card.funeral-variant {
+            background: var(--bg-white);
+            border-color: var(--border);
+        }
+
+        .scene-card.funeral-variant.selected {
+            background: var(--primary-green);
+            border-color: var(--primary-green);
+            color: #fff;
+        }
+
         .scene-card.funeral-variant.selected .scene-card-title,
-        .scene-card.funeral-variant.selected .scene-card-desc { color: rgba(255,255,255,0.9); }
-        .scene-card.funeral-variant.selected .scene-card-icon svg { stroke: #fff; }
+        .scene-card.funeral-variant.selected .scene-card-desc {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .scene-card.funeral-variant.selected .scene-card-icon svg {
+            stroke: #fff;
+        }
 
         /* ===== Product Cards (Step 2) ===== */
-        .product-grid { display: grid; gap: 14px; }
+        .product-grid {
+            display: grid;
+            gap: 14px;
+        }
+
         .product-card {
-            background: var(--bg-white); border: 2px solid var(--border);
-            border-radius: var(--radius-lg); overflow: hidden; cursor: pointer;
-            transition: all 0.25s; display: flex; align-items: center; gap: 16px;
+            background: var(--bg-white);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.25s;
+            display: flex;
+            align-items: center;
+            gap: 16px;
             padding: 16px;
         }
-        .product-card:hover { border-color: var(--accent-gold); box-shadow: var(--shadow); }
-        .product-card.selected { border-color: var(--text-dark); background: #f9f9f7; }
+
+        .product-card:hover {
+            border-color: var(--primary-green);
+            box-shadow: var(--shadow);
+        }
+
+        .product-card.selected {
+            border-color: var(--primary-green);
+            background: var(--bg-light);
+        }
+
         .product-photo-placeholder {
-            width: 80px; height: 80px; border-radius: 10px;
-            background: #f0f0f0; display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0; color: var(--text-light); font-size: 0.7rem; text-align: center;
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: var(--text-light);
+            font-size: 0.7rem;
+            text-align: center;
             border: 1px dashed #ddd;
         }
-        .product-info { flex: 1; }
-        .product-name { font-weight: 700; font-size: 1rem; color: var(--text-dark); margin-bottom: 4px; }
-        .product-price { font-size: 1.2rem; font-weight: 900; color: var(--accent-gold); }
-        .product-note { font-size: 0.8rem; color: var(--text-light); margin-top: 2px; }
+
+        .product-info {
+            flex: 1;
+        }
+
+        .product-name {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .product-price {
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: var(--accent-gold);
+        }
+
+        .product-note {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-top: 2px;
+        }
 
         /* ===== Tag Buttons ===== */
-        .tag-section { margin-bottom: 24px; }
-        .tag-title { font-weight: 700; font-size: 0.95rem; color: var(--text-dark); margin-bottom: 10px; }
-        .tag-title .required { color: #e74c3c; }
-        .tag-group { display: flex; flex-wrap: wrap; gap: 8px; }
-        .tag-btn {
-            padding: 8px 18px; border: 2px solid #e0e0e0; border-radius: 50px;
-            background: var(--bg-white); cursor: pointer; font-size: 0.9rem;
-            font-family: inherit; transition: all 0.2s; color: var(--text-mid);
+        .tag-section {
+            margin-bottom: 24px;
         }
-        .tag-btn:hover { border-color: var(--accent-gold); color: var(--text-dark); }
-        .tag-btn.selected { background: var(--text-dark); border-color: var(--text-dark); color: #fff; }
+
+        .tag-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .tag-title .required {
+            color: #e74c3c;
+        }
+
+        .tag-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag-btn {
+            padding: 8px 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            background: var(--bg-white);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: all 0.2s;
+            color: var(--text-mid);
+        }
+
+        .tag-btn:hover {
+            border-color: var(--primary-green);
+            color: var(--text-dark);
+        }
+
+        .tag-btn.selected {
+            background: var(--primary-green);
+            border-color: var(--primary-green);
+            color: #fff;
+        }
 
         /* ===== Senior / Husband Surname Toggles ===== */
         .toggle-row {
-            display: flex; align-items: center; gap: 8px;
-            font-size: 0.85rem; color: var(--text-mid); margin-top: 8px; cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-mid);
+            margin-top: 8px;
+            cursor: pointer;
         }
-        .toggle-row input[type="checkbox"] { width: 16px; height: 16px; }
+
+        .toggle-row input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+        }
 
         /* ===== Phrase Cards ===== */
-        .phrase-grid { display: grid; gap: 10px; max-height: 360px; overflow-y: auto; }
+        .phrase-grid {
+            display: grid;
+            gap: 10px;
+            max-height: 360px;
+            overflow-y: auto;
+        }
+
         .phrase-card {
-            background: var(--bg-white); border: 2px solid #e8e8e8;
-            border-radius: var(--radius); padding: 14px 18px; cursor: pointer;
-            transition: all 0.2s; display: flex; align-items: center; gap: 14px;
+            background: var(--bg-white);
+            border: 2px solid #e8e8e8;
+            border-radius: var(--radius);
+            padding: 14px 18px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 14px;
         }
-        .phrase-card:hover { border-color: var(--accent-gold); }
-        .phrase-card.selected { border-color: var(--text-dark); background: #f9f9f7; }
+
+        .phrase-card:hover {
+            border-color: var(--primary-green);
+        }
+
+        .phrase-card.selected {
+            border-color: var(--primary-green);
+            background: var(--bg-light);
+        }
+
         .phrase-card-check {
-            width: 22px; height: 22px; border-radius: 50%; border: 2px solid #ccc;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.8rem; flex-shrink: 0; transition: all 0.2s;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+            transition: all 0.2s;
         }
-        .phrase-card.selected .phrase-card-check { background: var(--text-dark); border-color: var(--text-dark); color: #fff; }
-        .phrase-card-main { font-size: 1.15rem; font-weight: 700; color: var(--text-dark); }
+
+        .phrase-card.selected .phrase-card-check {
+            background: var(--primary-green);
+            border-color: var(--primary-green);
+            color: #fff;
+        }
+
+        .phrase-card-main {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
 
         /* ===== Form ===== */
-        .form-group { margin-bottom: 20px; }
-        .form-label { display: block; font-weight: 700; font-size: 0.95rem; color: var(--text-dark); margin-bottom: 6px; }
-        .form-label .required { color: #e74c3c; }
-        .form-input {
-            width: 100%; padding: 14px 16px; font-size: 1rem;
-            border: 2px solid #e0e0e0; border-radius: 10px;
-            font-family: inherit; transition: all 0.2s;
+        .form-group {
+            margin-bottom: 20px;
         }
-        .form-input:focus { outline: none; border-color: var(--accent-gold); box-shadow: 0 0 0 3px rgba(201,168,124,0.1); }
-        .form-hint { font-size: 0.8rem; color: var(--text-light); margin-top: 4px; }
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-        /* ===== Card Preview ===== */
+        .form-label {
+            display: block;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+
+        .form-label .required {
+            color: #e74c3c;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-family: inherit;
+            transition: all 0.2s;
+            background-color: var(--bg-white);
+            color: var(--text-dark);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(27, 67, 50, 0.1);
+        }
+
+        .form-hint {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        /* ===== Card Preview Remake ===== */
         .card-preview {
-            background: linear-gradient(135deg, #fffef5 0%, #fff9e6 100%);
-            border: 2px solid var(--accent-gold); border-radius: var(--radius);
-            padding: 16px; margin: 20px auto; max-width: 340px;
-            box-shadow: 0 4px 16px rgba(201,168,124,0.12);
+            margin: 30px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            max-width: 100%;
         }
-        .card-preview-label { font-size: 0.75rem; color: var(--text-light); text-align: center; margin-bottom: 8px; }
+
+        .card-preview-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
         .card-preview-inner {
-            display: flex; justify-content: space-between; align-items: stretch;
-            min-height: 150px; padding: 8px 4px;
+            font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif !important;
+            writing-mode: vertical-rl;
+            -webkit-writing-mode: vertical-rl;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: stretch;
+            width: 160px;
+            height: 384px;
+            /* 1:2.4 ratio */
+            padding: 8% 16px;
+            /* 8% padding top/bottom */
+            box-sizing: border-box;
+            border-radius: 4px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            /* paper shadow */
+            transition: all 0.3s ease;
+            margin: 0 auto;
         }
-        .card-preview-to { writing-mode: vertical-rl; font-size: 0.85rem; color: #444; font-weight: 500; order: 3; }
+
+        @media (max-width: 600px) {
+            .card-preview-inner {
+                width: 50vw;
+                /* <= 55% of viewport width */
+                height: 120vw;
+                /* 1:2.4 ratio */
+            }
+        }
+
+        /* Themes */
+        .card-theme-funeral {
+            background-color: #FAF8F3 !important;
+            /* Rice-white */
+            color: #1A1A1A !important;
+            /* Ink-black */
+            border: 1px solid #E8E6DF;
+        }
+
+        .card-theme-funeral .card-preview-phrase {
+            color: #1A1A1A !important;
+        }
+
+        .card-theme-celebration {
+            background-color: #B3261E !important;
+            /* Bright red */
+            color: #D4AF37 !important;
+            /* Gold text */
+            border: 1px solid #9C1F18;
+        }
+
+        .card-theme-celebration .card-preview-phrase {
+            color: #D4AF37 !important;
+        }
+
+        /* Columns */
+        .card-preview-to {
+            font-size: 0.9rem;
+            font-weight: 400;
+            text-align: right;
+            align-self: flex-start;
+            height: 100%;
+            line-height: 1.4;
+        }
+
         .card-preview-phrase {
-            writing-mode: vertical-rl; font-size: 1.5rem; font-weight: 900;
-            color: var(--text-dark); letter-spacing: 6px; text-align: center;
-            order: 2; flex-grow: 1; display: flex; align-items: center; justify-content: center; margin: 0 8px;
+            font-size: 1.62rem;
+            /* 1.8x of upper inscription (0.9 * 1.8 = 1.62) */
+            font-weight: 700;
+            text-align: center;
+            align-self: center;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.4;
+            letter-spacing: 0.15em;
         }
-        .card-preview-from { writing-mode: vertical-rl; font-size: 0.8rem; color: var(--text-dark); font-weight: 600; order: 1; align-self: flex-end; }
+
+        .card-preview-from {
+            font-size: 0.8rem;
+            font-weight: 400;
+            text-align: left;
+            align-self: flex-end;
+            height: 100%;
+            display: flex;
+            align-items: flex-end;
+            line-height: 1.4;
+        }
 
         /* ===== Buttons ===== */
-        .btn-row { display: flex; gap: 12px; justify-content: center; margin-top: 36px; }
-        .btn {
-            padding: 14px 32px; border-radius: 10px; font-size: 1rem;
-            font-weight: 600; cursor: pointer; border: none; font-family: inherit; transition: all 0.2s;
+        .btn-row {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 36px;
         }
-        .btn-primary { background: var(--accent-gold); color: #fff; box-shadow: 0 4px 12px rgba(201,168,124,0.25); }
-        .btn-primary:hover { background: var(--accent-gold-hover); transform: translateY(-1px); }
-        .btn-secondary { background: var(--bg-light); color: var(--text-mid); border: 1px solid var(--border); }
-        .btn-secondary:hover { background: var(--border); color: var(--text-dark); }
-        .btn-line { background: var(--line-green); color: #fff; font-size: 1.1rem; padding: 16px 40px; border-radius: 50px; }
-        .btn-line:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(6,199,85,0.3); }
+
+        .btn {
+            padding: 14px 32px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary-green);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(27, 67, 50, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-green-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--bg-light);
+            color: var(--text-mid);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+            color: var(--text-dark);
+        }
+
+        .btn-line {
+            background: var(--line-green);
+            color: #fff;
+            font-size: 1.1rem;
+            padding: 16px 40px;
+            border-radius: 50px;
+        }
+
+        .btn-line:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(6, 199, 85, 0.3);
+        }
 
         /* ===== Footer ===== */
         .site-footer {
-            background: var(--funeral-bg); color: rgba(255,255,255,0.6);
-            text-align: center; padding: 48px 24px;
-            font-size: 0.85rem; line-height: 2;
+            background: var(--primary-green);
+            color: rgba(255, 255, 255, 0.6);
+            text-align: center;
+            padding: 48px 24px;
+            font-size: 0.85rem;
+            line-height: 2;
         }
-        .site-footer a { color: var(--accent-gold); text-decoration: none; }
-        .site-footer a:hover { text-decoration: underline; }
+
+        .site-footer a {
+            color: var(--accent-gold);
+            text-decoration: none;
+        }
+
+        .site-footer a:hover {
+            text-decoration: underline;
+        }
 
         /* ===== Responsive ===== */
         @media (max-width: 600px) {
-            .hero h1 { font-size: 2.2rem; }
-            .scene-grid { grid-template-columns: 1fr; }
-            .form-row { grid-template-columns: 1fr; }
-            .card-preview { max-width: 100%; }
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .scene-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .card-preview {
+                max-width: 100%;
+            }
         }
     </style>
 </head>
@@ -295,28 +755,66 @@
             <div class="scene-grid">
                 <div class="scene-card" onclick="selectScene('opening')">
                     <div class="scene-card-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/><path d="M9 9h.01"/><path d="M9 12h.01"/><path d="M9 15h.01"/><path d="M9 18h.01"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 21h18" />
+                            <path d="M5 21V7l8-4v18" />
+                            <path d="M19 21V11l-6-4" />
+                            <path d="M9 9h.01" />
+                            <path d="M9 12h.01" />
+                            <path d="M9 15h.01" />
+                            <path d="M9 18h.01" />
+                        </svg>
                     </div>
                     <div class="scene-card-title">開幕誌慶</div>
                     <div class="scene-card-desc">開幕、喬遷、落成</div>
                 </div>
                 <div class="scene-card funeral-variant" onclick="selectScene('funeral')">
                     <div class="scene-card-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v8"/><path d="m4.93 10.93 1.41 1.41"/><path d="M2 18h2"/><path d="M20 18h2"/><path d="m19.07 10.93-1.41 1.41"/><path d="M22 22H2"/><path d="m9 18 3-6 3 6"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2v8" />
+                            <path d="m4.93 10.93 1.41 1.41" />
+                            <path d="M2 18h2" />
+                            <path d="M20 18h2" />
+                            <path d="m19.07 10.93-1.41 1.41" />
+                            <path d="M22 22H2" />
+                            <path d="m9 18 3-6 3 6" />
+                        </svg>
                     </div>
                     <div class="scene-card-title">追思致哀</div>
                     <div class="scene-card-desc">告別式、追思會</div>
                 </div>
                 <div class="scene-card" onclick="selectScene('celebration')">
                     <div class="scene-card-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11c-.11.63-.69 1.09-1.32 1.12h-.29c-.73 0-1.34.52-1.46 1.23L16 18"/><path d="m8.5 2.5 1.68.84a2.93 2.93 0 0 1 1.16 3.9l-.54.9a1.99 1.99 0 0 0 .59 2.6l.2.14"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5.8 11.3 2 22l10.7-3.79" />
+                            <path d="M4 3h.01" />
+                            <path d="M22 8h.01" />
+                            <path d="M15 2h.01" />
+                            <path d="M22 20h.01" />
+                            <path
+                                d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10" />
+                            <path
+                                d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11c-.11.63-.69 1.09-1.32 1.12h-.29c-.73 0-1.34.52-1.46 1.23L16 18" />
+                            <path d="m8.5 2.5 1.68.84a2.93 2.93 0 0 1 1.16 3.9l-.54.9a1.99 1.99 0 0 0 .59 2.6l.2.14" />
+                        </svg>
                     </div>
                     <div class="scene-card-title">祝賀送禮</div>
                     <div class="scene-card-desc">婚慶、榮升、生日</div>
                 </div>
                 <div class="scene-card" onclick="selectScene('temple')">
                     <div class="scene-card-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 L6 8 L6 14 L18 14 L18 8 Z"/><path d="M6 14v6h12v-6"/><path d="M12 2v4"/><path d="M10 10h4"/><path d="M4 20h16"/><path d="M2 20h20"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2 L6 8 L6 14 L18 14 L18 8 Z" />
+                            <path d="M6 14v6h12v-6" />
+                            <path d="M12 2v4" />
+                            <path d="M10 10h4" />
+                            <path d="M4 20h16" />
+                            <path d="M2 20h20" />
+                        </svg>
                     </div>
                     <div class="scene-card-title">廟宇聖誕</div>
                     <div class="scene-card-desc">神明聖誕、進香</div>
@@ -355,7 +853,8 @@
                     </div>
                 </div>
                 <div class="tag-section">
-                    <div class="tag-title" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                    <div class="tag-title"
+                        style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
                         <span>往生者年齡 <span class="required">*</span></span>
                         <label class="toggle-row">
                             <input type="checkbox" id="seniorToggle" onchange="order.useSenior=this.checked">
@@ -460,10 +959,12 @@
                     </div>
                 </div>
                 <div class="form-group" id="husbandNameGroup" style="display:none;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:6px;">
+                    <div
+                        style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:6px;">
                         <label class="form-label" style="margin:0;">夫姓（已婚女性用）</label>
                         <label class="toggle-row">
-                            <input type="checkbox" id="useHusbandSurnameToggle" checked onchange="order.useHusbandSurname=this.checked; updatePreview();">
+                            <input type="checkbox" id="useHusbandSurnameToggle" checked
+                                onchange="order.useHusbandSurname=this.checked; updatePreview();">
                             傳統冠夫姓格式
                         </label>
                     </div>
@@ -476,13 +977,15 @@
             <div id="celebNameField" style="display:none;">
                 <div class="form-group">
                     <label class="form-label">收禮人/公司名稱 <span class="required">*</span></label>
-                    <input type="text" class="form-input" id="recipientName" placeholder="例：王小明先生、慶豐公司" oninput="updatePreview()">
+                    <input type="text" class="form-input" id="recipientName" placeholder="例：王小明先生、慶豐公司"
+                        oninput="updatePreview()">
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="form-label">送禮人姓名 <span class="required">*</span></label>
-                <input type="text" class="form-input" id="senderName" placeholder="例：慶豐股份有限公司" oninput="updatePreview()">
+                <input type="text" class="form-input" id="senderName" placeholder="例：慶豐股份有限公司"
+                    oninput="updatePreview()">
             </div>
 
             <div class="form-group" id="footerGroup">
@@ -494,10 +997,10 @@
             <!-- Card Preview -->
             <div class="card-preview" id="cardPreview" style="display:none;">
                 <div class="card-preview-label">卡片預覽（直式）</div>
-                <div class="card-preview-inner">
-                    <div class="card-preview-from" id="previewFrom"></div>
-                    <div class="card-preview-phrase" id="previewPhrase"></div>
+                <div class="card-preview-inner card-theme-celebration">
                     <div class="card-preview-to" id="previewTo"></div>
+                    <div class="card-preview-phrase" id="previewPhrase"></div>
+                    <div class="card-preview-from" id="previewFrom"></div>
                 </div>
             </div>
 
@@ -515,7 +1018,9 @@
                 <p class="step-desc">確認資訊後，透過 LINE 送出</p>
             </div>
 
-            <div id="orderSummary" style="background:var(--bg-light); border-radius:var(--radius); padding:24px; margin-bottom:24px;"></div>
+            <div id="orderSummary"
+                style="background:var(--bg-light); border-radius:var(--radius); padding:24px; margin-bottom:24px;">
+            </div>
 
             <div class="form-group">
                 <label class="form-label">訂購人姓名 <span class="required">*</span></label>
@@ -532,10 +1037,15 @@
 
     <!-- Footer -->
     <footer class="site-footer">
-        <p style="font-family:'Noto Serif TC',serif; font-size:1.1rem; color:rgba(255,255,255,0.9); margin-bottom:8px;">慶豐蘭園</p>
+        <p style="font-family:'Noto Serif TC',serif; font-size:1.1rem; color:rgba(255,255,255,0.9); margin-bottom:8px;">
+            慶豐蘭園</p>
         <p>雲林縣北港鎮 ・ 產地直送</p>
         <p>電話：<a href="tel:0988811607">0988-811-607</a></p>
-        <p style="margin-top:16px;">找不到您要的場合？<a href="https://line.me/ti/p/K2LFf7aucm" target="_blank" rel="noopener">直接 LINE 我們</a></p>
+        <p style="margin-top:16px;">如果您需要直接諮詢：<a href="https://line.me/ti/p/K2LFf7aucm" target="_blank" rel="noopener">直接
+                LINE 聯繫</a></p>
+        <p style="margin-top: 16px; font-size: 0.8rem; color: rgba(255,255,255,0.4);">
+            實用工具：<a href="condolence.html" style="color: var(--accent-gold); text-decoration: none;">輓聯產生器</a> | <a href="greeting.html" style="color: var(--accent-gold); text-decoration: none;">賀詞產生器</a>
+        </p>
         <p style="margin-top:24px; font-size:0.75rem; color:rgba(255,255,255,0.4);">&copy; 2026 慶豐蘭園 版權所有</p>
     </footer>
 
@@ -545,88 +1055,88 @@
     <script src="nav.js"></script>
 
     <script>
-    // ===== Constants =====
-    const LINE_URL = 'https://line.me/ti/p/K2LFf7aucm';
+        // ===== Constants =====
+        const LINE_URL = 'https://line.me/ti/p/K2LFf7aucm';
 
-    const PRODUCTS = {
-        funeral: [
-            { id: 'f7', name: '白蝴蝶蘭 7株', price: 2500 },
-            { id: 'f10', name: '白蝴蝶蘭 10株', price: 3500 },
-            { id: 'f12', name: '白蝴蝶蘭 12株落地盆', price: 4500 }
-        ],
-        celebration: [
-            { id: 'c7', name: '紅花蝴蝶蘭 7株', price: 2500 },
-            { id: 'c10', name: '紅花蝴蝶蘭 10株', price: 3500 },
-            { id: 'c12', name: '紅花蝴蝶蘭 12株落地盆', price: 4500 }
-        ]
-    };
-    // Opening and temple use red flower (celebration products)
-    PRODUCTS.opening = PRODUCTS.celebration;
-    PRODUCTS.temple = PRODUCTS.celebration;
+        const PRODUCTS = {
+            funeral: [
+                { id: 'f7', name: '白蝴蝶蘭 7株', price: 2500 },
+                { id: 'f10', name: '白蝴蝶蘭 10株', price: 3500 },
+                { id: 'f12', name: '白蝴蝶蘭 12株落地盆', price: 4500 }
+            ],
+            celebration: [
+                { id: 'c7', name: '紅花蝴蝶蘭 7株', price: 2500 },
+                { id: 'c10', name: '紅花蝴蝶蘭 10株', price: 3500 },
+                { id: 'c12', name: '紅花蝴蝶蘭 12株落地盆', price: 4500 }
+            ]
+        };
+        // Opening and temple use red flower (celebration products)
+        PRODUCTS.opening = PRODUCTS.celebration;
+        PRODUCTS.temple = PRODUCTS.celebration;
 
-    const SCENE_LABELS = {
-        opening: '開幕誌慶', funeral: '追思致哀',
-        celebration: '祝賀送禮', temple: '廟宇聖誕'
-    };
+        const SCENE_LABELS = {
+            opening: '開幕誌慶', funeral: '追思致哀',
+            celebration: '祝賀送禮', temple: '廟宇聖誕'
+        };
 
-    const CELEB_SUB = {
-        opening: [
-            { key: 'general', label: '一般開幕' },
-            { key: 'restaurant', label: '餐飲' },
-            { key: 'medical', label: '醫療' },
-            { key: 'legal', label: '法律事務所' }
-        ],
-        celebration: [
-            { key: 'moving', label: '喬遷' },
-            { key: 'promotion', label: '榮升' },
-            { key: 'election', label: '當選' },
-            { key: 'wedding', label: '婚慶' },
-            { key: 'birthday', label: '生日壽宴' },
-            { key: 'graduation', label: '畢業升學' }
-        ]
-    };
+        const CELEB_SUB = {
+            opening: [
+                { key: 'general', label: '一般開幕' },
+                { key: 'restaurant', label: '餐飲' },
+                { key: 'medical', label: '醫療' },
+                { key: 'legal', label: '法律事務所' }
+            ],
+            celebration: [
+                { key: 'moving', label: '喬遷' },
+                { key: 'promotion', label: '榮升' },
+                { key: 'election', label: '當選' },
+                { key: 'wedding', label: '婚慶' },
+                { key: 'birthday', label: '生日壽宴' },
+                { key: 'graduation', label: '畢業升學' }
+            ]
+        };
 
-    // ===== Order State =====
-    const order = {
-        scene: '', productId: '', productName: '', productPrice: 0,
-        gender: '', age: null, religion: 'general', relation: '',
-        useSenior: false, useHusbandSurname: true,
-        celebType: '', templeGod: 'general',
-        selectedPhrase: '', customPhrase: '',
-        lastName: '', firstName: '', husbandName: '',
-        recipientName: '', senderName: '', footerSuffix: '',
-        buyerName: ''
-    };
+        // ===== Order State =====
+        const order = {
+            scene: '', productId: '', productName: '', productPrice: 0,
+            gender: '', age: null, religion: 'general', relation: '',
+            useSenior: false, useHusbandSurname: true,
+            celebType: '', templeGod: 'general',
+            selectedPhrase: '', customPhrase: '',
+            lastName: '', firstName: '', husbandName: '',
+            recipientName: '', senderName: '', footerSuffix: '',
+            buyerName: ''
+        };
 
-    // ===== Navigation =====
-    function goStep(step) {
-        document.querySelectorAll('.order-step').forEach(s => s.classList.remove('active'));
-        const id = (step === '3b') ? 'step3b' : ('step' + step);
-        const el = document.getElementById(id);
-        if (el) {
-            el.classList.add('active');
-            if (step === '3b') setupStep3b();
-            if (step === 4) setupStep4();
+        // ===== Navigation =====
+        function goStep(step) {
+            document.querySelectorAll('.order-step').forEach(s => s.classList.remove('active'));
+            const id = (step === '3b') ? 'step3b' : ('step' + step);
+            const el = document.getElementById(id);
+            if (el) {
+                el.classList.add('active');
+                if (step === '3b') setupStep3b();
+                if (step === 4) setupStep4();
+            }
+            window.scrollTo({ top: document.getElementById('orderFlow').offsetTop - 80, behavior: 'smooth' });
         }
-        window.scrollTo({ top: document.getElementById('orderFlow').offsetTop - 80, behavior: 'smooth' });
-    }
 
-    // ===== Step 1: Scene =====
-    function selectScene(scene) {
-        order.scene = scene;
-        document.querySelectorAll('#step1 .scene-card').forEach(c => c.classList.remove('selected'));
-        event.currentTarget.classList.add('selected');
-        setTimeout(() => {
-            renderProducts();
-            goStep(2);
-        }, 250);
-    }
+        // ===== Step 1: Scene =====
+        function selectScene(scene) {
+            order.scene = scene;
+            document.querySelectorAll('#step1 .scene-card').forEach(c => c.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+            setTimeout(() => {
+                renderProducts();
+                goStep(2);
+            }, 250);
+        }
 
-    // ===== Step 2: Products =====
-    function renderProducts() {
-        const list = PRODUCTS[order.scene] || PRODUCTS.celebration;
-        const grid = document.getElementById('productGrid');
-        grid.innerHTML = list.map(p => `
+        // ===== Step 2: Products =====
+        function renderProducts() {
+            const list = PRODUCTS[order.scene] || PRODUCTS.celebration;
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = list.map(p => `
             <div class="product-card${p.id === order.productId ? ' selected' : ''}"
                  onclick="selectProduct('${p.id}','${p.name}',${p.price},this)">
                 <div class="product-photo-placeholder">照片<br>準備中</div>
@@ -637,262 +1147,276 @@
                 </div>
             </div>
         `).join('');
-    }
-
-    function selectProduct(id, name, price, el) {
-        order.productId = id;
-        order.productName = name;
-        order.productPrice = price;
-        document.querySelectorAll('#productGrid .product-card').forEach(c => c.classList.remove('selected'));
-        el.classList.add('selected');
-        setTimeout(() => {
-            setupStep3();
-            goStep(3);
-        }, 250);
-    }
-
-    // ===== Step 3: Card Text =====
-    function setupStep3() {
-        // Hide all sub-forms
-        document.getElementById('funeralForm').style.display = 'none';
-        document.getElementById('celebForm').style.display = 'none';
-        document.getElementById('templeForm').style.display = 'none';
-        document.getElementById('phraseSelection').style.display = 'none';
-
-        if (order.scene === 'funeral') {
-            document.getElementById('step3Title').textContent = '卡片用詞 — 追思';
-            document.getElementById('step3Desc').textContent = '填寫往生者資訊，推薦適合的輓詞';
-            document.getElementById('funeralForm').style.display = 'block';
-        } else if (order.scene === 'temple') {
-            document.getElementById('step3Title').textContent = '卡片用詞 — 廟宇';
-            document.getElementById('step3Desc').textContent = '選擇神明，推薦適合的賀詞';
-            document.getElementById('templeForm').style.display = 'block';
-        } else {
-            // Opening or Celebration
-            document.getElementById('step3Title').textContent = '卡片用詞 — ' + SCENE_LABELS[order.scene];
-            document.getElementById('step3Desc').textContent = '選擇場合細分，推薦適合的賀詞';
-            document.getElementById('celebForm').style.display = 'block';
-            renderCelebSubs();
         }
-    }
 
-    function renderCelebSubs() {
-        const subs = CELEB_SUB[order.scene] || CELEB_SUB.opening;
-        const container = document.getElementById('celebSubCategory');
-        container.innerHTML = subs.map(s =>
-            `<button class="tag-btn" onclick="selectCelebSub('${s.key}',this)">${s.label}</button>`
-        ).join('');
-    }
-
-    function selectCelebSub(key, el) {
-        order.celebType = key;
-        el.parentElement.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('selected'));
-        el.classList.add('selected');
-        loadCelebPhrases();
-    }
-
-    // ===== Tag Helpers =====
-    function setTag(type, value, el) {
-        el.parentElement.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('selected'));
-        el.classList.add('selected');
-        order[type] = value;
-    }
-
-    function setAge(value, el) {
-        el.parentElement.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('selected'));
-        el.classList.add('selected');
-        order.age = value;
-        const cb = document.getElementById('seniorToggle');
-        if (cb) {
-            cb.checked = value >= 80;
-            order.useSenior = value >= 80;
+        function selectProduct(id, name, price, el) {
+            order.productId = id;
+            order.productName = name;
+            order.productPrice = price;
+            document.querySelectorAll('#productGrid .product-card').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+            setTimeout(() => {
+                setupStep3();
+                goStep(3);
+            }, 250);
         }
-    }
 
-    // ===== Phrase Loading =====
-    function loadFuneralPhrases() {
-        if (!order.gender || !order.age || !order.relation) {
-            document.getElementById('funeralValidationMsg').style.display = 'block';
-            return;
+        // ===== Step 3: Card Text =====
+        function setupStep3() {
+            // Hide all sub-forms
+            document.getElementById('funeralForm').style.display = 'none';
+            document.getElementById('celebForm').style.display = 'none';
+            document.getElementById('templeForm').style.display = 'none';
+            document.getElementById('phraseSelection').style.display = 'none';
+
+            if (order.scene === 'funeral') {
+                document.getElementById('step3Title').textContent = '卡片用詞 — 追思';
+                document.getElementById('step3Desc').textContent = '填寫往生者資訊，推薦適合的輓詞';
+                document.getElementById('funeralForm').style.display = 'block';
+            } else if (order.scene === 'temple') {
+                document.getElementById('step3Title').textContent = '卡片用詞 — 廟宇';
+                document.getElementById('step3Desc').textContent = '選擇神明，推薦適合的賀詞';
+                document.getElementById('templeForm').style.display = 'block';
+            } else {
+                // Opening or Celebration
+                document.getElementById('step3Title').textContent = '卡片用詞 — ' + SCENE_LABELS[order.scene];
+                document.getElementById('step3Desc').textContent = '選擇場合細分，推薦適合的賀詞';
+                document.getElementById('celebForm').style.display = 'block';
+                renderCelebSubs();
+            }
         }
-        document.getElementById('funeralValidationMsg').style.display = 'none';
 
-        const phrases = (typeof getFuneralPhrases === 'function')
-            ? getFuneralPhrases({ gender: order.gender, age: order.age, religion: order.religion })
-            : [];
-        renderPhrases(phrases);
-    }
+        function renderCelebSubs() {
+            const subs = CELEB_SUB[order.scene] || CELEB_SUB.opening;
+            const container = document.getElementById('celebSubCategory');
+            container.innerHTML = subs.map(s =>
+                `<button class="tag-btn" onclick="selectCelebSub('${s.key}',this)">${s.label}</button>`
+            ).join('');
+        }
 
-    function loadCelebPhrases() {
-        const category = (order.scene === 'opening') ? 'opening' : order.celebType || 'opening';
-        const phrases = (typeof getCelebrationPhrases === 'function')
-            ? getCelebrationPhrases({ category: category, subCategory: order.celebType })
-            : [];
-        renderPhrases(phrases);
-    }
+        function selectCelebSub(key, el) {
+            order.celebType = key;
+            el.parentElement.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('selected'));
+            el.classList.add('selected');
+            loadCelebPhrases();
+        }
 
-    function loadTemplePhrases() {
-        const phrases = (typeof getCelebrationPhrases === 'function')
-            ? getCelebrationPhrases({ category: 'temple', subCategory: order.templeGod })
-            : [];
-        renderPhrases(phrases);
-    }
+        // ===== Tag Helpers =====
+        function setTag(type, value, el) {
+            el.parentElement.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('selected'));
+            el.classList.add('selected');
+            order[type] = value;
+        }
 
-    function renderPhrases(list) {
-        const container = document.getElementById('phraseGrid');
-        const display = list.slice(0, 15);
-        container.innerHTML = display.map(p => `
+        function setAge(value, el) {
+            el.parentElement.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('selected'));
+            el.classList.add('selected');
+            order.age = value;
+            const cb = document.getElementById('seniorToggle');
+            if (cb) {
+                cb.checked = value >= 80;
+                order.useSenior = value >= 80;
+            }
+        }
+
+        // ===== Phrase Loading =====
+        function loadFuneralPhrases() {
+            if (!order.gender || !order.age || !order.relation) {
+                document.getElementById('funeralValidationMsg').style.display = 'block';
+                return;
+            }
+            document.getElementById('funeralValidationMsg').style.display = 'none';
+
+            const phrases = (typeof getFuneralPhrases === 'function')
+                ? getFuneralPhrases({ gender: order.gender, age: order.age, religion: order.religion })
+                : [];
+            renderPhrases(phrases);
+        }
+
+        function loadCelebPhrases() {
+            const category = (order.scene === 'opening') ? 'opening' : order.celebType || 'opening';
+            const phrases = (typeof getCelebrationPhrases === 'function')
+                ? getCelebrationPhrases({ category: category, subCategory: order.celebType })
+                : [];
+            renderPhrases(phrases);
+        }
+
+        function loadTemplePhrases() {
+            const phrases = (typeof getCelebrationPhrases === 'function')
+                ? getCelebrationPhrases({ category: 'temple', subCategory: order.templeGod })
+                : [];
+            renderPhrases(phrases);
+        }
+
+        function renderPhrases(list) {
+            const container = document.getElementById('phraseGrid');
+            const display = list.slice(0, 15);
+            container.innerHTML = display.map(p => `
             <div class="phrase-card" onclick="selectPhrase('${p}',this)">
                 <div class="phrase-card-check">${order.selectedPhrase === p ? '✓' : ''}</div>
                 <div class="phrase-card-main">${p}</div>
             </div>
         `).join('');
-        document.getElementById('phraseSelection').style.display = 'block';
-        document.getElementById('phraseSelection').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-
-    function selectPhrase(phrase, el) {
-        order.selectedPhrase = phrase;
-        document.querySelectorAll('.phrase-card').forEach(c => {
-            c.classList.remove('selected');
-            c.querySelector('.phrase-card-check').textContent = '';
-        });
-        el.classList.add('selected');
-        el.querySelector('.phrase-card-check').textContent = '✓';
-    }
-
-    // ===== Step 3b: Card Details =====
-    function setupStep3b() {
-        document.getElementById('funeralNameFields').style.display = order.scene === 'funeral' ? 'block' : 'none';
-        document.getElementById('celebNameField').style.display = order.scene !== 'funeral' ? 'block' : 'none';
-
-        if (order.scene === 'funeral' && order.gender === 'female') {
-            document.getElementById('husbandNameGroup').style.display = 'block';
-        } else {
-            document.getElementById('husbandNameGroup').style.display = 'none';
+            document.getElementById('phraseSelection').style.display = 'block';
+            document.getElementById('phraseSelection').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
-        // Footer options
-        const footerContainer = document.getElementById('footerOptions');
-        const hint = document.getElementById('footerHint');
-        if (order.scene === 'funeral') {
-            const opts = ['敬輓', '泣輓', '拜輓'];
-            footerContainer.innerHTML = opts.map((o, i) =>
-                `<button class="tag-btn${i === 0 ? ' selected' : ''}" onclick="setFooter('${o}',this)">${o}</button>`
-            ).join('');
-            hint.textContent = '晚輩送長輩用「泣輓」，一般用「敬輓」';
-            order.footerSuffix = '敬輓';
-        } else {
-            const opts = ['敬賀', '敬祝'];
-            footerContainer.innerHTML = opts.map((o, i) =>
-                `<button class="tag-btn${i === 0 ? ' selected' : ''}" onclick="setFooter('${o}',this)">${o}</button>`
-            ).join('');
-            hint.textContent = '一般用「敬賀」';
-            order.footerSuffix = '敬賀';
+        function selectPhrase(phrase, el) {
+            order.selectedPhrase = phrase;
+            document.querySelectorAll('.phrase-card').forEach(c => {
+                c.classList.remove('selected');
+                c.querySelector('.phrase-card-check').textContent = '';
+            });
+            el.classList.add('selected');
+            el.querySelector('.phrase-card-check').textContent = '✓';
         }
 
-        updatePreview();
-    }
+        // ===== Step 3b: Card Details =====
+        function setupStep3b() {
+            document.getElementById('funeralNameFields').style.display = order.scene === 'funeral' ? 'block' : 'none';
+            document.getElementById('celebNameField').style.display = order.scene !== 'funeral' ? 'block' : 'none';
 
-    function setFooter(suffix, el) {
-        order.footerSuffix = suffix;
-        el.parentElement.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('selected'));
-        el.classList.add('selected');
-        updatePreview();
-    }
-
-    function updatePreview() {
-        const phrase = document.getElementById('customPhrase')?.value || order.selectedPhrase || '（用詞）';
-        const sender = document.getElementById('senderName')?.value || '（送禮人）';
-        let topLine = '';
-
-        if (order.scene === 'funeral') {
-            const ln = document.getElementById('lastName')?.value || '___';
-            const fn = document.getElementById('firstName')?.value || '';
-            const hn = document.getElementById('husbandName')?.value || '';
-
-            if (typeof generateCardFormat === 'function') {
-                const card = generateCardFormat({
-                    gender: order.gender, age: order.age,
-                    lastName: ln, firstName: fn,
-                    husbandName: hn, isMarried: !!hn,
-                    useHusbandSurname: order.useHusbandSurname,
-                    isSenior: order.useSenior,
-                    isBaptized: false, religion: order.religion,
-                    senderName: sender, phrase: phrase, relation: order.relation
-                });
-                topLine = card.topLine;
+            if (order.scene === 'funeral' && order.gender === 'female') {
+                document.getElementById('husbandNameGroup').style.display = 'block';
             } else {
-                topLine = `敬悼 ${ln}${fn}`;
+                document.getElementById('husbandNameGroup').style.display = 'none';
             }
-        } else {
-            const rn = document.getElementById('recipientName')?.value || '（收禮人）';
-            topLine = `祝 ${rn}`;
+
+            // Footer options
+            const footerContainer = document.getElementById('footerOptions');
+            const hint = document.getElementById('footerHint');
+            if (order.scene === 'funeral') {
+                const opts = ['敬輓', '泣輓', '拜輓'];
+                footerContainer.innerHTML = opts.map((o, i) =>
+                    `<button class="tag-btn${i === 0 ? ' selected' : ''}" onclick="setFooter('${o}',this)">${o}</button>`
+                ).join('');
+                hint.textContent = '晚輩送長輩用「泣輓」，一般用「敬輓」';
+                order.footerSuffix = '敬輓';
+            } else {
+                const opts = ['敬賀', '敬祝'];
+                footerContainer.innerHTML = opts.map((o, i) =>
+                    `<button class="tag-btn${i === 0 ? ' selected' : ''}" onclick="setFooter('${o}',this)">${o}</button>`
+                ).join('');
+                hint.textContent = '一般用「敬賀」';
+                order.footerSuffix = '敬賀';
+            }
+
+            updatePreview();
         }
 
-        document.getElementById('previewTo').textContent = topLine;
-        document.getElementById('previewPhrase').textContent = phrase;
-        document.getElementById('previewFrom').textContent = `${sender} ${order.footerSuffix}`;
-        document.getElementById('cardPreview').style.display = 'block';
-    }
-
-    // ===== Step 4: Summary & LINE Submit =====
-    function setupStep4() {
-        order.customPhrase = document.getElementById('customPhrase')?.value || '';
-        order.senderName = document.getElementById('senderName')?.value || '';
-        if (order.scene === 'funeral') {
-            order.lastName = document.getElementById('lastName')?.value || '';
-            order.firstName = document.getElementById('firstName')?.value || '';
-            order.husbandName = document.getElementById('husbandName')?.value || '';
-        } else {
-            order.recipientName = document.getElementById('recipientName')?.value || '';
+        function setFooter(suffix, el) {
+            order.footerSuffix = suffix;
+            el.parentElement.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('selected'));
+            el.classList.add('selected');
+            updatePreview();
         }
 
-        const phrase = order.customPhrase || order.selectedPhrase || '';
-        const summary = document.getElementById('orderSummary');
-        summary.innerHTML = `
+        function updatePreview() {
+            const phrase = document.getElementById('customPhrase')?.value || order.selectedPhrase || '（用詞）';
+            const sender = document.getElementById('senderName')?.value || '（送禮人）';
+            let topLine = '';
+
+            if (order.scene === 'funeral') {
+                const ln = document.getElementById('lastName')?.value || '___';
+                const fn = document.getElementById('firstName')?.value || '';
+                const hn = document.getElementById('husbandName')?.value || '';
+
+                if (typeof generateCardFormat === 'function') {
+                    const card = generateCardFormat({
+                        gender: order.gender, age: order.age,
+                        lastName: ln, firstName: fn,
+                        husbandName: hn, isMarried: !!hn,
+                        useHusbandSurname: order.useHusbandSurname,
+                        isSenior: order.useSenior,
+                        isBaptized: false, religion: order.religion,
+                        senderName: sender, phrase: phrase, relation: order.relation
+                    });
+                    topLine = card.topLine;
+                } else {
+                    topLine = `敬悼 ${ln}${fn}`;
+                }
+            } else {
+                const rn = document.getElementById('recipientName')?.value || '（收禮人）';
+                topLine = `祝 ${rn}`;
+            }
+
+            const previewInner = document.querySelector('.card-preview-inner');
+            if (previewInner) {
+                if (order.scene === 'funeral') {
+                    previewInner.className = 'card-preview-inner card-theme-funeral';
+                } else {
+                    previewInner.className = 'card-preview-inner card-theme-celebration';
+                }
+            }
+
+            document.getElementById('previewTo').textContent = topLine;
+            document.getElementById('previewPhrase').textContent = phrase;
+            document.getElementById('previewFrom').textContent = `${sender} ${order.footerSuffix}`;
+            document.getElementById('cardPreview').style.display = 'block';
+        }
+
+        // ===== Step 4: Summary & LINE Submit =====
+        function setupStep4() {
+            order.customPhrase = document.getElementById('customPhrase')?.value || '';
+            order.senderName = document.getElementById('senderName')?.value || '';
+            if (order.scene === 'funeral') {
+                order.lastName = document.getElementById('lastName')?.value || '';
+                order.firstName = document.getElementById('firstName')?.value || '';
+                order.husbandName = document.getElementById('husbandName')?.value || '';
+            } else {
+                order.recipientName = document.getElementById('recipientName')?.value || '';
+            }
+
+            const phrase = order.customPhrase || order.selectedPhrase || '';
+            const summary = document.getElementById('orderSummary');
+            summary.innerHTML = `
             <div style="margin-bottom:12px;"><strong>場合：</strong>${SCENE_LABELS[order.scene]}</div>
             <div style="margin-bottom:12px;"><strong>品項：</strong>${order.productName} — NT$ ${order.productPrice.toLocaleString()}</div>
             <div style="margin-bottom:12px;"><strong>卡片用詞：</strong>${phrase}</div>
             <div style="margin-bottom:12px;"><strong>送禮人：</strong>${order.senderName} ${order.footerSuffix}</div>
-            <div><strong>付款方式：</strong>貨到付款 / 轉帳</div>
+            <div style="margin-bottom:12px;"><strong>付款方式：</strong>轉帳 / 貨到付款</div>
+            <div style="font-size:0.9rem; color:#721c24; background-color:#f8d7da; border:1px solid #f5c6cb; border-radius:8px; padding:12px; margin-top:16px;">
+                ⚠️ <strong>注意：本系統不提供線上刷卡。</strong><br>
+                選擇轉帳者，轉帳完成後<strong>請務必於 LINE 回傳您的帳號末五碼</strong>，核對無誤後始安排出貨。
+            </div>
         `;
-    }
-
-    function submitToLine() {
-        const buyerName = document.getElementById('buyerName')?.value?.trim();
-        if (!buyerName) {
-            alert('請填寫訂購人姓名');
-            return;
         }
 
-        const phrase = order.customPhrase || order.selectedPhrase || '';
-        let topLine = '';
-        if (order.scene === 'funeral') {
-            topLine = `${order.lastName}${order.firstName}`;
-        } else {
-            topLine = order.recipientName;
+        function submitToLine() {
+            const buyerName = document.getElementById('buyerName')?.value?.trim();
+            if (!buyerName) {
+                alert('請填寫訂購人姓名');
+                return;
+            }
+
+            const phrase = order.customPhrase || order.selectedPhrase || '';
+            let topLine = '';
+            if (order.scene === 'funeral') {
+                topLine = `${order.lastName}${order.firstName}`;
+            } else {
+                topLine = order.recipientName;
+            }
+
+            const msg = [
+                `訂購【${SCENE_LABELS[order.scene]}】【${order.productName}】`,
+                `卡片文字：`,
+                `　上款：${topLine}`,
+                `　中款：${phrase}`,
+                `　下款：${order.senderName} ${order.footerSuffix}`,
+                `訂購人：${buyerName}`,
+            ].join('\n');
+
+            const encoded = encodeURIComponent(msg);
+            window.open(`${LINE_URL}?text=${encoded}`, '_blank');
         }
 
-        const msg = [
-            `訂購【${SCENE_LABELS[order.scene]}】【${order.productName}】`,
-            `卡片文字：`,
-            `　上款：${topLine}`,
-            `　中款：${phrase}`,
-            `　下款：${order.senderName} ${order.footerSuffix}`,
-            `訂購人：${buyerName}`,
-        ].join('\n');
-
-        const encoded = encodeURIComponent(msg);
-        window.open(`${LINE_URL}?text=${encoded}`, '_blank');
-    }
-
-    // Listen for input changes on name fields to update preview
-    document.addEventListener('input', function(e) {
-        if (['lastName','firstName','recipientName','senderName','customPhrase'].includes(e.target.id)) {
-            updatePreview();
-        }
-    });
+        // Listen for input changes on name fields to update preview
+        document.addEventListener('input', function (e) {
+            if (['lastName', 'firstName', 'recipientName', 'senderName', 'customPhrase'].includes(e.target.id)) {
+                updatePreview();
+            }
+        });
     </script>
 </body>
+
 </html>
