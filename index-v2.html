@@ -1406,8 +1406,15 @@
                 `訂購人：${buyerName}`,
             ].join('\n');
 
-            const encoded = encodeURIComponent(msg);
-            window.open(`${LINE_URL}?text=${encoded}`, '_blank');
+            // const encoded = encodeURIComponent(msg);
+            // window.open(`${LINE_URL}?text=${encoded}`, '_blank');
+            navigator.clipboard.writeText(msg).then(() => {
+                alert("訂單內容已複製！\n加入好友後貼上即可送出。");
+                window.open(LINE_URL, '_blank');
+            }).catch(err => {
+                alert("請手動複製以下內容，然後加入LINE好友貼上：\n\n" + msg);
+                window.open(LINE_URL, '_blank');
+            });
         }
 
         // Listen for input changes on name fields to update preview
