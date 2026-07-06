@@ -1216,7 +1216,17 @@
         </div>
     </div>
 
-    <!-- 引入成語資料庫 -->
+    <!-- Footer -->
+    <footer class="site-footer" style="background:#1a1a1a;color:rgba(255,255,255,0.7);text-align:center;padding:40px 20px;margin-top:40px;">
+        <p style="font-family:'Noto Serif TC',serif; font-size:1.1rem; color:rgba(255,255,255,0.9); margin-bottom:8px;">慶豐蘭園</p>
+        <p>雲林縣北港鎮 ‧ 專業蝴蝶蘭農場 ‧ 產地直送</p>
+        <p style="margin-top: 10px; font-size: 0.85rem; color: rgba(255,255,255,0.4);">
+            實用工具：<a href="condolence.html" style="color: #d4af37; text-decoration: none;">輓聯產生器</a> | <a href="greeting.html" style="color: #d4af37; text-decoration: none;">賀詞產生器</a>
+        </p>
+        <p style="margin-top:24px; font-size:0.75rem; color:rgba(255,255,255,0.4);">&copy; 2026 慶豐蘭園 版權所有</p>
+    </footer>
+
+    <!-- 引入詞庫資料庫 -->
     <script src="phrase-database.js"></script>
 
     <script>
@@ -1788,7 +1798,7 @@
                 }
 
                 if (result.success) {
-                   document.querySelector('.main-content').innerHTML = '<div style="text-align:center;padding:40px 20px;"><div style="font-size:4rem;margin-bottom:16px;">✅</div><h2 style="font-family:Noto Serif TC,serif;color:#1a1a1a;margin-bottom:8px;">訂單已送出</h2><p style="color:#666;margin-bottom:8px;">訂單編號：' + result.orderId + '</p><p style="color:#666;margin-bottom:32px;line-height:1.8;">我們會盡快與您確認花況與配送細節。<br><strong>請加入官方 LINE，方便即時聯繫與付款。</strong></p><a href="https://lin.ee/W4oObNt" target="_blank" style="display:inline-block;background:#06C755;color:#fff;padding:18px 48px;border-radius:12px;font-size:1.2rem;font-weight:700;text-decoration:none;box-shadow:0 4px 12px rgba(6,199,85,0.3);">💬 加入官方 LINE</a><p style="color:#999;font-size:0.9rem;margin-top:24px;">或來電 <a href="tel:0988811607" style="color:#1a1a1a;">0988-811-607</a></p></div>';
+                    document.querySelector('.main-content').innerHTML = '<div style="text-align:center;padding:40px 20px;"><div style="font-size:4rem;margin-bottom:16px;">✅</div><h2 style="font-family:Noto Serif TC,serif;color:#1a1a1a;margin-bottom:8px;">訂單已送出</h2><p style="color:#666;margin-bottom:8px;">訂單編號：' + result.orderId + '</p><p style="color:#666;margin-bottom:32px;line-height:1.8;">我們會盡快與您確認花況與配送細節。<br><strong>請加入官方 LINE，方便即時聯繫與付款。</strong></p><a href="https://lin.ee/W4oObNt" target="_blank" style="display:inline-block;background:#06C755;color:#fff;padding:18px 48px;border-radius:12px;font-size:1.2rem;font-weight:700;text-decoration:none;box-shadow:0 4px 12px rgba(6,199,85,0.3);">💬 加入官方 LINE</a><p style="color:#999;font-size:0.9rem;margin-top:24px;">或來電 <a href="tel:0988811607" style="color:#1a1a1a;">0988-811-607</a></p></div>';
                 } else {
                     throw new Error(result.error || '訂單送出失敗');
                 }
