@@ -727,6 +727,193 @@
                 max-width: 100%;
             }
         }
+        /* === 首頁目錄與工具區專用樣式 === */
+        /* 頂部品牌列 */
+        .top-brand-bar {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .brand-info strong {
+            font-family: 'Noto Serif TC', serif;
+            letter-spacing: 1px;
+            color: #d4af37;
+        }
+        .brand-info span {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.85rem;
+            margin-left: 6px;
+        }
+        .election-btn {
+            background: #d4af37;
+            color: #1a1a2e;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .election-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(212,175,55,0.3);
+            color: #1a1a2e;
+        }
+
+        /* 目錄區塊 */
+        .catalog-section {
+            padding: 40px 20px;
+            background: #fafafa;
+        }
+        .catalog-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .catalog-header h2 {
+            font-family: 'Noto Serif TC', serif;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.6rem;
+        }
+        .catalog-filters {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            background: #fff;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .filter-btn.active {
+            background: #2c3e50;
+            color: #fff;
+            border-color: #2c3e50;
+        }
+        
+        .catalog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .product-card {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .product-img-placeholder {
+            width: 100%;
+            height: 200px;
+            background: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #f0f0f0;
+            object-fit: cover;
+        }
+        .product-info {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .scene-tag {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        .tag-funeral { background: #607D8B; }
+        .tag-celebration { background: #e74c3c; }
+        
+        .product-title {
+            font-size: 1.15rem;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        .product-desc {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.4;
+            flex-grow: 1;
+        }
+        .product-price {
+            font-size: 1.25rem;
+            color: #e74c3c;
+            font-weight: bold;
+            font-family: 'Inter', sans-serif;
+            text-align: right;
+            border-top: 1px dashed #eee;
+            padding-top: 15px;
+        }
+
+        /* 工具區塊 */
+        .tools-section {
+            padding: 40px 20px;
+            background: #fff;
+        }
+        .tools-card {
+            max-width: 800px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border: 1px solid rgba(255,255,255,0.6);
+        }
+        .tools-card h3 {
+            font-family: 'Noto Serif TC', serif;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .tools-card p {
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+        }
+        .tools-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
     </style>
 </head>
 
@@ -738,7 +925,7 @@
         </div>
         <div style="display:flex; gap:8px;">
             <a href="index-v2.html" class="election-btn" style="background:#27ae60; text-decoration:none;">一般訂花專區</a>
-            <a href="../election" class="election-btn" style="text-decoration:none;">選舉花禮專區</a>
+            <a href="https://judahai.github.io/qingfeng-orchid/election/" class="election-btn" style="text-decoration:none;" target="_blank">選舉花禮專區</a>
         </div>
     </header>
 
