@@ -796,14 +796,156 @@
             text-decoration: none;
             font-weight: 600;
         }
+
+        /* ===== 首頁新版著陸頁樣式 ===== */
+        .top-brand-bar {
+            background: #1B4332;
+            color: white;
+            padding: 12px 20px;
+            text-align: center;
+            font-size: 0.95rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .brand-info strong { font-family: 'Noto Serif TC', serif; font-size: 1.1rem; letter-spacing: 1px; }
+        .brand-info span { opacity: 0.8; font-size: 0.85rem; margin-left: 8px; }
+        .election-btn {
+            background: #FFD700;
+            color: #1a1a1a;
+            padding: 6px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.85rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .catalog-section { padding: 50px 20px; background: var(--bg-light); }
+        .catalog-header { text-align: center; margin-bottom: 40px; }
+        .catalog-header h2 { font-size: 1.8rem; color: var(--primary); margin-bottom: 16px; font-weight: 700; }
+        .catalog-filters { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+        .filter-btn { padding: 8px 20px; border: 1px solid var(--border); border-radius: 20px; background: white; cursor: pointer; transition: 0.2s; font-weight: 600; font-size: 0.95rem; color: var(--text-mid); }
+        .filter-btn.active, .filter-btn:hover { background: var(--success); color: white; border-color: var(--success); }
+        
+        .catalog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; max-width: 1000px; margin: 0 auto; }
+        .product-card { background: white; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); border: 1px solid var(--accent); }
+        .product-img-placeholder { height: 220px; background: #e0e0e0; display: flex; align-items: center; justify-content: center; color: #999; font-size: 0.9rem; }
+        .product-info { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
+        .scene-tag { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; margin-bottom: 12px; align-self: flex-start; }
+        .tag-funeral { background: #f0f0f0; color: #555; }
+        .tag-celebration { background: #ffeeee; color: #d32f2f; }
+        .product-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; line-height: 1.4; }
+        .product-desc { font-size: 0.85rem; color: #666; margin-bottom: 16px; flex-grow: 1; }
+        .product-price { font-size: 1.3rem; font-weight: 700; color: var(--accent); text-align: right; }
+
+        .tools-section { background: white; padding: 50px 20px; text-align: center; }
+        .tools-card { max-width: 700px; margin: 0 auto; padding: 40px 30px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: #fafafa; box-shadow: var(--shadow); }
+        .tools-card h3 { font-size: 1.5rem; margin-bottom: 12px; color: var(--primary); }
+        .tools-card p { color: #666; margin-bottom: 24px; font-size: 1rem; }
+        .tools-links { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+        .tools-links .btn { min-width: 160px; }
+
+        /* 隱藏原有的 header */
+        .header { display: none; }
+        
+        @media (max-width: 600px) {
+            .top-brand-bar { flex-direction: column; gap: 10px; }
+        }
     </style>
 </head>
 
 <body>
-    <header class="header">
-        <h1>🌸 慶豐蘭業</h1>
-        <p>雲林專業蘭園 ‧ 農場直送</p>
+    <!-- 新增 窄幅品牌橫幅 -->
+    <header class="top-brand-bar">
+        <div class="brand-info">
+            <strong>慶豐蘭園</strong> <span>| 從農場到您家</span>
+        </div>
+        <a href="#step1" class="election-btn" onclick="selectCatalogProduct('celebration', 'c10', '大器款 | 升官當選・紅花10株', 3500); return false;">選舉花禮專區</a>
     </header>
+
+    <!-- 商品目錄照片牆 -->
+    <section class="catalog-section" id="catalog-section">
+        <div class="catalog-header">
+            <h2>產地當週新株 ‧ 專人配送到場</h2>
+            <div class="catalog-filters">
+                <button class="filter-btn active" data-filter="all" onclick="filterCatalog('all', this)">全部款式</button>
+                <button class="filter-btn" data-filter="funeral" onclick="filterCatalog('funeral', this)">喪禮蘭花</button>
+                <button class="filter-btn" data-filter="celebration" onclick="filterCatalog('celebration', this)">開幕/喜慶</button>
+            </div>
+        </div>
+        <div class="catalog-grid" id="catalog-grid">
+            <!-- 喪禮 -->
+            <div class="product-card" data-category="funeral" onclick="selectCatalogProduct('funeral', 'f7', '尊榮款 | 喪禮蘭花・白花7株', 2500)">
+                <div class="product-img-placeholder">照片準備中</div>
+                <div class="product-info">
+                    <span class="scene-tag tag-funeral">喪禮</span>
+                    <h3 class="product-title">尊榮款 | 喪禮蘭花・白花7株</h3>
+                    <p class="product-desc">會場內必有位置</p>
+                    <div class="product-price">$2,500</div>
+                </div>
+            </div>
+            <div class="product-card" data-category="funeral" onclick="selectCatalogProduct('funeral', 'f10', '大器款 | 喪禮蘭花・白花10株', 3500)">
+                <div class="product-img-placeholder">照片準備中</div>
+                <div class="product-info">
+                    <span class="scene-tag tag-funeral">喪禮</span>
+                    <h3 class="product-title">大器款 | 喪禮蘭花・白花10株</h3>
+                    <p class="product-desc">走道旁一眼認出,名字不被擋</p>
+                    <div class="product-price">$3,500</div>
+                </div>
+            </div>
+            <div class="product-card" data-category="funeral" onclick="selectCatalogProduct('funeral', 'f12', '首席款 | 喪禮蘭花・白花12株落地', 4500)">
+                <div class="product-img-placeholder">照片準備中</div>
+                <div class="product-info">
+                    <span class="scene-tag tag-funeral">喪禮</span>
+                    <h3 class="product-title">首席款 | 喪禮蘭花・白花12株落地</h3>
+                    <p class="product-desc">進場第一眼看到的就是您的名字</p>
+                    <div class="product-price">$4,500</div>
+                </div>
+            </div>
+            <!-- 開幕/喜慶 -->
+            <div class="product-card" data-category="celebration" onclick="selectCatalogProduct('celebration', 'c7', '尊榮款 | 開幕蘭花・紅花7株', 2500)">
+                <div class="product-img-placeholder">照片準備中</div>
+                <div class="product-info">
+                    <span class="scene-tag tag-celebration">開幕/喜慶</span>
+                    <h3 class="product-title">尊榮款 | 開幕蘭花・紅花7株</h3>
+                    <p class="product-desc">店內/會場內必有位置</p>
+                    <div class="product-price">$2,500</div>
+                </div>
+            </div>
+            <div class="product-card" data-category="celebration" onclick="selectCatalogProduct('celebration', 'c10', '大器款 | 開幕蘭花・紅花10株', 3500)">
+                <div class="product-img-placeholder">照片準備中</div>
+                <div class="product-info">
+                    <span class="scene-tag tag-celebration">開幕/喜慶</span>
+                    <h3 class="product-title">大器款 | 開幕蘭花・紅花10株</h3>
+                    <p class="product-desc">走道旁一眼認出,名字不被擋</p>
+                    <div class="product-price">$3,500</div>
+                </div>
+            </div>
+            <div class="product-card" data-category="celebration" onclick="selectCatalogProduct('celebration', 'c12', '首席款 | 開幕蘭花・紅花12株落地', 4500)">
+                <div class="product-img-placeholder">照片準備中</div>
+                <div class="product-info">
+                    <span class="scene-tag tag-celebration">開幕/喜慶</span>
+                    <h3 class="product-title">首席款 | 開幕蘭花・紅花12株落地</h3>
+                    <p class="product-desc">進場第一眼看到的就是您的名字</p>
+                    <div class="product-price">$4,500</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 工具卡區塊 -->
+    <section class="tools-section">
+        <div class="tools-card">
+            <h3>不知道卡片怎麼寫？</h3>
+            <p>免費使用我們的智能產生器，符合傳統禮俗、自動排版直書預覽。</p>
+            <div class="tools-links">
+                <a href="condolence.html" class="btn btn-secondary">輓聯產生器</a>
+                <a href="greeting.html" class="btn btn-secondary">賀詞產生器</a>
+            </div>
+        </div>
+    </section>
 
     <!-- 購物車浮動按鈕 -->
     <div class="cart-fab" onclick="toggleCart()">
@@ -832,14 +974,14 @@
                 </div>
                 <div class="cart-contact">
                     📞 <a href="tel:0988811607">0988-811-607</a> ｜
-                    <a href="https://lin.ee/W4oObNt" target="_blank">LINE 聯繫</a>
+                    <a href="https://line.me/ti/p/K2LFf7aucm" target="_blank">LINE 聯繫</a>
                 </div>
             </div>
         </div>
     </div>
 
 
-    <div class="progress-container">
+    <div class="progress-container" style="display: none;">
         <div class="progress-bar">
             <div class="progress-step active" data-step="1">
                 <div class="progress-dot">1</div>
@@ -872,7 +1014,7 @@
         </div>
     </div>
 
-    <div class="main-content">
+    <div class="main-content" style="display: none;">
         <!-- Step 1: 場合 -->
         <div class="order-step active" id="step1">
             <div class="step-header">
@@ -913,7 +1055,13 @@
 
             <!-- 年齡 -->
             <div class="tag-section">
-                <div class="tag-title">往生者年齡 <span class="required">*</span></div>
+                <div class="tag-title" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                    <span>往生者年齡 <span class="required">*</span></span>
+                    <label style="font-size:0.9rem; font-weight:normal; display:flex; align-items:center; gap:6px; cursor:pointer; color:#666;">
+                        <input type="checkbox" id="useSeniorFormatCheckbox" onchange="toggleSeniorFormat(this.checked)" style="width:16px; height:16px;">
+                        使用高壽格式 (紅花/老字輩)
+                    </label>
+                </div>
                 <div class="tag-group">
                     <button class="tag-btn" onclick="selectTag('age', '40', this)">49歲以下</button>
                     <button class="tag-btn" onclick="selectTag('age', '60', this)">50-69歲</button>
@@ -1046,9 +1194,15 @@
                     </div>
                 </div>
                 <div class="form-group" id="husbandNameGroup" style="display: none;">
-                    <label class="form-label">夫姓（已婚女性用）</label>
+                    <label class="form-label" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                        <span>夫姓（已婚女性用）</span>
+                        <label style="font-size:0.9rem; font-weight:normal; display:flex; align-items:center; gap:6px; cursor:pointer; color:#666;">
+                            <input type="checkbox" id="useHusbandSurnameCheckbox" checked onchange="orderData.useHusbandSurname = this.checked" style="width:16px; height:16px;">
+                            傳統冠夫姓格式
+                        </label>
+                    </label>
                     <input type="text" class="form-input" id="husbandName" placeholder="例：陳">
-                    <p class="form-hint">傳統上已婚女性冠夫姓，現代可選填</p>
+                    <p class="form-hint">取消勾選「傳統冠夫姓格式」，卡片將只印本姓與「女士/老夫人」</p>
                 </div>
             </div>
 
@@ -1216,17 +1370,7 @@
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="site-footer" style="background:#1a1a1a;color:rgba(255,255,255,0.7);text-align:center;padding:40px 20px;margin-top:40px;">
-        <p style="font-family:'Noto Serif TC',serif; font-size:1.1rem; color:rgba(255,255,255,0.9); margin-bottom:8px;">慶豐蘭園</p>
-        <p>雲林縣北港鎮 ‧ 專業蝴蝶蘭農場 ‧ 產地直送</p>
-        <p style="margin-top: 10px; font-size: 0.85rem; color: rgba(255,255,255,0.4);">
-            實用工具：<a href="condolence.html" style="color: #d4af37; text-decoration: none;">輓聯產生器</a> | <a href="greeting.html" style="color: #d4af37; text-decoration: none;">賀詞產生器</a>
-        </p>
-        <p style="margin-top:24px; font-size:0.75rem; color:rgba(255,255,255,0.4);">&copy; 2026 慶豐蘭園 版權所有</p>
-    </footer>
-
-    <!-- 引入詞庫資料庫 -->
+    <!-- 引入成語資料庫 -->
     <script src="phrase-database.js"></script>
 
     <script>
@@ -1234,7 +1378,9 @@
         const orderData = {
             occasion: '',
             gender: '',
-            age: 60,
+            age: null,
+            useSeniorFormat: false,
+            useHusbandSurname: true,
             religion: 'general',
             relation: '',
             celebType: '',
@@ -1304,10 +1450,22 @@
         }
 
         function addToCart() {
+            // 嚴格驗證性別與年齡
+            if (orderData.occasion === 'funeral' && (!orderData.gender || !orderData.age)) {
+                alert('系統錯誤：遺失往生者性別或年齡資訊，請回上一步重新確認。');
+                return;
+            }
+
             // 收集當前訂單資料
             const finalPhrase = orderData.customPhrase || orderData.selectedPhrase || '敬輓';
-            const recipient = orderData.deceasedLastName + orderData.deceasedFirstName +
-                (orderData.occasion === 'funeral' ? (orderData.age >= 80 ? '老先生' : '先生') : '');
+            let recipient = orderData.deceasedLastName + orderData.deceasedFirstName;
+            if (orderData.occasion === 'funeral') {
+                if (orderData.gender === 'female') {
+                    recipient += (orderData.useSeniorFormat ? '老夫人' : '女士');
+                } else {
+                    recipient += (orderData.useSeniorFormat ? '老先生' : '先生');
+                }
+            }
 
             const item = {
                 id: Date.now(),
@@ -1362,14 +1520,14 @@
         // 商品（從後端載入，這是備用）
         let products = {
             funeral: [
-                { id: 'f7', name: '白蝴蝶蘭 7株', price: 2500, emoji: '🤍' },
-                { id: 'f10', name: '白蝴蝶蘭 10株', price: 3500, emoji: '🤍' },
-                { id: 'f12', name: '白蝴蝶蘭 12株落地盆', price: 4500, emoji: '🤍' }
+                { id: 'f7', name: '尊榮款 | 喪禮蘭花・白花7株', price: 2500, emoji: '🤍' },
+                { id: 'f10', name: '大器款 | 喪禮蘭花・白花10株', price: 3500, emoji: '🤍' },
+                { id: 'f12', name: '首席款 | 喪禮蘭花・白花12株落地', price: 4500, emoji: '🤍' }
             ],
             celebration: [
-                { id: 'c7', name: '紅花蝴蝶蘭 7株', price: 2500, emoji: '🌺' },
-                { id: 'c10', name: '紅花蝴蝶蘭 10株', price: 3500, emoji: '🌺' },
-                { id: 'c12', name: '紅花蝴蝶蘭 12株落地盆', price: 4500, emoji: '🌺' }
+                { id: 'c7', name: '尊榮款 | 開幕蘭花・紅花7株', price: 2500, emoji: '🌺' },
+                { id: 'c10', name: '大器款 | 開幕蘭花・紅花10株', price: 3500, emoji: '🌺' },
+                { id: 'c12', name: '首席款 | 開幕蘭花・紅花12株落地', price: 4500, emoji: '🌺' }
             ]
         };
 
@@ -1397,6 +1555,44 @@
         loadProductsFromAPI();
 
         let currentStep = 1;
+
+        function selectCatalogProduct(category, productId, productName, price) {
+            orderData.occasion = category;
+            orderData.productId = productId;
+            orderData.productName = productName;
+            orderData.productPrice = price;
+            
+            // 標示被選中的過濾按鈕（可選 UI 反饋）
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.querySelector(`[data-filter="${category}"]`);
+            if (activeBtn) activeBtn.classList.add('active');
+
+            // 顯示表單
+            document.querySelector('.progress-container').style.display = 'block';
+            document.querySelector('.main-content').style.display = 'block';
+
+            // 平滑滾動至表單區塊
+            const formTop = document.querySelector('.progress-container');
+            if (formTop) {
+                window.scrollTo({ top: formTop.offsetTop - 20, behavior: 'smooth' });
+            }
+            
+            // 自動跳過場合與規格選擇，直接進入 Step 2 (卡片資訊)
+            goToStep(2);
+        }
+
+        function filterCatalog(category, element) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+            
+            document.querySelectorAll('.product-card').forEach(card => {
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
 
         function updateProgress() {
             document.querySelectorAll('.progress-step').forEach((step, i) => {
@@ -1462,14 +1658,32 @@
             setTimeout(() => goToStep(2), 300);
         }
 
+        function toggleSeniorFormat(checked) {
+            orderData.useSeniorFormat = checked;
+        }
+
         function selectTag(type, value, element) {
             // 取消同組其他選取
             element.parentElement.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('selected'));
             element.classList.add('selected');
 
-            if (type === 'gender') orderData.gender = value;
-            else if (type === 'age') orderData.age = parseInt(value);
-            else if (type === 'religion') orderData.religion = value;
+            if (type === 'gender') {
+                orderData.gender = value;
+            } else if (type === 'age') {
+                orderData.age = parseInt(value);
+                const seniorCheckbox = document.getElementById('useSeniorFormatCheckbox');
+                if (seniorCheckbox) {
+                    if (orderData.age >= 80) {
+                        seniorCheckbox.checked = true;
+                        orderData.useSeniorFormat = true;
+                    } else {
+                        seniorCheckbox.checked = false;
+                        orderData.useSeniorFormat = false;
+                    }
+                }
+            } else if (type === 'religion') {
+                orderData.religion = value;
+            }
         }
 
         function selectRelation(relation) {
@@ -1683,6 +1897,8 @@
                             firstName: orderData.deceasedFirstName,
                             husbandName: orderData.husbandName,
                             isMarried: !!orderData.husbandName,
+                            useHusbandSurname: orderData.useHusbandSurname,
+                            isSenior: orderData.useSeniorFormat,
                             isBaptized: false,
                             religion: orderData.religion,
                             senderName: orderData.senderName,
@@ -1798,7 +2014,9 @@
                 }
 
                 if (result.success) {
-                    document.querySelector('.main-content').innerHTML = '<div style="text-align:center;padding:40px 20px;"><div style="font-size:4rem;margin-bottom:16px;">✅</div><h2 style="font-family:Noto Serif TC,serif;color:#1a1a1a;margin-bottom:8px;">訂單已送出</h2><p style="color:#666;margin-bottom:8px;">訂單編號：' + result.orderId + '</p><p style="color:#666;margin-bottom:32px;line-height:1.8;">我們會盡快與您確認花況與配送細節。<br><strong>請加入官方 LINE，方便即時聯繫與付款。</strong></p><a href="https://lin.ee/W4oObNt" target="_blank" style="display:inline-block;background:#06C755;color:#fff;padding:18px 48px;border-radius:12px;font-size:1.2rem;font-weight:700;text-decoration:none;box-shadow:0 4px 12px rgba(6,199,85,0.3);">💬 加入官方 LINE</a><p style="color:#999;font-size:0.9rem;margin-top:24px;">或來電 <a href="tel:0988811607" style="color:#1a1a1a;">0988-811-607</a></p></div>';
+                    alert(`✅ 訂單已送出！\n訂單編號：${result.orderId}\n\n我們的員工會盡快與您聯繫確認。`);
+                    // 重置頁面
+                    location.reload();
                 } else {
                     throw new Error(result.error || '訂單送出失敗');
                 }
