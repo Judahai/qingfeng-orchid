@@ -39,9 +39,42 @@
     // ----- 注入 CSS -----
     const style = document.createElement('style');
     style.textContent = `
+        /* ===== 頂部黑色工具列 (產生器切換) ===== */
+        .qf-top-bar {
+            background: #1a1a1a;
+            color: #999;
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            padding: 6px 16px;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 9001;
+            font-family: 'Noto Sans TC', sans-serif;
+        }
+        .qf-top-bar a {
+            color: #999;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .qf-top-bar a.active {
+            color: #fff;
+            font-weight: 700;
+        }
+        .qf-top-bar a:hover {
+            color: #fff;
+        }
+        .qf-top-bar-divider {
+            width: 1px;
+            height: 12px;
+            background: #444;
+        }
+
         /* ===== 頂部導覽列（桌面） ===== */
         .qf-nav-top {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 9000;
+            position: fixed; top: 32px; left: 0; right: 0; z-index: 9000;
             background: rgba(255,255,255,0.95);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid #e9ecef;
@@ -100,13 +133,23 @@
         @media (max-width: 768px) {
             .qf-nav-top { display: none; }
             .qf-nav-bottom { display: block; }
-            body { padding-bottom: 68px; }
+            body { padding-bottom: 68px; padding-top: 36px; }
         }
         @media (min-width: 769px) {
-            body { padding-top: 64px; }
+            body { padding-top: 88px; }
         }
     `;
     document.head.appendChild(style);
+
+    // ----- 注入頂部黑色工具列 -----
+    const topBar = document.createElement('div');
+    topBar.className = 'qf-top-bar';
+    topBar.innerHTML = `
+        <a href="condolence.html" class="${window.location.pathname.includes('condolence.html') ? 'active' : ''}">輓聯產生器</a>
+        <div class="qf-top-bar-divider"></div>
+        <a href="greeting.html" class="${window.location.pathname.includes('greeting.html') ? 'active' : ''}">賀詞產生器</a>
+    `;
+    document.body.prepend(topBar);
 
     // ----- 注入頂部導覽列 -----
     const topNav = document.createElement('nav');
@@ -124,7 +167,8 @@
             </a>
         </div>
     `;
-    document.body.prepend(topNav);
+    // 將 topNav 插入到 topBar 之後
+    topBar.after(topNav);
 
     // ----- 注入底部分頁列 -----
     const bottomNav = document.createElement('nav');
