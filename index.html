@@ -727,6 +727,7 @@
                 max-width: 100%;
             }
         }
+
         /* === 首頁目錄與工具區專用樣式 === */
         /* 頂部品牌列 */
         .top-brand-bar {
@@ -740,18 +741,21 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
+
         .brand-info strong {
             font-family: 'Noto Serif TC', serif;
             letter-spacing: 1px;
             color: #d4af37;
         }
+
         .brand-info span {
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.7);
             font-size: 0.85rem;
             margin-left: 6px;
         }
+
         .election-btn {
             background: #d4af37;
             color: #1a1a2e;
@@ -762,9 +766,10 @@
             text-decoration: none;
             transition: transform 0.2s, box-shadow 0.2s;
         }
+
         .election-btn:hover {
             transform: translateY(-1px);
-            box-shadow: 0 4px 10px rgba(212,175,55,0.3);
+            box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);
             color: #1a1a2e;
         }
 
@@ -773,22 +778,26 @@
             padding: 40px 20px;
             background: #fafafa;
         }
+
         .catalog-header {
             text-align: center;
             margin-bottom: 30px;
         }
+
         .catalog-header h2 {
             font-family: 'Noto Serif TC', serif;
             color: #2c3e50;
             margin-bottom: 15px;
             font-size: 1.6rem;
         }
+
         .catalog-filters {
             display: flex;
             justify-content: center;
             gap: 10px;
             flex-wrap: wrap;
         }
+
         .filter-btn {
             padding: 8px 16px;
             border: 1px solid #ddd;
@@ -799,12 +808,13 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
+
         .filter-btn.active {
             background: #2c3e50;
             color: #fff;
             border-color: #2c3e50;
         }
-        
+
         .catalog-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -812,11 +822,12 @@
             max-width: 1200px;
             margin: 0 auto;
         }
+
         .product-card {
             background: #fff;
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             cursor: pointer;
             position: relative;
@@ -824,10 +835,12 @@
             flex-direction: column;
             text-decoration: none;
         }
+
         .product-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
+
         .product-img-placeholder {
             width: 100%;
             height: 200px;
@@ -840,12 +853,14 @@
             border-bottom: 1px solid #f0f0f0;
             object-fit: cover;
         }
+
         .product-info {
             padding: 20px;
             flex-grow: 1;
             display: flex;
             flex-direction: column;
         }
+
         .scene-tag {
             position: absolute;
             top: 15px;
@@ -855,17 +870,24 @@
             font-size: 0.75rem;
             font-weight: bold;
             color: #fff;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
-        .tag-funeral { background: #607D8B; }
-        .tag-celebration { background: #e74c3c; }
-        
+
+        .tag-funeral {
+            background: #607D8B;
+        }
+
+        .tag-celebration {
+            background: #e74c3c;
+        }
+
         .product-title {
             font-size: 1.15rem;
             color: #2c3e50;
             margin-bottom: 8px;
             font-weight: 700;
         }
+
         .product-desc {
             font-size: 0.9rem;
             color: #666;
@@ -873,6 +895,7 @@
             line-height: 1.4;
             flex-grow: 1;
         }
+
         .product-price {
             font-size: 1.25rem;
             color: #e74c3c;
@@ -888,6 +911,7 @@
             padding: 40px 20px;
             background: #fff;
         }
+
         .tools-card {
             max-width: 800px;
             margin: 0 auto;
@@ -895,19 +919,22 @@
             border-radius: 16px;
             padding: 30px;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            border: 1px solid rgba(255,255,255,0.6);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.6);
         }
+
         .tools-card h3 {
             font-family: 'Noto Serif TC', serif;
             color: #2c3e50;
             margin-bottom: 10px;
         }
+
         .tools-card p {
             color: #666;
             margin-bottom: 25px;
             font-size: 0.95rem;
         }
+
         .tools-links {
             display: flex;
             justify-content: center;
@@ -925,7 +952,8 @@
         </div>
         <div style="display:flex; gap:8px;">
             <a href="index-v2.html" class="election-btn" style="background:#27ae60; text-decoration:none;">一般訂花專區</a>
-            <a href="https://judahai.github.io/qingfeng-orchid/election/" class="election-btn" style="text-decoration:none;" target="_blank">選舉花禮專區</a>
+            <a href="https://judahai.github.io/qingfeng-orchid/election/" class="election-btn"
+                style="text-decoration:none;" target="_blank">選舉花禮專區</a>
         </div>
     </header>
 
@@ -936,12 +964,14 @@
             <div class="catalog-filters">
                 <button class="filter-btn active" data-filter="all" onclick="filterCatalog('all', this)">全部款式</button>
                 <button class="filter-btn" data-filter="funeral" onclick="filterCatalog('funeral', this)">喪禮蘭花</button>
-                <button class="filter-btn" data-filter="celebration" onclick="filterCatalog('celebration', this)">開幕/喜慶</button>
+                <button class="filter-btn" data-filter="celebration"
+                    onclick="filterCatalog('celebration', this)">開幕/喜慶</button>
             </div>
         </div>
         <div class="catalog-grid" id="catalog-grid">
             <!-- 喪禮 -->
-            <div class="product-card" data-category="funeral" onclick="selectCatalogProduct('funeral', 'f7')" id="card-f7">
+            <div class="product-card" data-category="funeral" onclick="selectCatalogProduct('funeral', 'f7')"
+                id="card-f7">
                 <div class="product-img-placeholder">照片準備中</div>
                 <div class="product-info">
                     <span class="scene-tag tag-funeral">喪禮</span>
@@ -950,7 +980,8 @@
                     <div class="product-price">$2,800</div>
                 </div>
             </div>
-            <div class="product-card" data-category="funeral" onclick="selectCatalogProduct('funeral', 'f10')" id="card-f10">
+            <div class="product-card" data-category="funeral" onclick="selectCatalogProduct('funeral', 'f10')"
+                id="card-f10">
                 <div class="product-img-placeholder">照片準備中</div>
                 <div class="product-info">
                     <span class="scene-tag tag-funeral">喪禮</span>
@@ -959,7 +990,8 @@
                     <div class="product-price">$4,000</div>
                 </div>
             </div>
-            <div class="product-card" data-category="funeral" onclick="selectCatalogProduct('funeral', 'f12')" id="card-f12">
+            <div class="product-card" data-category="funeral" onclick="selectCatalogProduct('funeral', 'f12')"
+                id="card-f12">
                 <div class="product-img-placeholder">照片準備中</div>
                 <div class="product-info">
                     <span class="scene-tag tag-funeral">喪禮</span>
@@ -969,7 +1001,8 @@
                 </div>
             </div>
             <!-- 開幕/喜慶 -->
-            <div class="product-card" data-category="celebration" onclick="selectCatalogProduct('celebration', 'c7')" id="card-c7">
+            <div class="product-card" data-category="celebration" onclick="selectCatalogProduct('celebration', 'c7')"
+                id="card-c7">
                 <div class="product-img-placeholder">照片準備中</div>
                 <div class="product-info">
                     <span class="scene-tag tag-celebration">開幕/喜慶</span>
@@ -978,16 +1011,18 @@
                     <div class="product-price">$2,800</div>
                 </div>
             </div>
-            <div class="product-card" data-category="celebration" onclick="selectCatalogProduct('celebration', 'c10')" id="card-c10">
+            <div class="product-card" data-category="celebration" onclick="selectCatalogProduct('celebration', 'c10')"
+                id="card-c10">
                 <div class="product-img-placeholder">照片準備中</div>
                 <div class="product-info">
                     <span class="scene-tag tag-celebration">開幕/喜慶</span>
                     <h3 class="product-title">走道尊榮款 | 開幕紅花高盆</h3>
-                    <p class="product-desc">走道旁一眼認出，名字不被擋</p>
+                    <p class="product-desc">走道旁一眼認出，名字不被擋<br><span style="font-size:0.85rem; color:#888;">當週產地新株・非回收盆</span></p>
                     <div class="product-price">$4,000</div>
                 </div>
             </div>
-            <div class="product-card" data-category="celebration" onclick="selectCatalogProduct('celebration', 'c12')" id="card-c12">
+            <div class="product-card" data-category="celebration" onclick="selectCatalogProduct('celebration', 'c12')"
+                id="card-c12">
                 <div class="product-img-placeholder">照片準備中</div>
                 <div class="product-info">
                     <span class="scene-tag tag-celebration">開幕/喜慶</span>
@@ -1053,10 +1088,10 @@
                 if (card) {
                     const titleEl = card.querySelector('.product-title');
                     if (titleEl) titleEl.innerText = p.name;
-                    
+
                     const priceEl = card.querySelector('.product-price');
                     if (priceEl) priceEl.innerText = '$' + p.price.toLocaleString();
-                    
+
                     if (p.imageUrl) {
                         const imgPlaceholder = card.querySelector('.product-img-placeholder');
                         if (imgPlaceholder && imgPlaceholder.tagName === 'DIV') {
@@ -1078,7 +1113,7 @@
         function filterCatalog(category, element) {
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             element.classList.add('active');
-            
+
             const cards = document.querySelectorAll('.product-card');
             cards.forEach(card => {
                 if (category === 'all' || card.dataset.category === category) {
@@ -1090,4 +1125,5 @@
         }
     </script>
 </body>
+
 </html>
