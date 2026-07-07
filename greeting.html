@@ -51,9 +51,9 @@
         .phrase-btn:hover, .phrase-btn.active { background: var(--primary-red); color: #fff; border-color: var(--primary-red); }
 
         .preview-area { position: sticky; top: 100px; }
-        .card-preview { background: #E60012; border: 1px solid #B71C1C; border-radius: 4px; padding: 40px 30px; height: 500px; display: flex; flex-direction: row-reverse; justify-content: space-between; font-family: 'LXGW WenKai TC', serif; writing-mode: vertical-rl; box-shadow: 0 10px 25px rgba(230,0,18,0.2); position: relative; }
+        .card-preview { background: #E60012; border: 1px solid #B71C1C; border-radius: 4px; padding: 40px 30px; height: 500px; display: flex; flex-direction: row-reverse; justify-content: space-between; font-family: 'LXGW WenKai TC', serif; writing-mode: vertical-rl; box-shadow: 0 10px 25px rgba(230,0,18,0.2); position: relative; overflow: hidden; }
         .card-preview::before { content: ''; position: absolute; inset: 10px; border: 2px solid #FFD700; pointer-events: none; opacity: 0.8; }
-        .card-line { font-size: 1.25rem; letter-spacing: 2px; color: #FFD700; white-space: nowrap; display: flex; align-items: center; justify-content: center; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
+        .card-line { font-size: 1.25rem; letter-spacing: 2px; color: #FFD700; white-space: nowrap; display: flex; align-items: center; justify-content: center; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); max-height: 100%; overflow: hidden; }
         .card-middle { font-size: 2.2rem; font-weight: 700; letter-spacing: 8px; }
         .card-top { margin-top: 20px; }
         .card-bottom { margin-bottom: 20px; display: flex; justify-content: flex-end; }
@@ -65,6 +65,8 @@
         .btn-home { display: inline-flex; margin-top: 15px; color: rgba(255,255,255,0.7); text-decoration: none; }
         .btn-home:hover { color: #fff; }
     </style>
+    <!-- 引入 html2canvas 用於產圖 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 
@@ -133,6 +135,10 @@
                     <div class="card-line card-bottom" id="preview-bottom"></div>
                     <div class="card-line card-middle" id="preview-middle"></div>
                     <div class="card-line card-top" id="preview-top"></div>
+                </div>
+                <div class="action-buttons" style="margin-top: 20px; text-align: center;">
+                    <button type="button" class="btn" style="background: var(--primary-red); color: white; width: 100%; border-radius: 50px; font-size: 1.1rem; padding: 12px; box-shadow: 0 4px 15px rgba(211,47,47,0.3);" onclick="downloadGreetingCard()">📲 生成高清分享圖 (IG/LINE)</button>
+                    <p style="font-size: 0.8rem; color: #888; margin-top: 8px;">支援原生分享與一鍵下載</p>
                 </div>
             </div>
         </div>
@@ -263,6 +269,9 @@
                 prevMiddle.innerText = elPhraseHidden.value;
                 prevBottom.innerText = bottomLine;
 
+                // 動態縮小字級防溢出
+                adjustFontSize();
+
                 // 更新 LINE 連結
                 const lineMsg = `您好，我要訂購喜慶祝賀花禮：\n\n【卡片內容】\n上款：${topLine}\n中款：${elPhraseHidden.value}\n下款：${bottomLine}`;
                 
@@ -277,6 +286,44 @@
                         window.open("https://line.me/ti/p/K2LFf7aucm", "_blank");
                     });
                 };
+            }
+
+            function adjustFontSize() {
+                const maxHeight = 420; // 500px card height minus 80px vertical padding
+
+                // 暫時取消 stretch 以便量測真實文字高度
+                prevTop.style.alignSelf = 'flex-start';
+                prevMiddle.style.alignSelf = 'flex-start';
+                prevBottom.style.alignSelf = 'flex-start';
+
+                // 調整上款
+                prevTop.style.fontSize = '1.25rem';
+                let topSize = 1.25;
+                while (prevTop.offsetHeight > maxHeight && topSize > 0.7) {
+                    topSize -= 0.05;
+                    prevTop.style.fontSize = `${topSize}rem`;
+                }
+
+                // 調整中款
+                prevMiddle.style.fontSize = '2.2rem';
+                let middleSize = 2.2;
+                while (prevMiddle.offsetHeight > maxHeight && middleSize > 1.0) {
+                    middleSize -= 0.1;
+                    prevMiddle.style.fontSize = `${middleSize}rem`;
+                }
+
+                // 調整下款
+                prevBottom.style.fontSize = '1.1rem';
+                let bottomSize = 1.1;
+                while (prevBottom.offsetHeight > maxHeight && bottomSize > 0.7) {
+                    bottomSize -= 0.05;
+                    prevBottom.style.fontSize = `${bottomSize}rem`;
+                }
+
+                // 恢復 stretch 讓 flexbox 垂直置中
+                prevTop.style.alignSelf = '';
+                prevMiddle.style.alignSelf = '';
+                prevBottom.style.alignSelf = '';
             }
 
             function renderPhraseButtons() {
@@ -303,9 +350,99 @@
             elReceiver.addEventListener('input', updateUI);
             elSender.addEventListener('input', updateUI);
 
-            // 初始化
+            // 初始執行
             updateSubCategory();
         });
+
+        // 產圖與分享邏輯
+        async function downloadGreetingCard() {
+            const previewEl = document.querySelector('.card-preview');
+            const originalTransform = previewEl.style.transform;
+            previewEl.style.transform = 'none'; // 暫時移除縮放以確保清晰度
+            
+            // 顯示載入中提示
+            const btn = document.querySelector('.action-buttons .btn');
+            const originalBtnText = btn.innerText;
+            btn.innerText = '⏳ 產圖中，請稍候...';
+            btn.disabled = true;
+            
+            try {
+                const canvas = await html2canvas(previewEl, {
+                    scale: 2, 
+                    backgroundColor: null,
+                    useCORS: true
+                });
+                
+                // 建立 1080x1920 畫布
+                const finalCanvas = document.createElement('canvas');
+                finalCanvas.width = 1080;
+                finalCanvas.height = 1920;
+                const ctx = finalCanvas.getContext('2d');
+                
+                // 填入喜慶底色 (米白)
+                ctx.fillStyle = '#fdfbfb';
+                ctx.fillRect(0, 0, 1080, 1920);
+                
+                // 計算置中縮放比例
+                const targetHeight = 1400;
+                const scale = targetHeight / canvas.height;
+                const targetWidth = canvas.width * scale;
+                const x = (1080 - targetWidth) / 2;
+                const y = (1920 - targetHeight) / 2 - 40;
+                
+                // 繪製陰影
+                ctx.shadowColor = 'rgba(211, 47, 47, 0.15)';
+                ctx.shadowBlur = 40;
+                ctx.shadowOffsetX = 10;
+                ctx.shadowOffsetY = 20;
+                ctx.drawImage(canvas, x, y, targetWidth, targetHeight);
+                
+                // 繪製浮水印
+                ctx.shadowColor = 'transparent';
+                ctx.fillStyle = '#bbbbbb';
+                ctx.font = '500 24px "Noto Sans TC", sans-serif';
+                ctx.textAlign = 'right';
+                ctx.fillText('慶豐蘭園 | judahai.github.io/qingfeng-orchid', 1030, 1880);
+                
+                // 轉為檔案並分享/下載
+                finalCanvas.toBlob(async (blob) => {
+                    const file = new File([blob], 'qingfeng_greeting.jpg', { type: 'image/jpeg' });
+                    
+                    // 檢查 Web Share API
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        try {
+                            await navigator.share({
+                                files: [file],
+                                title: '慶豐蘭園 - 賀卡分享',
+                                text: '與您分享這份祝福！'
+                            });
+                            return; // 分享成功，不觸發下載
+                        } catch (err) {
+                            console.log('使用者取消分享或失敗', err);
+                        }
+                    }
+                    
+                    // 若不支援分享或分享失敗，退回下載模式
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'qingfeng_greeting.jpg';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    
+                }, 'image/jpeg', 0.95);
+                
+            } catch (e) {
+                console.error('產圖失敗:', e);
+                alert('產圖失敗，請稍後再試');
+            } finally {
+                previewEl.style.transform = originalTransform;
+                btn.innerText = originalBtnText;
+                btn.disabled = false;
+            }
+        }
     </script>
 </body>
 </html>
