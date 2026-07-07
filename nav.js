@@ -13,10 +13,15 @@
     const NAV_ITEMS = [
         { label: '訂花', href: 'index.html', icon: svgFlower() },
         { label: '選舉花禮', href: 'election/index.html', icon: svgVote() },
+        { label: '輓聯產生器', href: 'condolence.html', icon: svgScroll() },
+        { label: '賀詞產生器', href: 'greeting.html', icon: svgScroll() },
         { label: '訂購須知', href: 'faq.html', icon: svgInfo() },
     ];
 
     // ----- SVG Icons (Lucide-style, 24x24) -----
+    function svgScroll() {
+        return '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4"/><polyline points="14 2 14 8 20 8"/><path d="M2 15h10"/><path d="M2 18h10"/></svg>';
+    }
     function svgFlower() {
         return '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7.5a4.5 4.5 0 1 1 4.5 4.5M12 7.5A4.5 4.5 0 1 0 7.5 12M12 7.5V9m-4.5 3a4.5 4.5 0 1 0 4.5 4.5M7.5 12H9m3 4.5a4.5 4.5 0 1 0 4.5-4.5M12 16.5V15m4.5-3H15"/><circle cx="12" cy="12" r="3"/><path d="m8 16 1.5-1.5M16 8l-1.5 1.5M8 8l1.5 1.5M16 16l-1.5-1.5"/></svg>';
     }
@@ -33,44 +38,14 @@
         if (href === 'index.html') {
             return path.endsWith('/') || path.endsWith('/index.html') || path.endsWith('/index-v2.html');
         }
-        return path.includes(href.replace('index.html', ''));
+        // 處理像是 'election/index.html' 這樣可能被省略為 'election/' 的情況
+        const normalizedHref = href.replace('index.html', ''); 
+        return path.includes(normalizedHref);
     }
 
     // ----- 注入 CSS -----
     const style = document.createElement('style');
     style.textContent = `
-        /* ===== 頂部黑色工具列 (產生器切換) ===== */
-        .qf-top-bar {
-            background: #1a1a1a;
-            color: #999;
-            font-size: 0.85rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 16px;
-            padding: 6px 16px;
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: 9001;
-            font-family: 'Noto Sans TC', sans-serif;
-        }
-        .qf-top-bar a {
-            color: #999;
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-        .qf-top-bar a.active {
-            color: #fff;
-            font-weight: 700;
-        }
-        .qf-top-bar a:hover {
-            color: #fff;
-        }
-        .qf-top-bar-divider {
-            width: 1px;
-            height: 12px;
-            background: #444;
-        }
 
         /* ===== 頂部導覽列（桌面） ===== */
         .qf-nav-top {
@@ -133,23 +108,15 @@
         @media (max-width: 768px) {
             .qf-nav-top { display: none; }
             .qf-nav-bottom { display: block; }
-            body { padding-bottom: 68px; padding-top: 36px; }
+            body { padding-bottom: 68px; }
         }
         @media (min-width: 769px) {
-            body { padding-top: 88px; }
+            body { padding-top: 64px; }
         }
     `;
     document.head.appendChild(style);
 
-    // ----- 注入頂部黑色工具列 -----
-    const topBar = document.createElement('div');
-    topBar.className = 'qf-top-bar';
-    topBar.innerHTML = `
-        <a href="condolence.html" class="${window.location.pathname.includes('condolence.html') ? 'active' : ''}">輓聯產生器</a>
-        <div class="qf-top-bar-divider"></div>
-        <a href="greeting.html" class="${window.location.pathname.includes('greeting.html') ? 'active' : ''}">賀詞產生器</a>
-    `;
-    document.body.prepend(topBar);
+    // (取消由 nav.js 注入頂部黑色工具列，改為由各別 HTML 獨立控制)
 
     // ----- 注入頂部導覽列 -----
     const topNav = document.createElement('nav');
@@ -167,8 +134,7 @@
             </a>
         </div>
     `;
-    // 將 topNav 插入到 topBar 之後
-    topBar.after(topNav);
+    document.body.prepend(topNav);
 
     // ----- 注入底部分頁列 -----
     const bottomNav = document.createElement('nav');
