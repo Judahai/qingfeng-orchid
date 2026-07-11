@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>慶豐蘭園 - 雲林北港產地直送 | 開幕誌慶・追思花籃・專業蘭花禮</title>
-    <meta name="description" content="【雲林嘉義免運配送】北港在地30年蘭園，老師傅專業種植。開幕喬遷、追思致哀，當日現組產地直送。線上訂購快速方便，免出門即刻傳達心意。">
+    <meta name="description" content="【雲林嘉義免運配送】北港在地26年蘭園，老師傅專業種植。開幕喬遷、追思致哀，當日現組產地直送。線上訂購快速方便，免出門即刻傳達心意。">
 
     <!-- Open Graph -->
     <meta property="og:title" content="慶豐蘭園 - 雲林北港產地直送">
@@ -161,534 +161,7 @@
             padding: 0 16px;
         }
 
-        /* ===== Step Container ===== */
-        .order-step {
-            display: none;
-            padding: 40px 24px;
-            border-radius: var(--radius-lg);
-            margin-bottom: 24px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
-        }
-
-        .order-step.active {
-            display: block;
-            animation: fadeUp 0.4s ease;
-        }
-
-        .order-step:nth-of-type(odd) {
-            background-color: var(--bg-white);
-        }
-
-        .order-step:nth-of-type(even) {
-            background-color: var(--bg-light);
-        }
-
-        @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(16px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .step-header {
-            text-align: center;
-            margin-bottom: 36px;
-        }
-
-        .step-number {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: var(--primary-green);
-            color: #fff;
-            font-size: 0.85rem;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
-
-        .step-title {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 6px;
-        }
-
-        .step-desc {
-            color: var(--text-mid);
-            font-size: 0.95rem;
-        }
-
-        /* ===== Scene Cards (Step 1) ===== */
-        .scene-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-        }
-
-        .scene-card {
-            background: var(--bg-white);
-            border: 2px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 28px 16px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.25s;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
-        }
-
-        .scene-card:hover {
-            border-color: var(--primary-green);
-            box-shadow: var(--shadow-hover);
-            transform: translateY(-2px);
-        }
-
-        .scene-card.selected {
-            border-color: var(--primary-green);
-            background: var(--bg-light);
-        }
-
-        .scene-card-icon {
-            margin-bottom: 12px;
-            color: var(--text-mid);
-        }
-
-        .scene-card-icon svg {
-            width: 36px;
-            height: 36px;
-        }
-
-        .scene-card-title {
-            font-family: 'Noto Serif TC', serif;
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 4px;
-        }
-
-        .scene-card-desc {
-            font-size: 0.8rem;
-            color: var(--text-light);
-        }
-
-        /* Funeral scene variant */
-        .scene-card.funeral-variant {
-            background: var(--bg-white);
-            border-color: var(--border);
-        }
-
-        .scene-card.funeral-variant.selected {
-            background: var(--primary-green);
-            border-color: var(--primary-green);
-            color: #fff;
-        }
-
-        .scene-card.funeral-variant.selected .scene-card-title,
-        .scene-card.funeral-variant.selected .scene-card-desc {
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .scene-card.funeral-variant.selected .scene-card-icon svg {
-            stroke: #fff;
-        }
-
-        /* ===== Product Cards (Step 2) ===== */
-        .product-grid {
-            display: grid;
-            gap: 14px;
-        }
-
-        .product-card {
-            background: var(--bg-white);
-            border: 2px solid var(--border);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.25s;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 16px;
-        }
-
-        .product-card:hover {
-            border-color: var(--primary-green);
-            box-shadow: var(--shadow);
-        }
-
-        .product-card.selected {
-            border-color: var(--primary-green);
-            background: var(--bg-light);
-        }
-
-        .product-photo-placeholder {
-            width: 80px;
-            height: 80px;
-            border-radius: 10px;
-            background: #f0f0f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            color: var(--text-light);
-            font-size: 0.7rem;
-            text-align: center;
-            border: 1px dashed #ddd;
-        }
-
-        .product-info {
-            flex: 1;
-        }
-
-        .product-name {
-            font-weight: 700;
-            font-size: 1rem;
-            color: var(--text-dark);
-            margin-bottom: 4px;
-        }
-
-        .product-price {
-            font-size: 1.2rem;
-            font-weight: 900;
-            color: var(--accent-gold);
-        }
-
-        .product-note {
-            font-size: 0.8rem;
-            color: var(--text-light);
-            margin-top: 2px;
-        }
-
-        /* ===== Tag Buttons ===== */
-        .tag-section {
-            margin-bottom: 24px;
-        }
-
-        .tag-title {
-            font-weight: 700;
-            font-size: 0.95rem;
-            color: var(--text-dark);
-            margin-bottom: 10px;
-        }
-
-        .tag-title .required {
-            color: #e74c3c;
-        }
-
-        .tag-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .tag-btn {
-            padding: 8px 18px;
-            border: 2px solid #e0e0e0;
-            border-radius: 50px;
-            background: var(--bg-white);
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-family: inherit;
-            transition: all 0.2s;
-            color: var(--text-mid);
-        }
-
-        .tag-btn:hover {
-            border-color: var(--primary-green);
-            color: var(--text-dark);
-        }
-
-        .tag-btn.selected {
-            background: var(--primary-green);
-            border-color: var(--primary-green);
-            color: #fff;
-        }
-
-        /* ===== Senior / Husband Surname Toggles ===== */
-        .toggle-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.85rem;
-            color: var(--text-mid);
-            margin-top: 8px;
-            cursor: pointer;
-        }
-
-        .toggle-row input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-        }
-
-        /* ===== Phrase Cards ===== */
-        .phrase-grid {
-            display: grid;
-            gap: 10px;
-            max-height: 360px;
-            overflow-y: auto;
-        }
-
-        .phrase-card {
-            background: var(--bg-white);
-            border: 2px solid #e8e8e8;
-            border-radius: var(--radius);
-            padding: 14px 18px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .phrase-card:hover {
-            border-color: var(--primary-green);
-        }
-
-        .phrase-card.selected {
-            border-color: var(--primary-green);
-            background: var(--bg-light);
-        }
-
-        .phrase-card-check {
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            border: 2px solid #ccc;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            flex-shrink: 0;
-            transition: all 0.2s;
-        }
-
-        .phrase-card.selected .phrase-card-check {
-            background: var(--primary-green);
-            border-color: var(--primary-green);
-            color: #fff;
-        }
-
-        .phrase-card-main {
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: var(--text-dark);
-        }
-
-        /* ===== Form ===== */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            font-weight: 700;
-            font-size: 0.95rem;
-            color: var(--text-dark);
-            margin-bottom: 6px;
-        }
-
-        .form-label .required {
-            color: #e74c3c;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 14px 16px;
-            font-size: 1rem;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-family: inherit;
-            transition: all 0.2s;
-            background-color: var(--bg-white);
-            color: var(--text-dark);
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: var(--primary-green);
-            box-shadow: 0 0 0 3px rgba(27, 67, 50, 0.1);
-        }
-
-        .form-hint {
-            font-size: 0.8rem;
-            color: var(--text-light);
-            margin-top: 4px;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        /* ===== Card Preview Remake ===== */
-        .card-preview {
-            margin: 30px auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            max-width: 100%;
-        }
-
-        .card-preview-label {
-            font-size: 0.75rem;
-            color: var(--text-light);
-            text-align: center;
-            margin-bottom: 12px;
-        }
-
-        .card-preview-inner {
-            font-family: 'LXGW WenKai TC', 'Noto Serif TC', serif !important;
-            writing-mode: vertical-rl;
-            -webkit-writing-mode: vertical-rl;
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: stretch;
-            width: 160px;
-            height: 384px;
-            /* 1:2.4 ratio */
-            padding: 8% 16px;
-            /* 8% padding top/bottom */
-            box-sizing: border-box;
-            border-radius: 4px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-            /* paper shadow */
-            transition: all 0.3s ease;
-            margin: 0 auto;
-        }
-
-        @media (max-width: 600px) {
-            .card-preview-inner {
-                width: 50vw;
-                /* <= 55% of viewport width */
-                height: 120vw;
-                /* 1:2.4 ratio */
-            }
-        }
-
-        /* Themes */
-        .card-theme-funeral {
-            background-color: #FAF8F3 !important;
-            /* Rice-white */
-            color: #1A1A1A !important;
-            /* Ink-black */
-            border: 1px solid #E8E6DF;
-        }
-
-        .card-theme-funeral .card-preview-phrase {
-            color: #1A1A1A !important;
-        }
-
-        .card-theme-celebration {
-            background-color: #B3261E !important;
-            /* Bright red */
-            color: #D4AF37 !important;
-            /* Gold text */
-            border: 1px solid #9C1F18;
-        }
-
-        .card-theme-celebration .card-preview-phrase {
-            color: #D4AF37 !important;
-        }
-
-        /* Columns */
-        .card-preview-to {
-            font-size: 0.9rem;
-            font-weight: 400;
-            text-align: right;
-            align-self: flex-start;
-            height: 100%;
-            line-height: 1.4;
-        }
-
-        .card-preview-phrase {
-            font-size: 1.62rem;
-            /* 1.8x of upper inscription (0.9 * 1.8 = 1.62) */
-            font-weight: 700;
-            text-align: center;
-            align-self: center;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            line-height: 1.4;
-            letter-spacing: 0.15em;
-        }
-
-        .card-preview-from {
-            font-size: 0.8rem;
-            font-weight: 400;
-            text-align: left;
-            align-self: flex-end;
-            height: 100%;
-            display: flex;
-            align-items: flex-end;
-            line-height: 1.4;
-        }
-
-        /* ===== Buttons ===== */
-        .btn-row {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            margin-top: 36px;
-        }
-
-        .btn {
-            padding: 14px 32px;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            font-family: inherit;
-            transition: all 0.2s;
-        }
-
-        .btn-primary {
-            background: var(--primary-green);
-            color: #fff;
-            box-shadow: 0 4px 12px rgba(27, 67, 50, 0.2);
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-green-hover);
-            transform: translateY(-1px);
-        }
-
-        .btn-secondary {
-            background: var(--bg-light);
-            color: var(--text-mid);
-            border: 1px solid var(--border);
-        }
-
-        .btn-secondary:hover {
-            background: var(--border);
-            color: var(--text-dark);
-        }
-
-        .btn-line {
-            background: var(--line-green);
-            color: #fff;
-            font-size: 1.1rem;
-            padding: 16px 40px;
-            border-radius: 50px;
-        }
-
-        .btn-line:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(6, 199, 85, 0.3);
-        }
+        /* ===== Cleaned up old form CSS ===== */
 
         /* ===== Footer ===== */
         .site-footer {
@@ -945,7 +418,14 @@
 </head>
 
 <body>
-    <!-- 新增 窄幅品牌橫幅 -->
+    <!-- 新增 最上方黑色工具列 -->
+    <div style="background: #0f0f1a; color: #fff; padding: 8px 20px; display: flex; justify-content: flex-end; align-items: center; gap: 8px; font-size: 0.85rem; z-index: 1001; position: relative;">
+        <span style="margin-right: auto; color: rgba(255,255,255,0.6); font-family: 'Noto Sans TC', sans-serif;">實用小工具：</span>
+        <a href="condolence.html" class="election-btn" style="background:#333; color:#fff; border: 1px solid #555;">輓聯產生器</a>
+        <a href="greeting.html" class="election-btn" style="background:#333; color:#fff; border: 1px solid #555;">賀詞產生器</a>
+    </div>
+
+    <!-- 窄幅品牌橫幅 -->
     <header class="top-brand-bar">
         <div class="brand-info">
             <strong>慶豐蘭園</strong> <span>| 從農場到您家</span>
@@ -970,17 +450,6 @@
         </div>
     </section>
 
-    <!-- 工具卡區塊（移到目錄牆上方，更容易被看到） -->
-    <section class="tools-section">
-        <div class="tools-card">
-            <h3>不知道卡片怎麼寫？</h3>
-            <p>免費使用我們的智能產生器，符合傳統禮俗、自動排版直書預覽。</p>
-            <div class="tools-links">
-                <a href="condolence.html" class="btn btn-secondary">輓聯產生器</a>
-                <a href="greeting.html" class="btn btn-secondary">賀詞產生器</a>
-            </div>
-        </div>
-    </section>
 
     <!-- 商品目錄照片牆 (在地代辦客比對選購) -->
     <section class="catalog-section" id="catalog-section">
@@ -997,7 +466,7 @@
             <!-- 喪禮 -->
             <div class="product-card" data-category="funeral" onclick="selectCatalogProduct('funeral', 'f7')"
                 id="card-f7">
-                <div class="product-img-placeholder">照片準備中</div>
+                <img src="images/f7.jpg" alt="照片準備中" class="product-img-placeholder" onerror="this.outerHTML='<div class=\'product-img-placeholder\'>照片準備中</div>'">
                 <div class="product-info">
                     <span class="scene-tag tag-funeral">喪禮</span>
                     <h3 class="product-title">桌上大器款 | 喪禮白花蘭盆</h3>
@@ -1007,7 +476,7 @@
             </div>
             <div class="product-card" data-category="funeral" onclick="selectCatalogProduct('funeral', 'f10')"
                 id="card-f10">
-                <div class="product-img-placeholder">照片準備中</div>
+                <img src="images/f10.jpg" alt="照片準備中" class="product-img-placeholder" onerror="this.outerHTML='<div class=\'product-img-placeholder\'>照片準備中</div>'">
                 <div class="product-info">
                     <span class="scene-tag tag-funeral">喪禮</span>
                     <h3 class="product-title">走道尊榮款 | 喪禮白花高盆</h3>
@@ -1017,7 +486,7 @@
             </div>
             <div class="product-card" data-category="funeral" onclick="selectCatalogProduct('funeral', 'f12')"
                 id="card-f12">
-                <div class="product-img-placeholder">照片準備中</div>
+                <img src="images/f12.jpg" alt="照片準備中" class="product-img-placeholder" onerror="this.outerHTML='<div class=\'product-img-placeholder\'>照片準備中</div>'">
                 <div class="product-info">
                     <span class="scene-tag tag-funeral">喪禮</span>
                     <h3 class="product-title">門面首席款 | 喪禮白花落地巨盆</h3>
@@ -1028,7 +497,7 @@
             <!-- 開幕/喜慶 -->
             <div class="product-card" data-category="celebration" onclick="selectCatalogProduct('celebration', 'c7')"
                 id="card-c7">
-                <div class="product-img-placeholder">照片準備中</div>
+                <img src="images/c7.jpg" alt="照片準備中" class="product-img-placeholder" onerror="this.outerHTML='<div class=\'product-img-placeholder\'>照片準備中</div>'">
                 <div class="product-info">
                     <span class="scene-tag tag-celebration">開幕/喜慶</span>
                     <h3 class="product-title">桌上大器款 | 開幕紅花蘭盆</h3>
@@ -1038,7 +507,7 @@
             </div>
             <div class="product-card" data-category="celebration" onclick="selectCatalogProduct('celebration', 'c10')"
                 id="card-c10">
-                <div class="product-img-placeholder">照片準備中</div>
+                <img src="images/c10.jpg" alt="照片準備中" class="product-img-placeholder" onerror="this.outerHTML='<div class=\'product-img-placeholder\'>照片準備中</div>'">
                 <div class="product-info">
                     <span class="scene-tag tag-celebration">開幕/喜慶</span>
                     <h3 class="product-title">走道尊榮款 | 開幕紅花高盆</h3>
@@ -1048,7 +517,7 @@
             </div>
             <div class="product-card" data-category="celebration" onclick="selectCatalogProduct('celebration', 'c12')"
                 id="card-c12">
-                <div class="product-img-placeholder">照片準備中</div>
+                <img src="images/c12.jpg" alt="照片準備中" class="product-img-placeholder" onerror="this.outerHTML='<div class=\'product-img-placeholder\'>照片準備中</div>'">
                 <div class="product-info">
                     <span class="scene-tag tag-celebration">開幕/喜慶</span>
                     <h3 class="product-title">門面首席款 | 開幕紅花落地巨盆</h3>
