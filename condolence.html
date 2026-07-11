@@ -70,6 +70,13 @@
 </head>
 <body>
 
+    <!-- 新增 最上方黑色工具列 -->
+    <div style="background: #0f0f1a; color: #fff; padding: 8px 20px; display: flex; justify-content: flex-end; align-items: center; gap: 8px; font-size: 0.85rem; z-index: 1001; position: relative;">
+        <span style="margin-right: auto; color: rgba(255,255,255,0.6); font-family: 'Noto Sans TC', sans-serif;">實用小工具：</span>
+        <a href="condolence.html" style="padding: 6px 14px; border-radius: 20px; text-decoration: none; font-weight: bold; background: #333; color: #d4af37; border: 1px solid #d4af37;">輓聯產生器</a>
+        <a href="greeting.html" style="padding: 6px 14px; border-radius: 20px; text-decoration: none; font-weight: bold; background: #333; color: #fff; border: 1px solid #555;">賀詞產生器</a>
+    </div>
+    
     <!-- 導覽列容器 -->
     <div id="nav-placeholder"></div>
 
@@ -175,7 +182,10 @@
                     <div class="card-line card-top" id="preview-top"></div>
                 </div>
                 <div class="action-buttons" style="margin-top: 20px; text-align: center; display: flex; flex-direction: column; gap: 10px;">
-                    <button type="button" class="btn" style="background: #333333; color: white; width: 100%; border-radius: 50px; font-size: 1.1rem; padding: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);" onclick="downloadCondolenceCard()">⬇️ 下載預覽圖</button>
+                    <div>
+                        <button type="button" class="btn" style="background: #333333; color: white; width: 100%; border-radius: 50px; font-size: 1.1rem; padding: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);" onclick="downloadCondolenceCard()">📸 生成高清輓聯圖片</button>
+                        <p style="font-size: 0.8rem; color: #888; margin-top: 8px; margin-bottom: 0;">長按圖片即可儲存至手機</p>
+                    </div>
                     <button type="button" class="btn" style="background: white; color: #333; border: 1px solid #ccc; width: 100%; border-radius: 50px; font-size: 1.1rem; padding: 12px;" onclick="copyCardText()">📋 複製純文字</button>
                 </div>
             </div>
@@ -237,6 +247,15 @@
 
                 // 取得推薦詞
                 currentPhrases = getFuneralPhrases(options);
+
+                // ===== F6: 嚴格過濾基督教/天主教輓詞 (不更動資料庫) =====
+                if (options.religion === 'christian' || options.religion === 'catholic') {
+                    if (typeof funeralPhraseDB !== 'undefined' && funeralPhraseDB.religion[options.religion]) {
+                        currentPhrases = [...funeralPhraseDB.religion[options.religion]];
+                    } else {
+                        currentPhrases = [];
+                    }
+                }
                 
                 // 確保目前選擇的詞在推薦名單內，若無則重置
                 if (!currentPhrases.includes(elPhraseHidden.value)) {
@@ -250,6 +269,11 @@
 
                 // 產生卡片
                 const card = generateCardFormat(options);
+
+                // ===== F6: 佛教高齡女性「老菩薩」稱謂 (不更動資料庫) =====
+                if (options.religion === 'buddhist' && options.gender === 'female' && options.age >= 80) {
+                    card.topLine = card.topLine.replace('老夫人', '老菩薩');
+                }
                 
                 prevTop.innerText = card.topLine;
                 prevMiddle.innerText = card.middleLine;
@@ -391,16 +415,10 @@
                 ctx.textAlign = 'right';
                 ctx.fillText('慶豐蘭園 | judahai.github.io/qingfeng-orchid', 1030, 1880);
                 
-                // 直接下載，絕對不使用 Web Share API
+                // 直接顯示於畫面上供長按儲存，絕對不使用 Web Share API
                 finalCanvas.toBlob((blob) => {
                     const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'qingfeng_condolence.jpg';
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(url);
+                    showImageModal(url);
                 }, 'image/jpeg', 0.95);
                 
             } catch (e) {
@@ -411,6 +429,56 @@
                 btn.innerText = originalBtnText;
                 btn.disabled = false;
             }
+        }
+
+        // 顯示圖片 Modal
+        function showImageModal(url) {
+            const modal = document.createElement('div');
+            modal.style.position = 'fixed';
+            modal.style.top = '0';
+            modal.style.left = '0';
+            modal.style.width = '100vw';
+            modal.style.height = '100vh';
+            modal.style.backgroundColor = 'rgba(0,0,0,0.85)';
+            modal.style.zIndex = '9999';
+            modal.style.display = 'flex';
+            modal.style.flexDirection = 'column';
+            modal.style.alignItems = 'center';
+            modal.style.justifyContent = 'center';
+            modal.style.padding = '20px';
+
+            const closeBtn = document.createElement('button');
+            closeBtn.innerText = '✕ 關閉';
+            closeBtn.style.position = 'absolute';
+            closeBtn.style.top = '20px';
+            closeBtn.style.right = '20px';
+            closeBtn.style.background = 'transparent';
+            closeBtn.style.color = 'white';
+            closeBtn.style.border = '1px solid rgba(255,255,255,0.5)';
+            closeBtn.style.borderRadius = '20px';
+            closeBtn.style.padding = '8px 16px';
+            closeBtn.style.fontSize = '1rem';
+            closeBtn.style.cursor = 'pointer';
+            closeBtn.onclick = () => document.body.removeChild(modal);
+
+            const resultImg = document.createElement('img');
+            resultImg.src = url;
+            resultImg.style.maxWidth = '100%';
+            resultImg.style.maxHeight = '80vh';
+            resultImg.style.borderRadius = '8px';
+            resultImg.style.boxShadow = '0 10px 30px rgba(0,0,0,0.5)';
+
+            const hint = document.createElement('p');
+            hint.innerHTML = '💡 長按上方圖片即可儲存到照片';
+            hint.style.color = 'white';
+            hint.style.marginTop = '20px';
+            hint.style.fontSize = '1.1rem';
+            hint.style.letterSpacing = '1px';
+
+            modal.appendChild(closeBtn);
+            modal.appendChild(resultImg);
+            modal.appendChild(hint);
+            document.body.appendChild(modal);
         }
 
         // 複製純文字
