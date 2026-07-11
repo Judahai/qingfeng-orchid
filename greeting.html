@@ -53,7 +53,7 @@
         .preview-area { position: sticky; top: 100px; }
         .card-preview { background: #C41E24; border: 1px solid #B71C1C; border-radius: 4px; padding: 40px 20px; min-height: 500px; display: flex; flex-direction: row-reverse; justify-content: space-between; font-family: 'LXGW WenKai TC', serif; writing-mode: vertical-rl; box-shadow: 0 10px 25px rgba(196,30,36,0.2); position: relative; overflow: visible; }
         .card-preview::before { content: ''; position: absolute; inset: 10px; border: 2px solid #FFD700; pointer-events: none; opacity: 0.8; }
-        .card-line { font-size: 1.25rem; letter-spacing: 2px; color: #FFD700; white-space: normal; display: flex; align-items: center; justify-content: center; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); overflow: visible; word-break: break-all; }
+        .card-line { font-size: 1.25rem; letter-spacing: 2px; color: #1A1A1A; white-space: normal; display: flex; align-items: center; justify-content: center; text-shadow: none; overflow: visible; word-break: break-all; }
         .card-middle { font-size: 2.2rem; font-weight: 700; letter-spacing: 8px; }
         .card-top { margin-top: 20px; }
         .card-bottom { margin-bottom: 20px; display: flex; justify-content: flex-end; }
@@ -70,6 +70,13 @@
 </head>
 <body>
 
+    <!-- 新增 最上方黑色工具列 -->
+    <div style="background: #0f0f1a; color: #fff; padding: 8px 20px; display: flex; justify-content: flex-end; align-items: center; gap: 8px; font-size: 0.85rem; z-index: 1001; position: relative;">
+        <span style="margin-right: auto; color: rgba(255,255,255,0.6); font-family: 'Noto Sans TC', sans-serif;">實用小工具：</span>
+        <a href="condolence.html" style="padding: 6px 14px; border-radius: 20px; text-decoration: none; font-weight: bold; background: #333; color: #fff; border: 1px solid #555;">輓聯產生器</a>
+        <a href="greeting.html" style="padding: 6px 14px; border-radius: 20px; text-decoration: none; font-weight: bold; background: #333; color: #d4af37; border: 1px solid #d4af37;">賀詞產生器</a>
+    </div>
+    
     <!-- 導覽列容器 -->
     <div id="nav-placeholder"></div>
 
@@ -137,8 +144,8 @@
                     <div class="card-line card-top" id="preview-top"></div>
                 </div>
                 <div class="action-buttons" style="margin-top: 20px; text-align: center;">
-                    <button type="button" class="btn" style="background: var(--primary-red); color: white; width: 100%; border-radius: 50px; font-size: 1.1rem; padding: 12px; box-shadow: 0 4px 15px rgba(211,47,47,0.3);" onclick="downloadGreetingCard()">📲 生成高清分享圖 (IG/LINE)</button>
-                    <p style="font-size: 0.8rem; color: #888; margin-top: 8px;">支援原生分享與一鍵下載</p>
+                    <button type="button" class="btn" style="background: var(--primary-red); color: white; width: 100%; border-radius: 50px; font-size: 1.1rem; padding: 12px; box-shadow: 0 4px 15px rgba(211,47,47,0.3);" onclick="downloadGreetingCard()">📸 生成高清賀卡圖片</button>
+                    <p style="font-size: 0.8rem; color: #888; margin-top: 8px;">長按圖片即可儲存至手機</p>
                 </div>
             </div>
         </div>
@@ -404,10 +411,14 @@
                 ctx.textAlign = 'right';
                 ctx.fillText('慶豐蘭園 | judahai.github.io/qingfeng-orchid', 1030, 1880);
                 
-                // 轉為檔案並分享/下載
+                // 轉為檔案並分享/顯示
                 finalCanvas.toBlob(async (blob) => {
                     const file = new File([blob], 'qingfeng_greeting.jpg', { type: 'image/jpeg' });
+                    const url = URL.createObjectURL(blob);
                     
+                    // 顯示在畫面上供長按儲存
+                    showImageModal(url);
+
                     // 檢查 Web Share API
                     if (navigator.canShare && navigator.canShare({ files: [file] })) {
                         try {
@@ -416,22 +427,10 @@
                                 title: '慶豐蘭園 - 賀卡分享',
                                 text: '與您分享這份祝福！'
                             });
-                            return; // 分享成功，不觸發下載
                         } catch (err) {
                             console.log('使用者取消分享或失敗', err);
                         }
                     }
-                    
-                    // 若不支援分享或分享失敗，退回下載模式
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'qingfeng_greeting.jpg';
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(url);
-                    
                 }, 'image/jpeg', 0.95);
                 
             } catch (e) {
@@ -442,6 +441,56 @@
                 btn.innerText = originalBtnText;
                 btn.disabled = false;
             }
+        }
+
+        // 顯示圖片 Modal
+        function showImageModal(url) {
+            const modal = document.createElement('div');
+            modal.style.position = 'fixed';
+            modal.style.top = '0';
+            modal.style.left = '0';
+            modal.style.width = '100vw';
+            modal.style.height = '100vh';
+            modal.style.backgroundColor = 'rgba(0,0,0,0.85)';
+            modal.style.zIndex = '9999';
+            modal.style.display = 'flex';
+            modal.style.flexDirection = 'column';
+            modal.style.alignItems = 'center';
+            modal.style.justifyContent = 'center';
+            modal.style.padding = '20px';
+
+            const closeBtn = document.createElement('button');
+            closeBtn.innerText = '✕ 關閉';
+            closeBtn.style.position = 'absolute';
+            closeBtn.style.top = '20px';
+            closeBtn.style.right = '20px';
+            closeBtn.style.background = 'transparent';
+            closeBtn.style.color = 'white';
+            closeBtn.style.border = '1px solid rgba(255,255,255,0.5)';
+            closeBtn.style.borderRadius = '20px';
+            closeBtn.style.padding = '8px 16px';
+            closeBtn.style.fontSize = '1rem';
+            closeBtn.style.cursor = 'pointer';
+            closeBtn.onclick = () => document.body.removeChild(modal);
+
+            const resultImg = document.createElement('img');
+            resultImg.src = url;
+            resultImg.style.maxWidth = '100%';
+            resultImg.style.maxHeight = '80vh';
+            resultImg.style.borderRadius = '8px';
+            resultImg.style.boxShadow = '0 10px 30px rgba(0,0,0,0.5)';
+
+            const hint = document.createElement('p');
+            hint.innerHTML = '💡 長按上方圖片即可儲存到照片';
+            hint.style.color = 'white';
+            hint.style.marginTop = '20px';
+            hint.style.fontSize = '1.1rem';
+            hint.style.letterSpacing = '1px';
+
+            modal.appendChild(closeBtn);
+            modal.appendChild(resultImg);
+            modal.appendChild(hint);
+            document.body.appendChild(modal);
         }
     </script>
 </body>
