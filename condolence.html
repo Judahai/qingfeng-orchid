@@ -51,12 +51,59 @@
         .phrase-btn:hover, .phrase-btn.active { background: var(--primary-green); color: #fff; border-color: var(--primary-green); }
 
         .preview-area { position: sticky; top: 100px; }
-        .card-preview { background: #fffcf8; border: 1px solid #e0d8c3; border-radius: 4px; padding: 40px 20px; min-height: 500px; display: flex; flex-direction: row-reverse; justify-content: space-between; font-family: 'LXGW WenKai TC', serif; writing-mode: vertical-rl; box-shadow: 0 10px 25px rgba(0,0,0,0.05); position: relative; overflow: visible; }
-        .card-preview::before { content: ''; position: absolute; inset: 10px; border: 1px solid rgba(184, 134, 11, 0.2); pointer-events: none; }
-        .card-line { font-size: 1.25rem; letter-spacing: 2px; color: #1a1a1a; white-space: normal; display: flex; align-items: center; justify-content: center; overflow: visible; word-break: break-all; }
-        .card-middle { font-size: 2.2rem; font-weight: 700; letter-spacing: 8px; }
-        .card-top { margin-top: 20px; }
-        .card-bottom { margin-bottom: 20px; display: flex; justify-content: flex-end; }
+        /* ===== 直書三欄卡片（html2canvas 安全版）===== */
+        .card-preview {
+            display: flex;
+            flex-direction: row;          /* 三欄橫排：左下款、中中款、右上款 */
+            justify-content: space-between;
+            align-items: stretch;
+            width: 340px;
+            height: 480px;                /* 固定比例，產圖才穩定 */
+            margin: 0 auto;
+            padding: 30px 24px;
+            background: #fffcf8;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            position: relative;
+            box-sizing: border-box;
+            font-family: 'LXGW WenKai TC', serif;
+        }
+        .card-preview::before {
+            content: '';
+            position: absolute;
+            inset: 10px;
+            border: 1px solid rgba(184, 134, 11, 0.2);
+            pointer-events: none;
+        }
+
+        /* 每一欄：窄寬度強迫一字一行 = 直書效果 */
+        .card-line {
+            width: 1.6em;                 /* 關鍵！沒有這行字就橫著跑 */
+            font-size: 1.25rem;
+            letter-spacing: 0;
+            line-height: 1.5;             /* 直書時這是「字距」 */
+            color: #1a1a1a;
+            word-break: break-all;
+            white-space: normal;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            overflow: visible;
+        }
+
+        /* 中款：最大字，垂直置中 */
+        .card-middle {
+            font-size: 2.2rem;
+            font-weight: 700;
+            width: 1.4em;
+            justify-content: center;
+        }
+
+        /* 上款：靠上（傳統格式從頂端起筆） */
+        .card-top { justify-content: flex-start; padding-top: 10px; }
+
+        /* 下款：靠下（落款收在底部） */
+        .card-bottom { justify-content: flex-end; padding-bottom: 10px; }
 
         .cta-area { text-align: center; margin-top: 50px; padding: 40px; background: var(--primary-green); border-radius: var(--radius-lg); color: #fff; }
         .cta-area h3 { color: #fff; margin-bottom: 10px; }
@@ -181,6 +228,7 @@
                         <p style="font-size: 0.8rem; color: #888; margin-top: 8px; margin-bottom: 0;">長按圖片即可儲存至手機</p>
                     </div>
                     <button type="button" class="btn" style="background: white; color: #333; border: 1px solid #ccc; width: 100%; border-radius: 50px; font-size: 1.1rem; padding: 12px;" onclick="copyCardText()">📋 複製純文字</button>
+                    <button type="button" class="btn" style="background:#06C755;color:#fff;width:100%;border-radius:50px;font-size:1.05rem;padding:12px;" onclick="shareCardToFamily()">👨‍👩‍👧 傳給家人確認落款</button>
                 </div>
             </div>
         </div>
@@ -404,10 +452,11 @@
                 
                 // 繪製浮水印
                 ctx.shadowColor = 'transparent';
-                ctx.fillStyle = '#bbbbbb';
-                ctx.font = '500 24px "Noto Sans TC", sans-serif';
+                ctx.fillStyle = '#999999';
+                ctx.font = '500 26px "Noto Sans TC", sans-serif';
                 ctx.textAlign = 'right';
-                ctx.fillText('慶豐蘭園 | judahai.github.io/qingfeng-orchid', 1030, 1880);
+                ctx.fillText('免費輓聯產生器 ‧ 慶豐蘭園', 1030, 1846);
+                ctx.fillText('judahai.github.io/qingfeng-orchid', 1030, 1884);
                 
                 // 直接顯示於畫面上供長按儲存，絕對不使用 Web Share API
                 finalCanvas.toBlob((blob) => {
@@ -489,6 +538,66 @@
                 console.error('複製失敗:', err);
                 alert('複製失敗，請手動圈選複製');
             });
+        }
+
+        // 傳給家人確認落款（Web Share API + fallback 到長按 Modal）
+        async function shareCardToFamily() {
+            const previewEl = document.querySelector('.card-preview');
+            const originalTransform = previewEl.style.transform;
+            previewEl.style.transform = 'none';
+
+            try {
+                const canvas = await html2canvas(previewEl, { scale: 2, backgroundColor: null, useCORS: true });
+
+                const finalCanvas = document.createElement('canvas');
+                finalCanvas.width = 1080;
+                finalCanvas.height = 1920;
+                const ctx = finalCanvas.getContext('2d');
+                ctx.fillStyle = '#f5f5f5';
+                ctx.fillRect(0, 0, 1080, 1920);
+
+                const targetHeight = 1400;
+                const scale = targetHeight / canvas.height;
+                const targetWidth = canvas.width * scale;
+                const x = (1080 - targetWidth) / 2;
+                const y = (1920 - targetHeight) / 2 - 40;
+
+                ctx.shadowColor = 'rgba(0, 0, 0, 0.1)';
+                ctx.shadowBlur = 30;
+                ctx.shadowOffsetY = 15;
+                ctx.drawImage(canvas, x, y, targetWidth, targetHeight);
+                ctx.shadowColor = 'transparent';
+
+                ctx.fillStyle = '#999999';
+                ctx.font = '500 26px "Noto Sans TC", sans-serif';
+                ctx.textAlign = 'right';
+                ctx.fillText('免費輓聯產生器 ‧ 慶豐蘭園', 1030, 1846);
+                ctx.fillText('judahai.github.io/qingfeng-orchid', 1030, 1884);
+
+                const blob = await new Promise(r => finalCanvas.toBlob(r, 'image/jpeg', 0.95));
+                const file = new File([blob], 'condolence_card.jpg', { type: 'image/jpeg' });
+
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    try {
+                        await navigator.share({
+                            files: [file],
+                            title: '請幫我看一下卡片',
+                            text: '幫我確認這張卡片的落款寫得對不對？'
+                        });
+                    } catch (shareErr) {
+                        if (shareErr.name !== 'AbortError') {
+                            showImageModal(URL.createObjectURL(blob));
+                        }
+                    }
+                } else {
+                    showImageModal(URL.createObjectURL(blob));
+                }
+            } catch (e) {
+                console.error('分享失敗:', e);
+                alert('請先產生圖片，長按儲存後再用 LINE 轉傳');
+            } finally {
+                previewEl.style.transform = originalTransform;
+            }
         }
     </script>
 </body>
