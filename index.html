@@ -68,6 +68,10 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Noto Sans TC', sans-serif;
             background: var(--bg-white);
@@ -367,6 +371,11 @@
             margin-bottom: 15px;
             line-height: 1.4;
             flex-grow: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
         .product-price {
@@ -461,7 +470,7 @@
             <!-- 喪禮 -->
             <div class="product-card" data-category="funeral" onclick="selectCatalogProduct('funeral', 'f7')"
                 id="card-f7">
-                <img src="images/f7.jpg" alt="照片準備中" class="product-img-placeholder" onerror="this.outerHTML='<div class=\'product-img-placeholder\'>照片準備中</div>'">
+                <img src="images/f7.jpg" alt="慶豐蘭園花禮" class="product-img-placeholder" loading="lazy" decoding="async" width="400" height="300" onerror="this.outerHTML='<div class=\'product-img-placeholder\'>照片準備中</div>'">
                 <div class="product-info">
                     <span class="scene-tag tag-funeral">喪禮</span>
                     <h3 class="product-title">桌上大器款 | 喪禮白花蘭盆</h3>
@@ -471,7 +480,7 @@
             </div>
             <div class="product-card" data-category="funeral" onclick="selectCatalogProduct('funeral', 'f10')"
                 id="card-f10">
-                <img src="images/f10.jpg" alt="照片準備中" class="product-img-placeholder" onerror="this.outerHTML='<div class=\'product-img-placeholder\'>照片準備中</div>'">
+                <img src="images/f10.jpg" alt="慶豐蘭園花禮" class="product-img-placeholder" loading="lazy" decoding="async" width="400" height="300" onerror="this.outerHTML='<div class=\'product-img-placeholder\'>照片準備中</div>'">
                 <div class="product-info">
                     <span class="scene-tag tag-funeral">喪禮</span>
                     <h3 class="product-title">走道尊榮款 | 喪禮白花高盆</h3>
@@ -481,7 +490,7 @@
             </div>
             <div class="product-card" data-category="funeral" onclick="selectCatalogProduct('funeral', 'f12')"
                 id="card-f12">
-                <img src="images/f12.jpg" alt="照片準備中" class="product-img-placeholder" onerror="this.outerHTML='<div class=\'product-img-placeholder\'>照片準備中</div>'">
+                <img src="images/f12.jpg" alt="慶豐蘭園花禮" class="product-img-placeholder" loading="lazy" decoding="async" width="400" height="300" onerror="this.outerHTML='<div class=\'product-img-placeholder\'>照片準備中</div>'">
                 <div class="product-info">
                     <span class="scene-tag tag-funeral">喪禮</span>
                     <h3 class="product-title">門面首席款 | 喪禮白花落地巨盆</h3>
@@ -492,7 +501,7 @@
             <!-- 開幕/喜慶 -->
             <div class="product-card" data-category="celebration" onclick="selectCatalogProduct('celebration', 'c7')"
                 id="card-c7">
-                <img src="images/c7.jpg" alt="照片準備中" class="product-img-placeholder" onerror="this.outerHTML='<div class=\'product-img-placeholder\'>照片準備中</div>'">
+                <img src="images/c7.jpg" alt="慶豐蘭園花禮" class="product-img-placeholder" loading="lazy" decoding="async" width="400" height="300" onerror="this.outerHTML='<div class=\'product-img-placeholder\'>照片準備中</div>'">
                 <div class="product-info">
                     <span class="scene-tag tag-celebration">開幕/喜慶</span>
                     <h3 class="product-title">桌上大器款 | 開幕紅花蘭盆</h3>
@@ -502,7 +511,7 @@
             </div>
             <div class="product-card" data-category="celebration" onclick="selectCatalogProduct('celebration', 'c10')"
                 id="card-c10">
-                <img src="images/c10.jpg" alt="照片準備中" class="product-img-placeholder" onerror="this.outerHTML='<div class=\'product-img-placeholder\'>照片準備中</div>'">
+                <img src="images/c10.jpg" alt="慶豐蘭園花禮" class="product-img-placeholder" loading="lazy" decoding="async" width="400" height="300" onerror="this.outerHTML='<div class=\'product-img-placeholder\'>照片準備中</div>'">
                 <div class="product-info">
                     <span class="scene-tag tag-celebration">開幕/喜慶</span>
                     <h3 class="product-title">走道尊榮款 | 開幕紅花高盆</h3>
@@ -512,7 +521,7 @@
             </div>
             <div class="product-card" data-category="celebration" onclick="selectCatalogProduct('celebration', 'c12')"
                 id="card-c12">
-                <img src="images/c12.jpg" alt="照片準備中" class="product-img-placeholder" onerror="this.outerHTML='<div class=\'product-img-placeholder\'>照片準備中</div>'">
+                <img src="images/c12.jpg" alt="慶豐蘭園花禮" class="product-img-placeholder" loading="lazy" decoding="async" width="400" height="300" onerror="this.outerHTML='<div class=\'product-img-placeholder\'>照片準備中</div>'">
                 <div class="product-info">
                     <span class="scene-tag tag-celebration">開幕/喜慶</span>
                     <h3 class="product-title">門面首席款 | 開幕紅花落地巨盆</h3>
