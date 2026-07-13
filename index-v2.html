@@ -589,15 +589,13 @@
         .card-theme-celebration {
             background-color: #C41E24 !important;
             /* 典雅中式紅，模擬實際印刷紅卡紙 */
-            color: #D4AF37 !important;
-            /* 霧面砂金，模擬燙金效果 */
+            color: #1A1A1A !important;
+            /* 墨黑 */
             border: 1px solid #A01A1F;
         }
 
         .card-theme-celebration .card-preview-phrase {
-            color: #D4AF37 !important;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-            /* 模擬燙金凸起的微陰影 */
+            color: #1A1A1A !important;
         }
 
         /* Columns */
@@ -710,12 +708,15 @@
 
         /* ===== 桌面端黃金比例雙欄 (Step 3b) ===== */
         @media (min-width: 769px) {
-            #step3b .step-header ~ *:not(.btn-row):not(.card-preview) {
+            #step3b .step-header~*:not(.btn-row):not(.card-preview) {
                 /* 左欄表單區域 */
             }
+
             #step3b {
-                display: none; /* 保持原本的 active 機制 */
+                display: none;
+                /* 保持原本的 active 機制 */
             }
+
             #step3b.active {
                 display: grid;
                 grid-template-columns: 1fr;
@@ -1067,10 +1068,12 @@
             慶豐蘭園</p>
         <p>雲林縣北港鎮 ・ 產地直送</p>
         <p>電話：<a href="tel:0988811607">0988-811-607</a></p>
-        <p style="margin-top:16px;">如果您需要直接諮詢：<a href="https://line.me/ti/p/K2LFf7aucm" target="_blank" rel="noopener">直接
+        <p style="margin-top:16px;">如果您需要直接諮詢：<a href="https://line.me/ti/p/K2LFf7aucm" target="_blank"
+                rel="noopener">直接
                 LINE 聯繫</a></p>
         <p style="margin-top: 16px; font-size: 0.8rem; color: rgba(255,255,255,0.4);">
-            實用工具：<a href="condolence.html" style="color: var(--accent-gold); text-decoration: none;">輓聯產生器</a> | <a href="greeting.html" style="color: var(--accent-gold); text-decoration: none;">賀詞產生器</a>
+            實用工具：<a href="condolence.html" style="color: var(--accent-gold); text-decoration: none;">輓聯產生器</a> | <a
+                href="greeting.html" style="color: var(--accent-gold); text-decoration: none;">賀詞產生器</a>
         </p>
         <p style="margin-top:24px; font-size:0.75rem; color:rgba(255,255,255,0.4);">&copy; 2026 慶豐蘭園 版權所有</p>
     </footer>
@@ -1084,21 +1087,41 @@
         // ===== Constants =====
         const LINE_URL = 'https://line.me/ti/p/K2LFf7aucm';
 
-        const PRODUCTS = {
+        const GAS_URL = '把你第2步複製的exec網址貼在這裡';
+
+        // 後備清單：後台連不上時的保險，價格與首頁一致
+        const FALLBACK = {
             funeral: [
-                { id: 'f7', name: '白蝴蝶蘭 7株', price: 2500 },
-                { id: 'f10', name: '白蝴蝶蘭 10株', price: 3500 },
-                { id: 'f12', name: '白蝴蝶蘭 12株落地盆', price: 4500 }
+                { id: 'f7', name: '白蝴蝶蘭 7株', price: 2800, image: '' },
+                { id: 'f10', name: '白蝴蝶蘭 10株', price: 4000, image: '' },
+                { id: 'f12', name: '白蝴蝶蘭 12株落地盆', price: 4800, image: '' }
             ],
             celebration: [
-                { id: 'c7', name: '紅花蝴蝶蘭 7株', price: 2500 },
-                { id: 'c10', name: '紅花蝴蝶蘭 10株', price: 3500 },
-                { id: 'c12', name: '紅花蝴蝶蘭 12株落地盆', price: 4500 }
+                { id: 'c7', name: '紅花蝴蝶蘭 7株', price: 2800, image: '' },
+                { id: 'c10', name: '紅花蝴蝶蘭 10株', price: 4000, image: '' },
+                { id: 'c12', name: '紅花蝴蝶蘭 12株落地盆', price: 4800, image: '' }
             ]
         };
-        // Opening and temple use red flower (celebration products)
-        PRODUCTS.opening = PRODUCTS.celebration;
-        PRODUCTS.temple = PRODUCTS.celebration;
+        FALLBACK.opening = FALLBACK.celebration;
+        FALLBACK.temple = FALLBACK.celebration;
+
+        let PRODUCTS = FALLBACK;
+
+        // 開頁抓後台商品，成功即覆蓋預設值
+        fetch(GAS_URL)
+            .then(r => r.json())
+            .then(list => {
+                const grouped = { funeral: [], celebration: [] };
+                list.forEach(p => { if (grouped[p.category]) grouped[p.category].push(p); });
+                if (!grouped.funeral.length) grouped.funeral = FALLBACK.funeral;
+                if (!grouped.celebration.length) grouped.celebration = FALLBACK.celebration;
+                grouped.opening = grouped.celebration;
+                grouped.temple = grouped.celebration;
+                PRODUCTS = grouped;
+                // 若客人已停在商品頁，即時刷新畫面
+                if (document.getElementById('step2').classList.contains('active')) renderProducts();
+            })
+            .catch(err => console.warn('後台載入失敗，使用預設商品', err));
 
         const SCENE_LABELS = {
             opening: '開幕誌慶', funeral: '追思致哀',
@@ -1165,7 +1188,7 @@
             grid.innerHTML = list.map(p => `
             <div class="product-card${p.id === order.productId ? ' selected' : ''}"
                  onclick="selectProduct('${p.id}','${p.name}',${p.price},this)">
-                <div class="product-photo-placeholder">照片<br>準備中</div>
+                ${p.image ? `<img src="${p.image}" alt="${p.name}" style="width:80px;height:80px;border-radius:10px;object-fit:cover;flex-shrink:0;" loading="lazy">` : `<div class="product-photo-placeholder">照片<br>準備中</div>`}
                 <div class="product-info">
                     <div class="product-name">${p.name}</div>
                     <div class="product-price">NT$ ${p.price.toLocaleString()}</div>
@@ -1337,7 +1360,8 @@
             updatePreview();
         }
 
-        function updatePreview() {
+        async function updatePreview() {
+            await document.fonts.ready;
             const phrase = document.getElementById('customPhrase')?.value || order.selectedPhrase || '（用詞）';
             const sender = document.getElementById('senderName')?.value || '（送禮人）';
             let topLine = '';
