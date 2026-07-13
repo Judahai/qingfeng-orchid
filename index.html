@@ -442,20 +442,36 @@
     </header>
 
     <!-- 信任承諾區塊 (戴假外地不熟客的第一屏) -->
-    <section
-        style="padding: 48px 20px; background: linear-gradient(180deg, #fff 0%, #fafafa 100%); text-align: center;">
-        <div style="max-width: 700px; margin: 0 auto;">
-            <h2
-                style="font-family: 'Noto Serif TC', serif; color: #2c3e50; font-size: 1.75rem; margin-bottom: 16px; letter-spacing: 0.05em;">
-                人到不了，讓花代替您到</h2>
-            <p style="color: #666; font-size: 1rem; line-height: 1.9; max-width: 580px; margin: 0 auto;">
-                無論是莊重的喪禮致哀，還是體面的開幕祝賀，每一次送花，都是一份不能出錯的心意。<br>
-                慶豐在地深耕 26 年，熟悉中南部各項禮俗與會場眉角。<br>
-                您只需提供基本資訊，我們將為您嚴格把關落款與用詞——像是往生者輩分較高、或平常信仰不同，落款用詞就有差別，這些細節我們會幫您留意。<br>
-                確保您的名字，穩穩地、體面地站在會場。
+    <section class="intro-section">
+        <div class="intro-content">
+            <h2>人到不了，讓花代替您到</h2>
+            <p class="intro-text" id="introText">
+                無論是莊重的喪禮致哀，還是體面的開幕祝賀，每一次送花，都是一份不能出錯的心意。慶豐在地深耕 26 年，熟悉中南部各項禮俗與會場眉角。
+                <span class="intro-more">您只需提供基本資訊，我們將為您嚴格把關落款與用詞——像是往生者輩分較高、或平常信仰不同，落款用詞就有差別，這些細節我們會幫您留意。確保您的名字，穩穩地、體面地站在會場。</span>
             </p>
+            <button type="button" class="intro-toggle" onclick="toggleIntro()" id="introToggleBtn">展開閱讀 ▾</button>
         </div>
     </section>
+
+    <style>
+    .intro-section { padding: 40px 20px 24px; background: linear-gradient(180deg, #fff 0%, #fafafa 100%); text-align: center; }
+    .intro-content { max-width: 700px; margin: 0 auto; }
+    .intro-content h2 { font-family:'Noto Serif TC', serif; color:#2c3e50; font-size:1.5rem; margin-bottom:14px; letter-spacing:0.05em; }
+    .intro-text { color:#666; font-size:1rem; line-height:1.9; max-width:580px; margin:0 auto; }
+    .intro-more { display:none; }
+    .intro-text.expanded .intro-more { display:inline; }
+    .intro-toggle { margin-top:10px; background:none; border:none; color:var(--accent-gold); font-size:0.9rem; font-weight:500; cursor:pointer; padding:6px 12px; }
+    .intro-toggle:hover { text-decoration:underline; }
+    </style>
+
+    <script>
+    function toggleIntro() {
+        const text = document.getElementById('introText');
+        const btn = document.getElementById('introToggleBtn');
+        text.classList.toggle('expanded');
+        btn.textContent = text.classList.contains('expanded') ? '收合 ▴' : '展開閱讀 ▾';
+    }
+    </script>
 
 
     <!-- 商品目錄照片牆 (依價位等級展示) -->
@@ -491,20 +507,4 @@
             </div>
 
             <!-- $4,800 門面首席款 -->
-            <div class="product-card" onclick="location.href='index-v2.html'" style="cursor: pointer;">
-                <img src="images/level10.jpg" alt="蘭花禮 門面首席款 價位示意" class="product-img-placeholder" style="object-fit:cover;" decoding="async" width="400" height="300" onerror="this.src='images/placeholder.jpg'; this.onerror=null;">
-                <div class="product-info">
-                    <span class="scene-tag" style="background:#B8860B;">頂級尊榮</span>
-                    <h3 class="product-title">門面首席款</h3>
-                    <p class="product-desc">進場第一眼，看到的就是您的名字
-                        <br><span style="font-size:0.78rem;color:#aaa;">情境示意圖・實品氣勢依現場組盆更大</span></p>
-                    <div class="product-price">$4,800</div>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-    <script src="nav.js?v=2"></script>
-</body>
-</html>
+       
