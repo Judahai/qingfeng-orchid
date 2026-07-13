@@ -1050,6 +1050,17 @@
             </div>
 
             <div class="form-group">
+                <label class="form-label">數量</label>
+                <div class="tag-group">
+                    <button class="tag-btn selected" onclick="setQty(1,this)">1 盆</button>
+                    <button class="tag-btn" onclick="setQty(2,this)">一對（2 盆）</button>
+                    <button class="tag-btn" onclick="setQty(3,this)">3 盆</button>
+                    <button class="tag-btn" onclick="setQty(4,this)">4 盆以上（LINE註明）</button>
+                </div>
+                <p class="form-hint">開幕、祝賀常見送一對；一對的卡片文字兩盆相同</p>
+            </div>
+
+            <div class="form-group">
                 <label class="form-label">訂購人姓名 <span class="required">*</span></label>
                 <input type="text" class="form-input" id="buyerName" placeholder="您的姓名">
                 <p class="form-hint">此為本流程唯一需要打字的地方</p>
@@ -1092,14 +1103,14 @@
         // 後備清單：後台連不上時的保險，價格與首頁一致
         const FALLBACK = {
             funeral: [
-                { id: 'f7', name: '白蝴蝶蘭 7株', price: 2800, image: '' },
-                { id: 'f10', name: '白蝴蝶蘭 10株', price: 4000, image: '' },
-                { id: 'f12', name: '白蝴蝶蘭 12株落地盆', price: 4800, image: '' }
+                { id: 'f7', name: '白蝴蝶蘭 7株', price: 2800, imageUrl: '' },
+                { id: 'f10', name: '白蝴蝶蘭 10株', price: 4000, imageUrl: '' },
+                { id: 'f12', name: '白蝴蝶蘭 12株落地盆', price: 4800, imageUrl: '' }
             ],
             celebration: [
-                { id: 'c7', name: '紅花蝴蝶蘭 7株', price: 2800, image: '' },
-                { id: 'c10', name: '紅花蝴蝶蘭 10株', price: 4000, image: '' },
-                { id: 'c12', name: '紅花蝴蝶蘭 12株落地盆', price: 4800, image: '' }
+                { id: 'c7', name: '紅花蝴蝶蘭 7株', price: 2800, imageUrl: '' },
+                { id: 'c10', name: '紅花蝴蝶蘭 10株', price: 4000, imageUrl: '' },
+                { id: 'c12', name: '紅花蝴蝶蘭 12株落地盆', price: 4800, imageUrl: '' }
             ]
         };
         FALLBACK.opening = FALLBACK.celebration;
@@ -1108,7 +1119,7 @@
         let PRODUCTS = FALLBACK;
 
         // 開頁抓後台商品，成功即覆蓋預設值
-        fetch(GAS_URL)
+        fetch(GAS_URL + '?action=getProducts')
             .then(r => r.json())
             .then(list => {
                 const grouped = { funeral: [], celebration: [] };
@@ -1153,8 +1164,9 @@
             celebType: '', templeGod: 'general',
             selectedPhrase: '', customPhrase: '',
             lastName: '', firstName: '', husbandName: '',
-            recipientName: '', senderName: '', footerSuffix: '',
-            buyerName: ''
+            recipientName: '', senderName: '', targetDate: '',
+            footerSuffix: '',
+            buyerName: '', quantity: 1
         };
 
         // ===== Navigation =====
@@ -1188,7 +1200,7 @@
             grid.innerHTML = list.map(p => `
             <div class="product-card${p.id === order.productId ? ' selected' : ''}"
                  onclick="selectProduct('${p.id}','${p.name}',${p.price},this)">
-                ${p.image ? `<img src="${p.image}" alt="${p.name}" style="width:80px;height:80px;border-radius:10px;object-fit:cover;flex-shrink:0;" loading="lazy">` : `<div class="product-photo-placeholder">照片<br>準備中</div>`}
+                ${p.imageUrl ? `<img src="${p.imageUrl}" alt="${p.name}" style="width:80px;height:80px;border-radius:10px;object-fit:cover;flex-shrink:0;" loading="lazy">` : `<div class="product-photo-placeholder">照片<br>準備中</div>`}
                 <div class="product-info">
                     <div class="product-name">${p.name}</div>
                     <div class="product-price">NT$ ${p.price.toLocaleString()}</div>
@@ -1406,6 +1418,13 @@
         }
 
         // ===== Step 4: Summary & LINE Submit =====
+        function setQty(n, el) {
+            order.quantity = n;
+            el.parentElement.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('selected'));
+            el.classList.add('selected');
+            setupStep4(); // 重算摘要總價
+        }
+
         function setupStep4() {
             order.customPhrase = document.getElementById('customPhrase')?.value || '';
             order.senderName = document.getElementById('senderName')?.value || '';
@@ -1421,7 +1440,7 @@
             const summary = document.getElementById('orderSummary');
             summary.innerHTML = `
             <div style="margin-bottom:12px;"><strong>場合：</strong>${SCENE_LABELS[order.scene]}</div>
-            <div style="margin-bottom:12px;"><strong>品項：</strong>${order.productName} — NT$ ${order.productPrice.toLocaleString()}</div>
+            <div style="margin-bottom:12px;"><strong>品項：</strong>${order.productName} × ${order.quantity} — 共 NT$ ${(order.productPrice * order.quantity).toLocaleString()}</div>
             <div style="margin-bottom:12px;"><strong>卡片用詞：</strong>${phrase}</div>
             <div style="margin-bottom:12px;"><strong>送禮人：</strong>${order.senderName} ${order.footerSuffix}</div>
             <div style="margin-bottom:12px;"><strong>付款方式：</strong>轉帳 / 貨到付款</div>
@@ -1448,7 +1467,8 @@
             }
 
             const msg = [
-                `訂購【${SCENE_LABELS[order.scene]}】【${order.productName}】`,
+                `訂購【${SCENE_LABELS[order.scene]}】【${order.productName}】× ${order.quantity}`,
+                `總計：NT$ ${(order.productPrice * order.quantity).toLocaleString()}`,
                 `卡片文字：`,
                 `　上款：${topLine}`,
                 `　中款：${phrase}`,
