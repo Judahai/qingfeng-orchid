@@ -178,15 +178,9 @@
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="form-group col" style="flex: 0.5;">
-                            <label>姓氏</label>
-                            <input type="text" class="form-control" id="f-lastname" placeholder="例: 陳" value="陳">
-                        </div>
-                        <div class="form-group col">
-                            <label>名字</label>
-                            <input type="text" class="form-control" id="f-firstname" placeholder="例: 大明" value="大明">
-                        </div>
+                    <div class="form-group">
+                        <label>往生者全名</label>
+                        <input type="text" class="form-control" id="f-fullname" placeholder="例: 陳大明" value="陳大明" maxlength="6">
                     </div>
 
                     <div class="form-group" id="husband-name-group" style="display: none;">
@@ -228,6 +222,7 @@
                         <p style="font-size: 0.8rem; color: #888; margin-top: 8px; margin-bottom: 0;">長按圖片即可儲存至手機</p>
                     </div>
                     <button type="button" class="btn" style="background: white; color: #333; border: 1px solid #ccc; width: 100%; border-radius: 50px; font-size: 1.1rem; padding: 12px;" onclick="copyCardText()">📋 複製純文字</button>
+                    <button type="button" class="btn" style="background: #2c5f8a; color: white; width: 100%; border-radius: 50px; font-size: 1.05rem; padding: 12px;" onclick="downloadWordFile()">📄 下載 Word 檔（標楷體可列印）</button>
                     <button type="button" class="btn" style="background:#06C755;color:#fff;width:100%;border-radius:50px;font-size:1.05rem;padding:12px;" onclick="shareCardToFamily()">👨‍👩‍👧 傳給家人確認落款</button>
                 </div>
             </div>
@@ -279,8 +274,8 @@
                     age: parseInt(document.getElementById('f-age').value, 10),
                     religion: document.getElementById('f-religion').value,
                     relation: document.getElementById('f-relation').value,
-                    lastName: document.getElementById('f-lastname').value,
-                    firstName: document.getElementById('f-firstname').value,
+                    lastName: parseFullName().lastName,
+                    firstName: parseFullName().firstName,
                     husbandName: document.getElementById('f-husbandname').value,
                     isMarried: document.getElementById('f-husbandname').value.trim() !== '',
                     useHusbandSurname: document.getElementById('f-usehusband').checked,
@@ -522,6 +517,40 @@
             modal.appendChild(resultImg);
             modal.appendChild(hint);
             document.body.appendChild(modal);
+        }
+
+        // 下載 Word 檔（標楷體直書，含浮水印）
+        function downloadWordFile() {
+            const top = document.getElementById('preview-top').innerText;
+            const middle = document.getElementById('preview-middle').innerText;
+            const bottom = document.getElementById('preview-bottom').innerText;
+
+            const html = `
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+      xmlns:w="urn:schemas-microsoft-com:office:word"
+      xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><title>輓聯卡片</title></head>
+<body style="font-family:標楷體, DFKai-SB, serif;">
+    <table width="100%" style="height:600pt;" cellspacing="0" cellpadding="20">
+        <tr>
+            <td width="30%" valign="bottom" align="center"
+                style="layout-flow:vertical-ideographic; font-size:22pt; font-family:標楷體;">${bottom}</td>
+            <td width="40%" valign="middle" align="center"
+                style="layout-flow:vertical-ideographic; font-size:48pt; font-weight:bold; font-family:標楷體;">${middle}</td>
+            <td width="30%" valign="top" align="center"
+                style="layout-flow:vertical-ideographic; font-size:24pt; font-family:標楷體;">${top}</td>
+        </tr>
+    </table>
+    <p style="text-align:right; font-size:9pt; color:#999999; font-family:標楷體;">
+        卡片格式由 慶豐蘭園 免費產生 ‧ judahai.github.io/qingfeng-orchid</p>
+</body></html>`;
+
+            const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = '輓聯卡片_慶豐蘭園.doc';
+            a.click();
+            URL.revokeObjectURL(a.href);
         }
 
         // 複製純文字
