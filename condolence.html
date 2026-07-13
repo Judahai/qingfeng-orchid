@@ -265,6 +265,16 @@
 
             let currentPhrases = [];
 
+            // 全名自動拆成姓＋名（供既有資料庫函式使用，複姓自動判斷）
+            function parseFullName() {
+                const full = document.getElementById('f-fullname').value.trim();
+                const compound = ['歐陽','司馬','司徒','張簡','范姜','陳黃','諸葛','上官','夏侯','東方'];
+                if (compound.includes(full.slice(0, 2))) {
+                    return { lastName: full.slice(0, 2), firstName: full.slice(2) };
+                }
+                return { lastName: full.slice(0, 1), firstName: full.slice(1) };
+            }
+
             function updateUI() {
                 // 女性顯示夫姓欄位
                 elHusbandGroup.style.display = elGender.value === 'female' ? 'block' : 'none';
