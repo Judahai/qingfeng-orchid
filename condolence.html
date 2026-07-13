@@ -222,7 +222,10 @@
                         <p style="font-size: 0.8rem; color: #888; margin-top: 8px; margin-bottom: 0;">長按圖片即可儲存至手機</p>
                     </div>
                     <button type="button" class="btn" style="background: white; color: #333; border: 1px solid #ccc; width: 100%; border-radius: 50px; font-size: 1.1rem; padding: 12px;" onclick="copyCardText()">📋 複製純文字</button>
-                    <button type="button" class="btn" style="background: #2c5f8a; color: white; width: 100%; border-radius: 50px; font-size: 1.05rem; padding: 12px;" onclick="downloadWordFile()">📄 下載 Word 檔（標楷體可列印）</button>
+                    <div>
+                        <button type="button" class="btn" style="background: #2c5f8a; color: white; width: 100%; border-radius: 50px; font-size: 1.05rem; padding: 12px;" onclick="downloadWordFile()">📄 下載 Word 檔（標楷體可列印）</button>
+                        <p style="font-size: 0.75rem; color: #999; margin: 4px 0 0;">Word 檔適合電腦開啟列印；手機請直接使用上方圖片功能</p>
+                    </div>
                     <button type="button" class="btn" style="background:#06C755;color:#fff;width:100%;border-radius:50px;font-size:1.05rem;padding:12px;" onclick="shareCardToFamily()">👨‍👩‍👧 傳給家人確認落款</button>
                 </div>
             </div>
@@ -529,7 +532,7 @@
             document.body.appendChild(modal);
         }
 
-        // 下載 Word 檔（標楷體直書，含浮水印）
+        // 下載 Word 檔（標楷體直書滿版，含浮水印）
         function downloadWordFile() {
             const top = document.getElementById('preview-top').innerText;
             const middle = document.getElementById('preview-middle').innerText;
@@ -545,28 +548,27 @@
     <style>
         @page WordSection1 {
             size: 21.0cm 29.7cm;
-            margin: 1.0cm 1.0cm 1.0cm 1.0cm;
-            mso-header-margin: 0.5cm;
-            mso-footer-margin: 0.5cm;
-            mso-paper-source: 0;
+            margin: 0.5cm 0.5cm 0.5cm 0.5cm;
         }
         div.WordSection1 { page: WordSection1; }
     </style>
 </head>
-<body style="font-family:標楷體, DFKai-SB, serif;">
+<body style="font-family:標楷體, DFKai-SB, serif; margin:0; padding:0;">
 <div class="WordSection1">
-    <table width="100%" style="height:700pt;" cellspacing="0" cellpadding="0">
+    <table width="100%" style="height:27.5cm;" cellspacing="0" cellpadding="0">
         <tr>
-            <td width="30%" valign="bottom" align="center"
-                style="layout-flow:vertical-ideographic; font-size:36pt; font-family:標楷體;">${bottom}</td>
-            <td width="40%" valign="middle" align="center"
-                style="layout-flow:vertical-ideographic; font-size:90pt; font-weight:bold; font-family:標楷體;">${middle}</td>
-            <td width="30%" valign="top" align="center"
-                style="layout-flow:vertical-ideographic; font-size:36pt; font-family:標楷體;">${top}</td>
+            <td width="27%" valign="bottom" align="center"
+                style="layout-flow:vertical-ideographic; font-size:70pt; font-family:標楷體;">${bottom}</td>
+            <td width="46%" valign="middle" align="center"
+                style="layout-flow:vertical-ideographic; font-size:160pt; font-weight:bold; font-family:標楷體;">${middle}</td>
+            <td width="27%" valign="top" align="center"
+                style="layout-flow:vertical-ideographic; font-size:70pt; font-family:標楷體;">${top}</td>
+        </tr>
+        <tr>
+            <td colspan="3" align="right" height="1"
+                style="font-size:8pt; color:#aaaaaa; font-family:標楷體;">卡片格式由 慶豐蘭園 免費產生 ‧ judahai.github.io/qingfeng-orchid</td>
         </tr>
     </table>
-    <p style="text-align:right; font-size:9pt; color:#999999; font-family:標楷體; margin-top:20px;">
-        卡片格式由 慶豐蘭園 免費產生 ‧ judahai.github.io/qingfeng-orchid</p>
 </div>
 </body></html>`;
 
