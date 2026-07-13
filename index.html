@@ -462,76 +462,46 @@
     <section class="catalog-section" id="catalog-section">
         <div class="catalog-header">
             <h2>產地當週新株 ‧ 專人配送到場</h2>
-            <div class="catalog-filters">
-                <button class="filter-btn active" data-filter="all" onclick="filterCatalog('all', this)">全部款式</button>
-                <button class="filter-btn" data-filter="funeral" onclick="filterCatalog('funeral', this)">喪禮蘭花</button>
-                <button class="filter-btn" data-filter="celebration"
-                    onclick="filterCatalog('celebration', this)">開幕/喜慶</button>
-            </div>
+            <p style="color: #666; margin-top: 10px;">點擊選擇預算等級，進入一般訂花區選擇「喪禮」或「喜慶」款式</p>
         </div>
-        <div class="catalog-grid" id="catalog-grid">
-            <!-- 喪禮 -->
-            <div class="product-card" data-category="funeral" onclick="selectCatalogProduct('funeral', 'f7')"
-                id="card-f7">
-                <img src="images/f7.jpg" alt="慶豐蘭園花禮" class="product-img-placeholder" loading="lazy" decoding="async" width="400" height="300" onerror="this.outerHTML='<div class=\'product-img-placeholder\'>照片準備中</div>'">
+        <div class="catalog-grid" id="catalog-grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
+            
+            <!-- $2,800 桌上大器款 -->
+            <div class="product-card" onclick="location.href='index-v2.html'" style="cursor: pointer;">
+                <img src="images/level10.jpg" alt="蘭花禮 桌上大器款 價位示意" class="product-img-placeholder" style="object-fit:cover;" decoding="async" width="400" height="300" onerror="this.src='images/placeholder.jpg'; this.onerror=null;">
                 <div class="product-info">
-                    <span class="scene-tag tag-funeral">喪禮</span>
-                    <h3 class="product-title">桌上大器款 | 喪禮白花蘭盆</h3>
-                    <p class="product-desc">桌上顯眼有面子<br><span style="font-size:0.82rem; color:#aaa;">當週產地新株・非回收盆</span></p>
+                    <span class="scene-tag" style="background:#B8860B;">熱銷入門</span>
+                    <h3 class="product-title">桌上大器款</h3>
+                    <p class="product-desc">放在桌上就顯眼，心意不失禮
+                        <br><span style="font-size:0.78rem;color:#aaa;">情境示意圖・實品當週產地新株組盆</span></p>
                     <div class="product-price">$2,800</div>
                 </div>
             </div>
-            <div class="product-card" data-category="funeral" onclick="selectCatalogProduct('funeral', 'f10')"
-                id="card-f10">
-                <img src="images/f10.jpg" alt="慶豐蘭園花禮" class="product-img-placeholder" loading="lazy" decoding="async" width="400" height="300" onerror="this.outerHTML='<div class=\'product-img-placeholder\'>照片準備中</div>'">
+
+            <!-- $4,000 走道尊榮款 -->
+            <div class="product-card" onclick="location.href='index-v2.html'" style="cursor: pointer;">
+                <img src="images/level10.jpg" alt="蘭花禮 走道尊榮款 實拍" class="product-img-placeholder" style="object-fit:cover;" decoding="async" width="400" height="300" onerror="this.src='images/placeholder.jpg'; this.onerror=null;">
                 <div class="product-info">
-                    <span class="scene-tag tag-funeral">喪禮</span>
-                    <h3 class="product-title">走道尊榮款 | 喪禮白花高盆</h3>
-                    <p class="product-desc">走道旁一眼認出，名字不被擋<br><span style="font-size:0.82rem; color:#aaa;">當週產地新株・非回收盆</span></p>
+                    <span class="scene-tag" style="background:#B8860B;">最受歡迎</span>
+                    <h3 class="product-title">走道尊榮款</h3>
+                    <p class="product-desc">走道旁一眼認出，您的名字不被擋
+                        <br><span style="font-size:0.78rem;color:#aaa;">園內實拍・當週產地新株</span></p>
                     <div class="product-price">$4,000</div>
                 </div>
             </div>
-            <div class="product-card" data-category="funeral" onclick="selectCatalogProduct('funeral', 'f12')"
-                id="card-f12">
-                <img src="images/f12.jpg" alt="慶豐蘭園花禮" class="product-img-placeholder" loading="lazy" decoding="async" width="400" height="300" onerror="this.outerHTML='<div class=\'product-img-placeholder\'>照片準備中</div>'">
+
+            <!-- $4,800 門面首席款 -->
+            <div class="product-card" onclick="location.href='index-v2.html'" style="cursor: pointer;">
+                <img src="images/level10.jpg" alt="蘭花禮 門面首席款 價位示意" class="product-img-placeholder" style="object-fit:cover;" decoding="async" width="400" height="300" onerror="this.src='images/placeholder.jpg'; this.onerror=null;">
                 <div class="product-info">
-                    <span class="scene-tag tag-funeral">喪禮</span>
-                    <h3 class="product-title">門面首席款 | 喪禮白花落地巨盆</h3>
-                    <p class="product-desc">進場第一眼看到的就是您的名字<br><span style="font-size:0.82rem; color:#aaa;">當週產地新株・非回收盆</span></p>
+                    <span class="scene-tag" style="background:#B8860B;">頂級尊榮</span>
+                    <h3 class="product-title">門面首席款</h3>
+                    <p class="product-desc">進場第一眼，看到的就是您的名字
+                        <br><span style="font-size:0.78rem;color:#aaa;">情境示意圖・實品氣勢依現場組盆更大</span></p>
                     <div class="product-price">$4,800</div>
                 </div>
             </div>
-            <!-- 開幕/喜慶 -->
-            <div class="product-card" data-category="celebration" onclick="selectCatalogProduct('celebration', 'c7')"
-                id="card-c7">
-                <img src="images/c7.jpg" alt="慶豐蘭園花禮" class="product-img-placeholder" loading="lazy" decoding="async" width="400" height="300" onerror="this.outerHTML='<div class=\'product-img-placeholder\'>照片準備中</div>'">
-                <div class="product-info">
-                    <span class="scene-tag tag-celebration">開幕/喜慶</span>
-                    <h3 class="product-title">桌上大器款 | 開幕紅花蘭盆</h3>
-                    <p class="product-desc">送蘭花，你的名字在他店裡站三個月<br><span style="font-size:0.82rem; color:#aaa;">當週產地新株・非回收盆</span></p>
-                    <div class="product-price">$2,800</div>
-                </div>
-            </div>
-            <div class="product-card" data-category="celebration" onclick="selectCatalogProduct('celebration', 'c10')"
-                id="card-c10">
-                <img src="images/c10.jpg" alt="慶豐蘭園花禮" class="product-img-placeholder" loading="lazy" decoding="async" width="400" height="300" onerror="this.outerHTML='<div class=\'product-img-placeholder\'>照片準備中</div>'">
-                <div class="product-info">
-                    <span class="scene-tag tag-celebration">開幕/喜慶</span>
-                    <h3 class="product-title">走道尊榮款 | 開幕紅花高盆</h3>
-                    <p class="product-desc">走道旁一眼認出，名字不被擋<br><span style="font-size:0.85rem; color:#888;">當週產地新株・非回收盆</span></p>
-                    <div class="product-price">$4,000</div>
-                </div>
-            </div>
-            <div class="product-card" data-category="celebration" onclick="selectCatalogProduct('celebration', 'c12')"
-                id="card-c12">
-                <img src="images/c12.jpg" alt="慶豐蘭園花禮" class="product-img-placeholder" loading="lazy" decoding="async" width="400" height="300" onerror="this.outerHTML='<div class=\'product-img-placeholder\'>照片準備中</div>'">
-                <div class="product-info">
-                    <span class="scene-tag tag-celebration">開幕/喜慶</span>
-                    <h3 class="product-title">門面首席款 | 開幕紅花落地巨盆</h3>
-                    <p class="product-desc">進門第一個看到的就是您的名字</p>
-                    <div class="product-price">$4,800</div>
-                </div>
-            </div>
+
         </div>
     </section>
 
