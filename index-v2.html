@@ -1678,11 +1678,19 @@
                 const out = await res.json();
                 if (out.status !== 'success') throw new Error(out.error || '送出失敗');
 
+                const bankInfo = order.payment === '轉帳' ? `
+                    <div style="background:#FFF8E7; border:1px solid #E8D9A0; border-radius:10px; padding:14px; margin-top:14px; text-align:left;">
+                        <p style="font-weight:700; margin-bottom:6px;">💰 轉帳資訊</p>
+                        <p style="font-size:1.05rem;">合作金庫（006）<br>戶名：蔡哲宇<br>帳號：<strong style="letter-spacing:1px;">0270988010526</strong></p>
+                        <p style="font-size:0.85rem; color:var(--text-mid); margin-top:8px;">轉帳完成後，請透過下方 LINE 回傳帳號末五碼，核對後即安排出貨。</p>
+                    </div>` : '';
+
                 document.getElementById('orderSummary').innerHTML = `
                     <div style="text-align:center; padding:20px;">
                         <div style="font-size:2.5rem;">✅</div>
                         <h3 style="margin:10px 0;">訂單已送出</h3>
                         <p style="font-size:1.3rem; font-weight:700; color:var(--accent-gold);">訂單編號：${out.orderId}</p>
+                        ${bankInfo}
                         <p style="color:var(--text-mid); font-size:0.9rem; margin-top:10px;">我們將盡快與您電話確認。<br>也可以加入 LINE 追蹤訂單、傳送轉帳末五碼：</p>
                         <a href="${LINE_URL}" target="_blank" class="btn btn-line" style="display:inline-block; margin-top:12px; text-decoration:none;">加入 LINE 好友</a>
                     </div>`;
