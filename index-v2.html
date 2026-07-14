@@ -1091,6 +1091,10 @@
                     <button class="tag-btn" onclick="setPayment('貨到付款',this)">貨到付款</button>
                 </div>
             </div>
+            <div class="form-group" id="last5Group" style="display:none;">
+                <label class="form-label">轉帳後五碼</label>
+                <input type="text" class="form-input" id="last5" placeholder="轉帳完成後填寫，方便核對" maxlength="5">
+            </div>
             <div class="form-group">
                 <label class="form-label">訂購人姓名 <span class="required">*</span></label>
                 <input type="text" class="form-input" id="buyerName" placeholder="您的姓名">
@@ -1477,7 +1481,7 @@
             <div style="margin-bottom:12px;"><strong>付款方式：</strong>轉帳 / 貨到付款</div>
             <div style="font-size:0.9rem; color:#721c24; background-color:#f8d7da; border:1px solid #f5c6cb; border-radius:8px; padding:12px; margin-top:16px;">
                 ⚠️ <strong>注意：本系統不提供線上刷卡。</strong><br>
-                選擇轉帳者，轉帳完成後<strong>請務必於 LINE 回傳您的帳號末五碼</strong>，核對無誤後始安排出貨。
+                選擇轉帳者，轉帳完成後<strong>請務必於 LINE 回傳您的帳號末五碼</strong>，核對無誤後始安排出貨。<br>🌸 花材為當日現場現組，實際花況、株型與網頁圖片可能略有差異，皆保持同等級品質，介意者請 LINE 告知。
             </div>
         `;
         }
@@ -1486,6 +1490,7 @@
             order.payment = p;
             el.parentElement.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('selected'));
             el.classList.add('selected');
+            document.getElementById('last5Group').style.display = (p === '轉帳') ? 'block' : 'none';
         }
 
         async function submitToLine() {
@@ -1518,6 +1523,7 @@
                 area: area,
                 address: address,
                 payment: order.payment,
+                last5: document.getElementById('last5')?.value || '',
                 imageUrl: prod.imageUrl || ''
             };
 
