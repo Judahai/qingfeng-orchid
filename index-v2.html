@@ -754,6 +754,132 @@
                 margin-bottom: 20px;
             }
         }
+        /* ============================== */
+        /* ===== 美化補丁 v1（可整段移除還原）===== */
+        /* ============================== */
+
+        /* --- 卡片預覽：從「色塊」變「實體卡紙」 --- */
+        .card-preview-inner {
+            border-radius: 6px;
+            box-shadow:
+                0 1px 2px rgba(0,0,0,0.12),
+                0 8px 24px rgba(0,0,0,0.18),
+                inset 0 0 60px rgba(0,0,0,0.04);   /* 紙張內陰影，立體感 */
+            position: relative;
+        }
+        .card-preview-inner::before {              /* 內框金線，像真卡的燙邊 */
+            content: '';
+            position: absolute;
+            inset: 8px;
+            border: 1px solid rgba(184, 134, 11, 0.45);
+            border-radius: 3px;
+            pointer-events: none;
+        }
+        .card-theme-funeral {
+            background: linear-gradient(160deg, #FCFAF5 0%, #F3EFE6 100%) !important; /* 米白紙紋 */
+        }
+        .card-theme-funeral::before {
+            border-color: rgba(120, 120, 120, 0.35); /* 喪禮卡用銀灰線，不用金 */
+        }
+        .card-theme-celebration {
+            background: linear-gradient(160deg, #CE2229 0%, #B01B21 100%) !important; /* 紅卡漸層 */
+        }
+        .card-theme-celebration,
+        .card-theme-celebration .card-preview-phrase,
+        .card-theme-celebration .card-preview-to,
+        .card-theme-celebration .card-preview-from {
+            color: #F5D67A !important;              /* 紅卡配砂金字，模擬燙金 */
+            text-shadow: 0 1px 1px rgba(0,0,0,0.25);
+        }
+        .card-preview-label {
+            letter-spacing: 2px;
+        }
+
+        /* --- 選項按鈕：加大、有觸感 --- */
+        .tag-btn {
+            padding: 10px 22px;
+            font-size: 0.95rem;
+            border-width: 1.5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .tag-btn:active { transform: scale(0.96); }
+        .tag-btn.selected {
+            box-shadow: 0 3px 10px rgba(27, 67, 50, 0.28);
+            font-weight: 700;
+        }
+
+        /* --- 場合卡：hover 帶金色細節 --- */
+        .scene-card:hover .scene-card-icon { color: var(--accent-gold); }
+        .scene-card.selected .scene-card-icon { color: var(--primary-green); }
+        .scene-card { border-radius: 14px; }
+
+        /* --- 商品卡：照片放大、價格更醒目 --- */
+        .product-card img,
+        .product-photo-placeholder {
+            width: 96px !important;
+            height: 96px !important;
+        }
+        .product-card { padding: 14px 16px; }
+        .product-price { letter-spacing: 0.5px; }
+        .product-card.selected {
+            box-shadow: 0 4px 14px rgba(27, 67, 50, 0.15);
+        }
+
+        /* --- 用詞卡：桌面雙欄，不再一長串 --- */
+        @media (min-width: 600px) {
+            .phrase-grid { grid-template-columns: 1fr 1fr; }
+        }
+        .phrase-card { border-radius: 12px; }
+
+        /* --- 表單：焦點更明確、區塊呼吸感 --- */
+        .form-input { border-radius: 12px; }
+        .form-input:focus { border-color: var(--accent-gold); box-shadow: 0 0 0 3px rgba(184,134,11,0.12); }
+        select.form-input { cursor: pointer; }
+
+        /* --- 步驟標頭：加一條金色小分隔線 --- */
+        .step-title::after {
+            content: '';
+            display: block;
+            width: 36px;
+            height: 2px;
+            background: var(--accent-gold);
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+
+        /* --- 主要按鈕：更有份量 --- */
+        .btn-primary, .btn-line {
+            letter-spacing: 1px;
+        }
+        .btn:active { transform: scale(0.97); }
+
+        /* --- 手機版：第一屏瘦身，一屏內完成第一步 --- */
+        @media (max-width: 600px) {
+            /* Hero 從 60vh 縮成緊湊橫幅 */
+            .hero {
+                min-height: auto;
+                padding: 56px 20px 32px;
+            }
+            .hero h1 { font-size: 1.9rem; margin-bottom: 6px; }
+            .hero-subtitle { font-size: 0.95rem; margin-bottom: 20px; }
+            .hero-badge { margin-bottom: 12px; font-size: 0.78rem; padding: 4px 14px; }
+            .hero-cta { padding: 12px 32px; font-size: 1rem; }
+
+            /* 場合卡：改回 2×2，一屏看完四個選項 */
+            .scene-grid {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 10px;
+            }
+            .scene-card { padding: 18px 10px; }
+            .scene-card-icon { margin-bottom: 8px; }
+            .scene-card-icon svg { width: 28px; height: 28px; }
+            .scene-card-title { font-size: 1rem; }
+            .scene-card-desc { font-size: 0.72rem; }
+
+            /* 步驟區塊瘦身 */
+            .step-title { font-size: 1.3rem; }
+            .step-header { margin-bottom: 16px; }
+        }
     </style>
 </head>
 
@@ -1449,6 +1575,22 @@
             document.getElementById('previewTo').textContent = topLine;
             document.getElementById('previewPhrase').textContent = phrase;
             document.getElementById('previewFrom').textContent = `${sender} ${order.footerSuffix}`;
+            // 上下款過長時自動縮字，避免被卡片高度截斷
+            requestAnimationFrame(() => {
+                const inner = document.querySelector('.card-preview-inner');
+                if (!inner) return;
+                const maxH = inner.clientHeight - 20;
+                [['previewTo', 0.9], ['previewFrom', 0.8]].forEach(([id, base]) => {
+                    const el = document.getElementById(id);
+                    if (!el) return;
+                    let size = base;
+                    el.style.fontSize = size + 'rem';
+                    while (el.scrollWidth > maxH && size > 0.5) {  // 直書模式下 scrollWidth 是文字長度方向
+                        size -= 0.05;
+                        el.style.fontSize = size + 'rem';
+                    }
+                });
+            });
             document.getElementById('cardPreview').style.display = 'block';
         }
 
