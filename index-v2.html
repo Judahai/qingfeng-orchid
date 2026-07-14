@@ -1061,6 +1061,37 @@
             </div>
 
             <div class="form-group">
+                <label class="form-label">聯絡電話 <span class="required">*</span></label>
+                <input type="tel" class="form-input" id="buyerPhone" placeholder="09xxxxxxxx" maxlength="10">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">希望送達日期 <span class="required">*</span></label>
+                    <input type="date" class="form-input" id="deliveryDate">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">配送區域 <span class="required">*</span></label>
+                    <select class="form-input" id="deliveryArea">
+                        <option value="">請選擇</option>
+                        <option>雲林縣（免運）</option>
+                        <option>嘉義縣（免運）</option>
+                        <option>嘉義市（免運）</option>
+                        <option>其他地區（LINE確認運費）</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">會場/收件地址 <span class="required">*</span></label>
+                <input type="text" class="form-input" id="deliveryAddress" placeholder="例：北港鎮○○路100號 / ○○葬儀會館第2廳">
+            </div>
+            <div class="form-group">
+                <label class="form-label">付款方式 <span class="required">*</span></label>
+                <div class="tag-group">
+                    <button class="tag-btn" onclick="setPayment('轉帳',this)">轉帳</button>
+                    <button class="tag-btn" onclick="setPayment('貨到付款',this)">貨到付款</button>
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="form-label">訂購人姓名 <span class="required">*</span></label>
                 <input type="text" class="form-input" id="buyerName" placeholder="您的姓名">
                 <p class="form-hint">此為本流程唯一需要打字的地方</p>
@@ -1098,7 +1129,7 @@
         // ===== Constants =====
         const LINE_URL = 'https://line.me/ti/p/K2LFf7aucm';
 
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbz6H3k3B0OTlWCHtDvJhmaI99gMPthO-_vyB0PSpGJVvfZPRox6ig4EOqITOZ1FT9s_Ew/exec';
+        const GAS_URL = '把你第2步複製的exec網址貼在這裡';
 
         // 後備清單：後台連不上時的保險，價格與首頁一致
         const FALLBACK = {
@@ -1451,40 +1482,73 @@
         `;
         }
 
-        function submitToLine() {
+        function setPayment(p, el) {
+            order.payment = p;
+            el.parentElement.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+
+        async function submitToLine() {
             const buyerName = document.getElementById('buyerName')?.value?.trim();
-            if (!buyerName) {
-                alert('請填寫訂購人姓名');
-                return;
+            const phone = document.getElementById('buyerPhone')?.value?.trim();
+            const date = document.getElementById('deliveryDate')?.value;
+            const area = document.getElementById('deliveryArea')?.value;
+            const address = document.getElementById('deliveryAddress')?.value?.trim();
+
+            if (!buyerName) return alert('請填寫訂購人姓名');
+            if (!/^09\d{8}$/.test(phone)) return alert('請填寫正確的手機號碼（09開頭共10碼）');
+            if (!date) return alert('請選擇希望送達日期');
+            if (!area) return alert('請選擇配送區域');
+            if (!address) return alert('請填寫會場或收件地址');
+            if (!order.payment) return alert('請選擇付款方式');
+
+            const prod = (PRODUCTS[order.scene] || []).find(p => p.id === order.productId) || {};
+
+            const payload = {
+                customerName: buyerName,
+                customerPhone: phone,
+                scene: SCENE_LABELS[order.scene],
+                productName: order.productName,
+                quantity: order.quantity,
+                total: order.productPrice * order.quantity,
+                cardTop: document.getElementById('previewTo')?.textContent || '',
+                cardMiddle: order.customPhrase || order.selectedPhrase || '',
+                cardBottom: document.getElementById('previewFrom')?.textContent || '',
+                deliveryDate: date,
+                area: area,
+                address: address,
+                payment: order.payment,
+                imageUrl: prod.imageUrl || ''
+            };
+
+            const btn = document.querySelector('#step4 .btn-line');
+            btn.disabled = true;
+            btn.textContent = '訂單送出中…';
+
+            try {
+                const res = await fetch(GAS_URL, { method: 'POST', body: JSON.stringify(payload) });
+                const out = await res.json();
+                if (out.status !== 'success') throw new Error(out.error || '送出失敗');
+
+                document.getElementById('orderSummary').innerHTML = `
+                    <div style="text-align:center; padding:20px;">
+                        <div style="font-size:2.5rem;">✅</div>
+                        <h3 style="margin:10px 0;">訂單已送出</h3>
+                        <p style="font-size:1.3rem; font-weight:700; color:var(--accent-gold);">訂單編號：${out.orderId}</p>
+                        <p style="color:var(--text-mid); font-size:0.9rem; margin-top:10px;">我們將盡快與您電話確認。<br>也可以加入 LINE 追蹤訂單、傳送轉帳末五碼：</p>
+                        <a href="${LINE_URL}" target="_blank" class="btn btn-line" style="display:inline-block; margin-top:12px; text-decoration:none;">加入 LINE 好友</a>
+                    </div>`;
+                btn.style.display = 'none';
+                document.querySelector('#step4 .btn-secondary').style.display = 'none';
+            } catch (err) {
+                btn.disabled = false;
+                btn.textContent = '透過 LINE 送出訂單';
+                const msg = `訂購【${payload.scene}】【${payload.productName}】× ${payload.quantity}\n總計：$${payload.total}\n卡片：${payload.cardTop}｜${payload.cardMiddle}｜${payload.cardBottom}\n送達：${date} ${area}${address}\n付款：${order.payment}\n訂購人：${buyerName} ${phone}`;
+                navigator.clipboard.writeText(msg).then(() => {
+                    alert('系統忙碌中，訂單內容已幫您複製！\n請加入 LINE 好友後貼上送出。');
+                    window.open(LINE_URL, '_blank');
+                });
             }
-
-            const phrase = order.customPhrase || order.selectedPhrase || '';
-            let topLine = '';
-            if (order.scene === 'funeral') {
-                topLine = `${order.lastName}${order.firstName}`;
-            } else {
-                topLine = order.recipientName;
-            }
-
-            const msg = [
-                `訂購【${SCENE_LABELS[order.scene]}】【${order.productName}】× ${order.quantity}`,
-                `總計：NT$ ${(order.productPrice * order.quantity).toLocaleString()}`,
-                `卡片文字：`,
-                `　上款：${topLine}`,
-                `　中款：${phrase}`,
-                `　下款：${order.senderName} ${order.footerSuffix}`,
-                `訂購人：${buyerName}`,
-            ].join('\n');
-
-            // const encoded = encodeURIComponent(msg);
-            // window.open(`${LINE_URL}?text=${encoded}`, '_blank');
-            navigator.clipboard.writeText(msg).then(() => {
-                alert("訂單內容已複製！\n加入好友後貼上即可送出。");
-                window.open(LINE_URL, '_blank');
-            }).catch(err => {
-                alert("請手動複製以下內容，然後加入LINE好友貼上：\n\n" + msg);
-                window.open(LINE_URL, '_blank');
-            });
         }
 
         // Listen for input changes on name fields to update preview
