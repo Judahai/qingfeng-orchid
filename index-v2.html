@@ -1261,39 +1261,34 @@
 
         const GAS_URL = 'https://script.google.com/macros/s/AKfycbzdvvO4vzVSebbsSDh9GPVpu0Xa8uvsCQi9gxyi0nsg2ou0Ih7-LQxR0C17Ed_T0MVWWQ/exec';
 
-        // 後備清單：後台連不上時的保險，價格與首頁一致
-        const FALLBACK = {
-            funeral: [
-                { id: 'f7', name: '白蝴蝶蘭 7株', price: 2800, imageUrl: '' },
-                { id: 'f10', name: '白蝴蝶蘭 10株', price: 4000, imageUrl: '' },
-                { id: 'f12', name: '白蝴蝶蘭 12株落地盆', price: 4800, imageUrl: '' }
-            ],
-            celebration: [
-                { id: 'c7', name: '紅花蝴蝶蘭 7株', price: 2800, imageUrl: '' },
-                { id: 'c10', name: '紅花蝴蝶蘭 10株', price: 4000, imageUrl: '' },
-                { id: 'c12', name: '紅花蝴蝶蘭 12株落地盆', price: 4800, imageUrl: '' }
-            ]
-        };
-        FALLBACK.opening = FALLBACK.celebration;
-        FALLBACK.temple = FALLBACK.celebration;
+        // 固定款：本地圖片，秒開，不讀 Google
+        const FIXED_PRODUCTS = [
+            { id: 'level7',     name: '經典款',     price: 2800, note: '產地直送' },
+            { id: 'level10',    name: '進階款',     price: 4000, note: '產地直送' },
+            { id: 'level12',    name: '尊榮款',     price: 4800, note: '產地直送' },
+            { id: 'levelhight', name: '頂級款',     price: 6000, note: '產地直送' }
+        ];
 
-        let PRODUCTS = FALLBACK;
+        // Google 動態商品：按了「查看更多」才載入
+        let EXTRA_PRODUCTS = [];
+        let extraLoaded = false;
 
-        // 開頁抓後台商品，成功即覆蓋預設值
-        fetch(GAS_URL + '?action=getProducts')
-            .then(r => r.json())
-            .then(list => {
-                const grouped = { funeral: [], celebration: [] };
-                list.forEach(p => { if (grouped[p.category]) grouped[p.category].push(p); });
-                if (!grouped.funeral.length) grouped.funeral = FALLBACK.funeral;
-                if (!grouped.celebration.length) grouped.celebration = FALLBACK.celebration;
-                grouped.opening = grouped.celebration;
-                grouped.temple = grouped.celebration;
-                PRODUCTS = grouped;
-                // 若客人已停在商品頁，即時刷新畫面
-                if (document.getElementById('step2').classList.contains('active')) renderProducts();
-            })
-            .catch(err => console.warn('後台載入失敗，使用預設商品', err));
+        function loadExtraProducts(btn) {
+            btn.disabled = true;
+            btn.textContent = '載入中…';
+            fetch(GAS_URL + '?action=getProducts')
+                .then(r => r.json())
+                .then(list => {
+                    EXTRA_PRODUCTS = list;
+                    extraLoaded = true;
+                    renderProducts();
+                })
+                .catch(err => {
+                    btn.disabled = false;
+                    btn.textContent = '查看更多實際款式';
+                    alert('載入失敗，請稍後再試');
+                });
+        }
 
         const SCENE_LABELS = {
             opening: '開幕誌慶', funeral: '追思致哀',
@@ -1356,18 +1351,28 @@
 
         // ===== Step 2: Products =====
         function renderProducts() {
-            const list = PRODUCTS[order.scene] || PRODUCTS.celebration;
             const grid = document.getElementById('productGrid');
-            grid.innerHTML = list.map(p => `
+            const cardHtml = p => `
             <div class="product-card${p.id === order.productId ? ' selected' : ''}"
-                 onclick="selectProduct('${p.id}','${p.name}',${p.price},this)">
-<img src="images/products/${p.id}.jpg" alt="${p.name}" style="width:80px;height:80px;border-radius:10px;object-fit:cover;flex-shrink:0;" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="product-photo-placeholder" style="display:none;">照片<br>準備中</div>                <div class="product-info">
+                 onclick="selectProduct('${p.id}','${p.name.replace(/'/g, '')}',${p.price},this)">
+                <img src="images/products/${p.id}.jpg" alt="${p.name}" style="width:80px;height:80px;border-radius:10px;object-fit:cover;flex-shrink:0;" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="product-photo-placeholder" style="display:none;">照片<br>準備中</div>
+                <div class="product-info">
                     <div class="product-name">${p.name}</div>
                     <div class="product-price">NT$ ${p.price.toLocaleString()}</div>
-                    <div class="product-note">產地直送</div>
+                    <div class="product-note">${p.note || '產地直送'}</div>
                 </div>
-            </div>
-        `).join('');
+            </div>`;
+
+            let html = FIXED_PRODUCTS.map(cardHtml).join('');
+
+            if (extraLoaded && EXTRA_PRODUCTS.length) {
+                html += `<div style="text-align:center; color:var(--text-light); font-size:0.85rem; margin:8px 0;">— 更多實際款式 —</div>`;
+                html += EXTRA_PRODUCTS.map(cardHtml).join('');
+            } else if (!extraLoaded) {
+                html += `<button class="btn btn-secondary" style="margin:8px auto; display:block;" onclick="loadExtraProducts(this)">查看更多實際款式</button>`;
+            }
+
+            grid.innerHTML = html;
         }
 
         function selectProduct(id, name, price, el) {
@@ -1648,7 +1653,7 @@
             if (!address) return alert('請填寫會場或收件地址');
             if (!order.payment) return alert('請選擇付款方式');
 
-            const prod = (PRODUCTS[order.scene] || []).find(p => p.id === order.productId) || {};
+            const prod = [...FIXED_PRODUCTS, ...EXTRA_PRODUCTS].find(p => p.id === order.productId) || {};
 
             const payload = {
                 customerName: buyerName,
