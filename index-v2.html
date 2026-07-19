@@ -1011,7 +1011,7 @@
                         <span>往生者年齡 <span class="required">*</span></span>
                         <label class="toggle-row">
                             <input type="checkbox" id="seniorToggle" onchange="order.useSenior=this.checked">
-                            使用高壽格式（紅花/老字輩）
+                            使用高壽格式（80歲以上長者適用）
                         </label>
                     </div>
                     <div class="tag-group">
@@ -1217,9 +1217,17 @@
                     <button class="tag-btn" onclick="setPayment('貨到付款',this)">貨到付款</button>
                 </div>
             </div>
-            <div class="form-group" id="last5Group" style="display:none;">
-                <label class="form-label">轉帳後五碼</label>
-                <input type="text" class="form-input" id="last5" placeholder="轉帳完成後填寫，方便核對" maxlength="5">
+            <div id="transferInfoBlock" style="display:none; background:#FFF8E7; border:1px solid #E8D9A0; border-radius:10px; padding:14px; margin-bottom:16px;">
+                <p style="font-weight:700; margin-bottom:8px;">💰 轉帳流程說明</p>
+                <div style="font-size:0.9rem; color:var(--text-mid); line-height:1.8;">
+                    <p>❶ 送出訂單後，畫面會顯示轉帳帳號</p>
+                    <p>❷ 完成轉帳後，請加 LINE 回傳帳號<strong>末五碼</strong></p>
+                    <p>❸ 核對無誤後，當日安排出貨</p>
+                </div>
+                <div class="form-group" style="margin-top:12px; margin-bottom:0;">
+                    <label class="form-label">轉帳後五碼（選填，也可稍後透過 LINE 回報）</label>
+                    <input type="text" class="form-input" id="last5" placeholder="轉帳完成後填寫末五碼" maxlength="5">
+                </div>
             </div>
             <div class="form-group">
                 <label class="form-label">訂購人姓名 <span class="required">*</span></label>
@@ -1454,7 +1462,7 @@
             document.getElementById('funeralValidationMsg').style.display = 'none';
 
             const phrases = (typeof getFuneralPhrases === 'function')
-                ? getFuneralPhrases({ gender: order.gender, age: order.age, religion: order.religion })
+                ? getFuneralPhrases({ gender: order.gender, age: order.age, religion: order.religion, relation: order.relation })
                 : [];
             renderPhrases(phrases);
         }
@@ -1636,7 +1644,7 @@
             order.payment = p;
             el.parentElement.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('selected'));
             el.classList.add('selected');
-            document.getElementById('last5Group').style.display = (p === '轉帳') ? 'block' : 'none';
+            document.getElementById('transferInfoBlock').style.display = (p === '轉帳') ? 'block' : 'none';
         }
 
         async function submitToLine() {
@@ -1700,6 +1708,7 @@
                     </div>`;
                 btn.style.display = 'none';
                 document.querySelector('#step4 .btn-secondary').style.display = 'none';
+                document.querySelectorAll('#step4 .form-group, #step4 .form-row').forEach(el => el.style.display = 'none');
             } catch (err) {
                 btn.disabled = false;
                 btn.textContent = '透過 LINE 送出訂單';
