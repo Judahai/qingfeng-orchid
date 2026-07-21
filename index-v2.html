@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>慶豐蘭園 - 雲林北港產地直送 | 開幕誌慶・追思花籃・專業蘭花禮</title>
-    <meta name="description" content="【雲林嘉義免運配送】北港在地30年蘭園，老師傅專業種植。開幕喬遷、追思致哀，當日現組產地直送。線上訂購快速方便，免出門即刻傳達心意。">
+    <meta name="description" content="【雲林嘉義免運配送】北港在地26年蘭園，老師傅專業種植。開幕喬遷、追思致哀，當日現組產地直送。線上訂購快速方便，免出門即刻傳達心意。">
 
     <!-- Open Graph -->
     <meta property="og:title" content="慶豐蘭園 - 雲林北港產地直送">
@@ -879,6 +879,32 @@
             /* 步驟區塊瘦身 */
             .step-title { font-size: 1.3rem; }
             .step-header { margin-bottom: 16px; }
+        }
+
+        /* ===== 手機版商品卡：直式大圖 ===== */
+        @media (max-width: 600px) {
+            .product-card {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 0;
+                gap: 0;
+            }
+            .product-card img,
+            .product-card .product-photo-placeholder {
+                width: 100% !important;
+                height: 220px !important;
+                border-radius: 14px 14px 0 0;
+            }
+            .product-card .product-info {
+                padding: 14px 16px 16px;
+                text-align: center;
+            }
+            .product-card .product-name {
+                font-size: 1.05rem;
+            }
+            .product-card .product-price {
+                font-size: 1.35rem;
+            }
         }
     </style>
 </head>
