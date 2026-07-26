@@ -1,24 +1,36 @@
 // ===============================================
 // 慶豐蘭業 - 喪禮卡片用詞資料庫 v5
-// 陣列為資料來源，標籤索引於載入時自動建立，不需手動轉檔
+// ===============================================
+// v5 修正項目：
+//   1. 性別未填不再靜默當男性，直接擋下
+//   2. 佛教選項剔除道教專屬用語
+//   3. 下款改用「是否喪家 + 輩分」判斷，泣輓拜輓正式接上
+//   4. 結尾詞統一由 endings 陣列決定，不再寫死在模板
+//   5. profession、friend 接上函式
+//   6. 標籤索引自動建立，重複詞自動合併
+//   7. 基督教天主教格式查證後修正：
+//      受洗者用「主內 OOO 弟兄/姊妹 安息」
+//      非信徒用「敬悼 OOO 先生/女士」
+//      天主教用「故 OOO 弟兄/姊妹 蒙主恩召」
+//   8. 「府」字以年齡門檻自動判斷，可手動覆寫
+//   9. 免費模式缺資料給安全牌，不留白
 // ===============================================
 
-// ===== 異體字／錯字合併（左 → 右）=====
+// ===== 異體字／錯字合併 =====
 const PHRASE_VARIANTS = {
-    '華開見佛': '花開見佛',   // 店主確認：花開見佛 為正確
-    '長才未竟': '長才未盡',   // 店主確認：長才未盡 為正確
+    '華開見佛': '花開見佛',
+    '長才未竟': '長才未盡',
     '慈雲缥緲': '慈雲縹緲',
-    '駕賀西歸': '駕鶴西歸',   // 疑為錯字，若確實有此寫法請刪掉這行
-    '婺星光黯': '婺星光暗',   // 兩種寫法都出現過，暫統一用「暗」
+    '駕賀西歸': '駕鶴西歸',
+    '婺星光黯': '婺星光暗'
 };
 
 // ===== 停用清單：不刪詞，只關掉 =====
-// 覺得某句不適合就加進來，附一句原因。日後要開回來把該行刪掉即可。
 const DISABLED_PHRASES = {
-    // '某句詞': '太文言，客人看不懂',
+    // '某句詞': '關掉的原因',
 };
 
-// 基督教／天主教不可用（道教、民間信仰色彩明顯）
+// 基督教／天主教不可用
 const NON_CHRISTIAN_PHRASES = [
     '駕鶴西歸', '羽化登仙', '蓬島歸真', '仙凡路隔', '返璞歸真', '歸真返璞',
     '瑤池赴召', '寶婺星沉', '駕返瑤池', '跨鶴仙鄉', '瑤島仙遊', '仙遊上界',
@@ -35,7 +47,6 @@ const AGE_BANDS = {
 const funeralPhraseDB = {
 
     // ===== 卡片格式範本 =====
-    // 模板只到稱謂，結尾敬語一律由 composeTopLine() 從 endings 接上
     cardFormat: {
         general: {
             male:   { senior: '敬悼 {姓}公{名} 老先生', adult: '敬悼 {姓}{名} 先生' },
@@ -48,24 +59,16 @@ const funeralPhraseDB = {
             endings: ['千古', '仙逝', '往生蓮邦', '往生淨土']
         },
         christian: {
-            male: {
-                general: '敬悼 {姓}{名} 先生'
-            },
-            female: {
-                general: '敬悼 {姓}{名} 女士'
-            },
+            male:   { baptized: '主內 {姓}{名} 弟兄 安息', general: '敬悼 {姓}{名} 先生' },
+            female: { baptized: '主內 {姓}{名} 姊妹 安息', general: '敬悼 {姓}{名} 女士' },
             footer: '{送禮人} {敬語}',
-            endings: ['安息主懷', '榮歸天家', '榮歸天國']
+            endings: ['']
         },
         catholic: {
-            male: {
-                general: '故 {姓}{名} 先生'
-            },
-            female: {
-                general: '故 {姓}{名} 女士'
-            },
+            male:   { baptized: '故 {姓}{名} 弟兄 蒙主恩召', general: '故 {姓}{名} 先生' },
+            female: { baptized: '故 {姓}{名} 姊妹 蒙主恩召', general: '故 {姓}{名} 女士' },
             footer: '{送禮人} {敬語}',
-            endings: ['蒙主恩召', '魂歸天國']
+            endings: ['']
         }
     },
 
@@ -77,8 +80,6 @@ const funeralPhraseDB = {
             '棟折梁摧', '同悲不捨', '音容宛在', '悵望音容', '英氣頓杳',
             '英風宛在', '英才天妒', '千秋永別', '一別千古', '典則空留', '痛隔天人'
         ],
-        // 依店主提供的參考資料：僅這五句延伸至 69 歲，
-        // 其餘「英年」類用詞不適用中壯年，故此組不再整份複製
         age50to69: [
             '玉樹長埋', '英氣頓杳', '長才未盡', '痛隔天人', '星隕少微'
         ],
@@ -94,7 +95,6 @@ const funeralPhraseDB = {
             '桑梓流光', '德範永存', '德望永昭', '道範長存', '斗山安仰',
             '典型足式', '南極星沉', '高山仰止', '碩德貽徽', '儀型足式', '高風安仰'
         ],
-        // 男喪通用弔唁詞，不限年齡
         tribute: [
             '福壽全歸', '福慧雙修', '道範長存', '福壽雙全', '駕鶴西歸',
             '德徽永昭', '跨鶴仙鄉', '老成凋謝', '大雅云亡', '斗山共仰',
@@ -135,7 +135,6 @@ const funeralPhraseDB = {
     },
 
     // ===== 宗教 =====
-    // 道教未獨立分類：道教用詞與一般常用高度重疊，一律歸入 general
     religion: {
         general: ['音容宛在', '典範長存', '駕鶴西歸', '德範永存', '永懷不忘'],
         buddhist: [
@@ -152,7 +151,8 @@ const funeralPhraseDB = {
             '炬光永曜', '位登上品', '駕返蓮邦', '彌陀笑迎', '蓮開寶沼',
             '歸西證果', '西歸蓮域', '遠塵離垢', '覺行圓滿', '蓮沼映輝',
             '蓮邦永托', '念佛生西', '慈光常住', '返真蓮域', '親近諸佛',
-            '天樂鳴空', '護國弘教', '慧光溥昭', '宏教垂範', '化生蓮邦'
+            '天樂鳴空', '護國弘教', '慧光溥昭', '宏教垂範', '化生蓮邦',
+            '九品蓮登', '往生淨土', '往生佛國'
         ],
         yiguandao: [
             '回歸理天', '靈歸無極', '返樸歸真', '駕返瑤池',
@@ -185,7 +185,7 @@ const funeralPhraseDB = {
         ]
     },
 
-    // ===== 友人通用（女喪用詞佔多數，由索引自動判斷性別）=====
+    // ===== 友人通用 =====
     friend: [
         '痛失知音', '話冷雞窗', '心傷畏友', '響絕牙琴', '人琴俱亡',
         '伊人宛在', '範垂巾幗', '福壽全歸', '彤管流芳', '丹管流芬',
@@ -205,6 +205,97 @@ const funeralPhraseDB = {
 };
 
 // ===============================================
+// 喜慶成語資料庫（未動）
+// ===============================================
+const celebrationPhraseDB = {
+    opening: {
+        general: [
+            '開幕誌慶', '駿業宏開', '鴻圖大展', '生意興隆', '財源廣進',
+            '日進斗金', '開張大吉', '萬商雲集', '近悅遠來', '業紹陶朱'
+        ],
+        restaurant: ['賓客盈門', '高朋滿座', '珍饈滿座', '門庭若市', '佳餚滿堂'],
+        medical: [
+            '杏林春暖', '仁心仁術', '懸壺濟世', '華佗再世', '妙手回春',
+            '功同良相', '濟世利民', '德術雙馨'
+        ],
+        legal: ['伸張正義', '法理精湛', '明鏡高懸', '公正廉明', '匡扶正義']
+    },
+    moving: {
+        general: [
+            '喬遷之喜', '華廈生輝', '德門仁第', '福地洞天', '竹苞松茂',
+            '瑞氣盈門', '門庭集慶', '美輪美奐', '堂構更新'
+        ],
+        elderly: ['福壽康寧', '安居樂業', '福澤綿延']
+    },
+    promotion: {
+        general: [
+            '步步高升', '榮任新職', '鵬程萬里', '高升志喜', '大展鴻圖',
+            '飛黃騰達', '榮陞卓越', '仕途順遂'
+        ],
+        election: [
+            '眾望所歸', '造福桑梓', '民主之光', '德孚眾望', '高票當選',
+            '眾望攸歸', '為民喉舌', '澤被蒼生'
+        ]
+    },
+    exhibition: {
+        general: [
+            '藝壇生輝', '璀璨奪目', '妙筆生花', '化腐朽為神奇',
+            '藝苑增輝', '妙造自然', '匠心獨運'
+        ]
+    },
+    wedding: {
+        general: [
+            '百年好合', '永浴愛河', '佳偶天成', '琴瑟和鳴',
+            '鸞鳳和鳴', '天作之合', '珠聯璧合', '龍鳳呈祥'
+        ]
+    },
+    birthday: {
+        general: ['生日快樂', '心想事成', '萬事如意'],
+        elderly: [
+            '福如東海', '壽比南山', '松柏長青', '鶴壽松齡',
+            '福壽康寧', '南極星輝', '德高壽永', '松鶴延年'
+        ],
+        longevity: ['福壽雙全', '壽翁晉五', '長命百歲', '耄耋康健']
+    },
+    temple: {
+        general: [
+            '神威顯赫', '香火鼎盛', '澤被蒼生', '庇佑蒼生',
+            '神恩浩蕩', '聖德長昭', '威靈顯赫', '德澤廣被'
+        ],
+        mazu: ['天后聖母', '海國長安', '航海明燈'],
+        guandi: ['義薄雲天', '忠義千秋', '浩然正氣']
+    },
+    newyear: {
+        general: [
+            '恭賀新禧', '新年快樂', '萬事如意', '心想事成', '大吉大利',
+            '吉祥如意', '財源廣進', '招財進寶', '金玉滿堂', '福星高照',
+            '迎春納福', '春到福到', '龍馬精神', '蛇年行大運', '富貴吉祥'
+        ],
+        business: ['生意興隆', '日進斗金', '財源滾滾', '鴻圖大展', '事業蒸蒸日上'],
+        family: ['闔家平安', '闔家歡樂', '天倫之樂', '福壽雙全', '百福齊臻']
+    },
+    graduation: {
+        general: [
+            '畢業快樂', '學業有成', '前程似錦', '鵬程萬里', '一帆風順',
+            '展翅高飛', '百尺竿頭', '更進一步', '學海無涯', '青雲直上'
+        ],
+        admission: ['金榜題名', '魚躍龍門', '蟾宮折桂', '及第登科', '龍門高跳'],
+        doctorate: ['學富五車', '博學多才', '學術精深', '卓越成就']
+    }
+};
+
+function getCelebrationPhrases(options) {
+    const { category, subCategory, isElderly } = options;
+    const db = celebrationPhraseDB[category];
+    if (!db) return [];
+    let results = [];
+    if (db.general) results.push(...db.general);
+    if (subCategory && db[subCategory]) results.push(...db[subCategory]);
+    if (isElderly && db.elderly) results.push(...db.elderly);
+    return results;
+}
+
+// ===============================================
 // 標籤索引：載入時自動建立
 // ===============================================
 function buildPhraseIndex(db) {
@@ -222,7 +313,7 @@ function buildPhraseIndex(db) {
         rec.sources.add(source);
         if (patch.gender !== undefined) {
             if (rec.gender === undefined) rec.gender = patch.gender;
-            else if (rec.gender !== patch.gender) rec.gender = null;  // 男女都有 → 不限
+            else if (rec.gender !== patch.gender) rec.gender = null;
         }
         if (patch.ageMin !== undefined) {
             rec.ageMin = rec.ageMin === undefined ? patch.ageMin : Math.min(rec.ageMin, patch.ageMin);
@@ -264,20 +355,27 @@ function buildPhraseIndex(db) {
 
 const PHRASE_INDEX = buildPhraseIndex(funeralPhraseDB);
 
+// 安全牌：性別不限、年齡不限、宗教不限的通用詞
+const SAFE_PHRASES = PHRASE_INDEX.filter(p =>
+    p.enabled && !p.gender && p.ageMin === 0 && p.ageMax === 120 &&
+    !p.religion.length && !p.profession.length && !p.friendOnly
+).map(p => p.text);
+
 // ===============================================
 // 查詢
 // ===============================================
-function getFuneralPhrases({ gender, age, religion, profession, isFriend } = {}) {
+function getFuneralPhrases({ gender, age, religion, profession, isFriend, mode = 'order' } = {}) {
     const numAge = Number(age);
-    if (!Number.isFinite(numAge) || numAge < 0 || numAge > 120) {
-        console.warn('[getFuneralPhrases] ⚠️ 年齡無效或未填:', age);
+    const ageOk = Number.isFinite(numAge) && numAge >= 0 && numAge <= 120;
+    const genderOk = gender === 'male' || gender === 'female';
+
+    if (!ageOk || !genderOk) {
+        if (mode === 'free') return SAFE_PHRASES.slice();
+        console.warn('[getFuneralPhrases] ⚠️ 性別或年齡未填:', gender, age);
         return [];
     }
-    if (gender !== 'male' && gender !== 'female') {
-        console.warn('[getFuneralPhrases] ⚠️ 性別未填或無效:', gender);
-        return [];
-    }
-    return PHRASE_INDEX.filter(p => {
+
+    const results = PHRASE_INDEX.filter(p => {
         if (!p.enabled) return false;
         if (p.gender && p.gender !== gender) return false;
         if (numAge < p.ageMin || numAge > p.ageMax) return false;
@@ -290,6 +388,11 @@ function getFuneralPhrases({ gender, age, religion, profession, isFriend } = {})
         }
         return true;
     }).map(p => p.text);
+
+    if (mode === 'free' && results.length < 5) {
+        return [...new Set([...results, ...SAFE_PHRASES])];
+    }
+    return results;
 }
 
 // ===============================================
@@ -303,24 +406,18 @@ function assertGender(gender, fnName) {
     return gender;
 }
 
-// 下款：主詞是訂花的人，不是往生者
 function getFooterSuffix({ isBereaved, seniority } = {}) {
     if (isBereaved === true) return '泣輓';
-    if (isBereaved !== false) {
-        console.warn('[getFooterSuffix] ⚠️ isBereaved 未填，退回敬輓。前端要問這一題。');
-        return '敬輓';
-    }
+    if (isBereaved !== false) return '敬輓';
     return seniority === 'junior' ? '拜輓' : '敬輓';
 }
 
 function composeTopLine(nameBlock, ending, religionKey) {
     const valid = funeralPhraseDB.cardFormat[religionKey].endings;
     const safeEnding = valid.includes(ending) ? ending : valid[0];
-    return `${nameBlock} ${safeEnding}`;
+    return `${nameBlock} ${safeEnding}`.trim();
 }
 
-// 「府」：年輕往生者才用。界線由 FU_AGE_THRESHOLD 控制，可隨時調整，
-// 後台也可用 useFuStyle 直接覆寫（true/false）。
 const FU_AGE_THRESHOLD = 50;
 
 function applyFuStyle(nameBlock, lastName, age, useFuStyle) {
@@ -332,7 +429,7 @@ function generateCardFormat(options) {
     const {
         gender, age, lastName, firstName, husbandName, isMarried,
         useHusbandSurname = true, isSenior = age >= 80,
-        religion, senderName, phrase, ending,
+        isBaptized, religion, senderName, phrase, ending,
         isBereaved, seniority, useFuStyle
     } = options;
 
@@ -341,10 +438,13 @@ function generateCardFormat(options) {
 
     const religionKey = (religion === 'christian' || religion === 'catholic') ? religion : 'general';
     const format = funeralPhraseDB.cardFormat[religionKey];
+
     let nameBlock;
 
     if (religionKey !== 'general') {
-        nameBlock = format[safeGender].general
+        // 基督教／天主教：表單沒問是否受洗，預設走 general（先生/女士）
+        const subType = isBaptized ? 'baptized' : 'general';
+        nameBlock = format[safeGender][subType]
             .replace('{姓}', lastName).replace('{名}', firstName);
     } else if (safeGender === 'male') {
         nameBlock = (isSenior ? format.male.senior : format.male.adult)
@@ -360,9 +460,7 @@ function generateCardFormat(options) {
             .replace('{姓}', lastName).replace('{名}', firstName);
     }
 
-    if (religionKey === 'general') {
-        nameBlock = applyFuStyle(nameBlock, lastName, age, useFuStyle);
-    }
+    nameBlock = applyFuStyle(nameBlock, lastName, age, useFuStyle);
 
     return {
         topLine: composeTopLine(nameBlock, ending, religionKey),
@@ -381,6 +479,6 @@ function getValidEndings(religion) {
 }
 
 if (typeof module !== 'undefined') {
-    module.exports = { funeralPhraseDB, PHRASE_INDEX, getFuneralPhrases,
+    module.exports = { funeralPhraseDB, PHRASE_INDEX, SAFE_PHRASES, getFuneralPhrases,
                        generateCardFormat, getValidEndings };
 }
