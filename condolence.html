@@ -1,3 +1,8 @@
+這是整份改好的檔案。直接全選複製，蓋掉你原本的 HTML 存檔就好，不用自己找段落。
+
+有一件事要先確認：**這份 HTML 需要搭配 v5 的 `phrase-database.js`**（就是我前面給的那份完整資料庫）。如果那支還是舊版，我在下面加了防護，頁面不會掛掉，但下款的泣輓拜輓不會生效。
+
+```html
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -49,6 +54,8 @@
         .phrase-buttons { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
         .phrase-btn { padding: 8px 16px; border: 1px solid var(--border); background: var(--bg-light); border-radius: 20px; cursor: pointer; font-size: 0.95rem; color: var(--text-mid); transition: 0.2s; }
         .phrase-btn:hover, .phrase-btn.active { background: var(--primary-green); color: #fff; border-color: var(--primary-green); }
+
+        .fmt-warn { color: #B8860B; font-size: 0.9rem; margin-top: 10px; padding: 10px 12px; background: #FDF8EC; border-radius: 8px; }
 
         .preview-area { position: sticky; top: 100px; }
         /* ===== 直書三欄卡片（html2canvas 安全版）===== */
@@ -128,9 +135,11 @@
             <h2>1. 稱謂與性別選擇</h2>
             <p>上款會依據逝者的性別、年齡與婚姻狀況來決定稱呼。一般來說，男性尊稱「先生/老先生」，女性尊稱「女士/老夫人」。若女性有冠夫姓，傳統上也會加入夫姓。</p>
             <h2>2. 宗教用詞禁忌</h2>
-            <p>佛教與道教常使用「往生淨土、高登蓮品」等詞；而基督教與天主教則**絕對不可使用「千古」或佛道教詞彙**，應改用「安息主懷、蒙主恩召、榮歸天家」等專用語。</p>
+            <p>佛教與道教常使用「往生淨土、高登蓮品」等詞；而基督教與天主教則絕對不可使用「千古」或佛道教詞彙，應改用「安息主懷、蒙主恩召、榮歸天家」等專用語。</p>
             <h2>3. 年齡限制</h2>
             <p>若是年輕或中年逝者（通常70歲以下），忌諱使用「福壽全歸」、「五福全歸」等高壽功德詞彙，應改用「英年玉折」、「天不假年」等表達惋惜之意。</p>
+            <h2>4. 下款怎麼落</h2>
+            <p>下款的敬語取決於送花的人，不是往生者。喪家自己人用「泣輓」，晚輩、學生、部屬用「拜輓」，平輩朋友與一般關係用「敬輓」。</p>
         </div>
 
         <div class="generator-grid">
@@ -159,21 +168,21 @@
                         <div class="form-group col">
                             <label>宗教信仰</label>
                             <select class="form-control" id="f-religion">
-                                <option value="general">一般 / 佛道教</option>
+                                <option value="general">一般（含道教）</option>
                                 <option value="buddhist">佛教</option>
+                                <option value="yiguandao">一貫道</option>
+                                <option value="tiandijiao">天帝教</option>
                                 <option value="christian">基督教</option>
                                 <option value="catholic">天主教</option>
-                                <option value="yiguandao">一貫道</option>
                             </select>
                         </div>
                         <div class="form-group col">
-                            <label>與往生者關係</label>
+                            <label>您與往生者的關係</label>
                             <select class="form-control" id="f-relation">
-                                <option value="friend">朋友 / 同事 / 一般</option>
-                                <option value="parents">父母 / 長輩</option>
-                                <option value="siblings">兄弟姊妹</option>
-                                <option value="spouse">配偶</option>
-                                <option value="client">客戶 / 商業夥伴</option>
+                                <option value="peer">朋友 / 同事 / 平輩</option>
+                                <option value="bereaved">我是家屬（子女/配偶/兄弟姊妹/孫）</option>
+                                <option value="junior">晚輩 / 學生 / 部屬</option>
+                                <option value="business">客戶 / 商業夥伴</option>
                             </select>
                         </div>
                     </div>
@@ -268,6 +277,20 @@
 
             let currentPhrases = [];
 
+            // 下款敬語的判斷依據是「送花的人」，不是往生者。
+            // 一題關係同時決定：是否喪家、輩分、能不能用友人詞。
+            const RELATION_MAP = {
+                peer:     { isBereaved: false, seniority: 'peer',   isFriend: true  },
+                bereaved: { isBereaved: true,  seniority: 'junior', isFriend: false },
+                junior:   { isBereaved: false, seniority: 'junior', isFriend: false },
+                business: { isBereaved: false, seniority: 'peer',   isFriend: false }
+            };
+
+            // 安全牌：資料庫有提供就用，沒有就退回這幾句通用詞
+            const FALLBACK = (typeof SAFE_PHRASES !== 'undefined' && SAFE_PHRASES.length)
+                ? SAFE_PHRASES
+                : ['音容宛在', '典範長存', '德範永存', '永懷不忘'];
+
             // 全名自動拆成姓＋名（供既有資料庫函式使用，複姓自動判斷）
             function parseFullName() {
                 const full = document.getElementById('f-fullname').value.trim();
@@ -278,78 +301,98 @@
                 return { lastName: full.slice(0, 1), firstName: full.slice(1) };
             }
 
+            function showFormatWarning(msg) {
+                let el = document.getElementById('fmt-warn');
+                if (!el) {
+                    el = document.createElement('p');
+                    el.id = 'fmt-warn';
+                    el.className = 'fmt-warn';
+                    elPhraseContainer.parentNode.appendChild(el);
+                }
+                el.innerText = msg;
+            }
+
+            function clearFormatWarning() {
+                const el = document.getElementById('fmt-warn');
+                if (el) el.remove();
+            }
+
             function updateUI() {
                 // 女性顯示夫姓欄位
                 elHusbandGroup.style.display = elGender.value === 'female' ? 'block' : 'none';
+
+                const rel = RELATION_MAP[document.getElementById('f-relation').value] || RELATION_MAP.peer;
+                const name = parseFullName();
 
                 const options = {
                     gender: elGender.value,
                     age: parseInt(document.getElementById('f-age').value, 10),
                     religion: document.getElementById('f-religion').value,
-                    relation: document.getElementById('f-relation').value,
-                    lastName: parseFullName().lastName,
-                    firstName: parseFullName().firstName,
+                    isBereaved: rel.isBereaved,
+                    seniority: rel.seniority,
+                    isFriend: rel.isFriend,
+                    lastName: name.lastName,
+                    firstName: name.firstName,
                     husbandName: document.getElementById('f-husbandname').value,
                     isMarried: document.getElementById('f-husbandname').value.trim() !== '',
                     useHusbandSurname: document.getElementById('f-usehusband').checked,
-                    senderName: document.getElementById('f-sender').value
+                    senderName: document.getElementById('f-sender').value,
+                    mode: 'free'
                 };
 
-                // 取得推薦詞
-                currentPhrases = getFuneralPhrases(options);
+                // 取得推薦詞（過濾邏輯已在資料庫函式內處理，這裡不再另外加工）
+                currentPhrases = getFuneralPhrases(options) || [];
+                if (!currentPhrases.length) currentPhrases = FALLBACK.slice();
 
-                // ===== F6: 嚴格過濾基督教/天主教輓詞 (不更動資料庫) =====
-                if (options.religion === 'christian' || options.religion === 'catholic') {
-                    if (typeof funeralPhraseDB !== 'undefined' && funeralPhraseDB.religion[options.religion]) {
-                        currentPhrases = [...funeralPhraseDB.religion[options.religion]];
-                    } else {
-                        currentPhrases = [];
-                    }
-                }
-                
-                // 確保目前選擇的詞在推薦名單內，若無則重置
+                // 通用安全詞排前面，避免冷門詞佔滿前 15 個位置
+                currentPhrases.sort((a, b) =>
+                    (FALLBACK.includes(b) ? 1 : 0) - (FALLBACK.includes(a) ? 1 : 0));
+
                 if (!currentPhrases.includes(elPhraseHidden.value)) {
-                    elPhraseHidden.value = currentPhrases.length > 0 ? currentPhrases[0] : '音容宛在';
+                    elPhraseHidden.value = currentPhrases[0] || '音容宛在';
                 }
-                
                 options.phrase = elPhraseHidden.value;
 
-                // 渲染按鈕
                 renderPhraseButtons();
 
-                // 產生卡片
                 const card = generateCardFormat(options);
 
-                // ===== F6: 佛教高齡女性「老菩薩」稱謂 (不更動資料庫) =====
+                // 稱謂格式尚未核對的宗教會回傳 null，這裡接住，不讓整頁停住
+                if (!card) {
+                    prevTop.innerText = '';
+                    prevMiddle.innerText = elPhraseHidden.value;
+                    prevBottom.innerText = '';
+                    showFormatWarning('此宗教的上下款稱謂格式仍在確認中，中款輓詞可正常使用。完整卡片請洽門市協助。');
+                    adjustFontSize();
+                    return;
+                }
+                clearFormatWarning();
+
+                // 佛教高齡女性在地稱謂
                 if (options.religion === 'buddhist' && options.gender === 'female' && options.age >= 80) {
                     card.topLine = card.topLine.replace('老夫人', '老菩薩');
                 }
-                
+
                 prevTop.innerText = card.topLine;
                 prevMiddle.innerText = card.middleLine;
                 prevBottom.innerText = card.bottomLine;
 
-                // 動態縮小字級防溢出
                 adjustFontSize();
 
-                // 更新 LINE 連結
                 const lineMsg = `您好，我要訂購追思花禮：\n\n【卡片內容】\n上款：${card.topLine}\n中款：${card.middleLine}\n下款：${card.bottomLine}`;
-                
+
                 lineBtn.removeAttribute('href');
                 lineBtn.onclick = (e) => {
                     e.preventDefault();
-                    navigator.clipboard.writeText(lineMsg).then(() => {
-                        alert("訂單內容已複製！\n加入好友後貼上即可送出。");
-                        window.open("https://line.me/ti/p/K2LFf7aucm", "_blank");
-                    }).catch(err => {
-                        alert("請手動複製以下內容，然後加入LINE好友貼上：\n\n" + lineMsg);
-                        window.open("https://line.me/ti/p/K2LFf7aucm", "_blank");
-                    });
+                    navigator.clipboard.writeText(lineMsg)
+                        .then(() => { alert("訂單內容已複製！\n加入好友後貼上即可送出。"); })
+                        .catch(() => { alert("請手動複製以下內容，然後加入LINE好友貼上：\n\n" + lineMsg); })
+                        .finally(() => { window.open("https://line.me/ti/p/K2LFf7aucm", "_blank"); });
                 };
             }
 
             function adjustFontSize() {
-                const maxHeight = 420; // 500px card height minus 80px vertical padding
+                const maxHeight = 420; // 480px card height minus vertical padding
 
                 // 暫時取消 stretch 以便量測真實文字高度
                 prevTop.style.alignSelf = 'flex-start';
@@ -464,7 +507,7 @@
                 ctx.font = '500 26px "Noto Sans TC", sans-serif';
                 ctx.textAlign = 'right';
                 ctx.fillText('免費輓聯產生器 ‧ 慶豐蘭園', 1030, 1846);
-                ctx.fillText('judahai.github.io/qingfeng-orchid', 1030, 1884);
+                ctx.fillText('chingfeng.tw', 1030, 1884);
                 
                 // 直接顯示於畫面上供長按儲存，絕對不使用 Web Share API
                 finalCanvas.toBlob((blob) => {
@@ -566,7 +609,7 @@
         </tr>
         <tr>
             <td colspan="3" align="right" height="1"
-                style="font-size:8pt; color:#aaaaaa; font-family:標楷體;">卡片格式由 慶豐蘭園 免費產生 ‧ judahai.github.io/qingfeng-orchid</td>
+                style="font-size:8pt; color:#aaaaaa; font-family:標楷體;">卡片格式由 慶豐蘭園 免費產生 ‧ chingfeng.tw</td>
         </tr>
     </table>
 </div>
@@ -628,7 +671,7 @@
                 ctx.font = '500 26px "Noto Sans TC", sans-serif';
                 ctx.textAlign = 'right';
                 ctx.fillText('免費輓聯產生器 ‧ 慶豐蘭園', 1030, 1846);
-                ctx.fillText('judahai.github.io/qingfeng-orchid', 1030, 1884);
+                ctx.fillText('chingfeng.tw', 1030, 1884);
 
                 const blob = await new Promise(r => finalCanvas.toBlob(r, 'image/jpeg', 0.95));
                 const file = new File([blob], 'condolence_card.jpg', { type: 'image/jpeg' });
@@ -658,3 +701,5 @@
     </script>
 </body>
 </html>
+```
+
