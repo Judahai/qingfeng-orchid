@@ -344,13 +344,9 @@ function generateCardFormat(options) {
     if (!safeGender) return null;
 
     const religionKey = (religion === 'christian' || religion === 'catholic') ? religion : 'general';
-    if (religionKey !== 'general') {
-        console.warn('[generateCardFormat] ⚠️ 基督教／天主教稱謂格式尚未核對，暫停產出。');
-        return null;
-    }
+   
 
-    const format = funeralPhraseDB.cardFormat.general;
-    let nameBlock;
+const format = funeralPhraseDB.cardFormat[religionKey];    let nameBlock;
 
     if (safeGender === 'male') {
         nameBlock = (isSenior ? format.male.senior : format.male.adult)
