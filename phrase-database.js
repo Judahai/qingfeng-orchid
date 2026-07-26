@@ -49,11 +49,9 @@ const funeralPhraseDB = {
         },
         christian: {
             male: {
-                baptized: '主內 {姓}{名} 弟兄 安息',
                 general: '敬悼 {姓}{名} 先生'
             },
             female: {
-                baptized: '主內 {姓}{名} 姊妹 安息',
                 general: '敬悼 {姓}{名} 女士'
             },
             footer: '{送禮人} {敬語}',
@@ -61,11 +59,9 @@ const funeralPhraseDB = {
         },
         catholic: {
             male: {
-                baptized: '故 {姓}{名} 弟兄 蒙主恩召',
                 general: '故 {姓}{名} 先生'
             },
             female: {
-                baptized: '故 {姓}{名} 姊妹 蒙主恩召',
                 general: '故 {姓}{名} 女士'
             },
             footer: '{送禮人} {敬語}',
@@ -318,20 +314,9 @@ function getFooterSuffix({ isBereaved, seniority } = {}) {
 }
 
 function composeTopLine(nameBlock, ending, religionKey) {
-    // 宗教用詞由中款顯示；上款只顯示姓名與稱謂。
-    // endings 陣列仍保留給前端的宗教成語分類選單使用。
-    if (religionKey === 'christian' || religionKey === 'catholic') {
-        return String(nameBlock || '').trim();
-    }
-
-    const format = funeralPhraseDB.cardFormat[religionKey]
-        || funeralPhraseDB.cardFormat.general;
-    const validEndings = Array.isArray(format.endings) ? format.endings : [''];
-    const safeEnding = validEndings.includes(ending)
-        ? ending
-        : (validEndings[0] || '');
-
-    return `${nameBlock || ''} ${safeEnding}`.trim();
+    const valid = funeralPhraseDB.cardFormat[religionKey].endings;
+    const safeEnding = valid.includes(ending) ? ending : valid[0];
+    return `${nameBlock} ${safeEnding}`;
 }
 
 // 「府」：年輕往生者才用。界線由 FU_AGE_THRESHOLD 控制，可隨時調整，
@@ -339,83 +324,54 @@ function composeTopLine(nameBlock, ending, religionKey) {
 const FU_AGE_THRESHOLD = 50;
 
 function applyFuStyle(nameBlock, lastName, age, useFuStyle) {
-    const should = (useFuStyle === undefined)
-        ? Number(age) < FU_AGE_THRESHOLD
-        : Boolean(useFuStyle);
-
-    if (!should || !lastName) return nameBlock;
-    return nameBlock.replace(lastName, `${lastName}府`);
+    const should = (useFuStyle === undefined) ? (Number(age) < FU_AGE_THRESHOLD) : !!useFuStyle;
+    return should ? nameBlock.replace(lastName, `${lastName}府`) : nameBlock;
 }
 
-function generateCardFormat(options = {}) {
+function generateCardFormat(options) {
     const {
         gender, age, lastName, firstName, husbandName, isMarried,
-        useHusbandSurname = true, isSenior = Number(age) >= 80,
-        religion, isBaptized = false, senderName, phrase, ending,
+        useHusbandSurname = true, isSenior = age >= 80,
+        religion, senderName, phrase, ending,
         isBereaved, seniority, useFuStyle
     } = options;
 
     const safeGender = assertGender(gender, 'generateCardFormat');
     if (!safeGender) return null;
 
-    const religionKey = (
-        religion === 'christian' || religion === 'catholic'
-    ) ? religion : 'general';
-
+    const religionKey = (religion === 'christian' || religion === 'catholic') ? religion : 'general';
     const format = funeralPhraseDB.cardFormat[religionKey];
-    const safeLastName = String(lastName || '').trim();
-    const safeFirstName = String(firstName || '').trim();
     let nameBlock;
 
     if (religionKey !== 'general') {
-        const templateKey = isBaptized ? 'baptized' : 'general';
-        nameBlock = format[safeGender][templateKey]
-            .replace('{姓}', safeLastName)
-            .replace('{名}', safeFirstName);
+        nameBlock = format[safeGender].general
+            .replace('{姓}', lastName).replace('{名}', firstName);
     } else if (safeGender === 'male') {
         nameBlock = (isSenior ? format.male.senior : format.male.adult)
-            .replace('{姓}', safeLastName)
-            .replace('{名}', safeFirstName);
+            .replace('{姓}', lastName).replace('{名}', firstName);
     } else if (isSenior && isMarried && useHusbandSurname) {
         nameBlock = format.female.senior
-            .replace('{夫姓}', String(husbandName || '').trim())
-            .replace('{本姓}', safeLastName)
-            .replace('{名}', safeFirstName);
+            .replace('{夫姓}', husbandName || '').replace('{本姓}', lastName).replace('{名}', firstName);
     } else if (isSenior) {
         nameBlock = format.female.seniorSingle
-            .replace('{姓}', safeLastName)
-            .replace('{名}', safeFirstName);
+            .replace('{姓}', lastName).replace('{名}', firstName);
     } else {
         nameBlock = format.female.adult
-            .replace('{姓}', safeLastName)
-            .replace('{名}', safeFirstName);
+            .replace('{姓}', lastName).replace('{名}', firstName);
     }
 
     if (religionKey === 'general') {
-        nameBlock = applyFuStyle(
-            nameBlock,
-            safeLastName,
-            age,
-            useFuStyle
-        );
+        nameBlock = applyFuStyle(nameBlock, lastName, age, useFuStyle);
     }
 
     return {
         topLine: composeTopLine(nameBlock, ending, religionKey),
-        middleLine: String(phrase || '').trim(),
-        bottomLine: `${String(senderName || '').trim()} ${getFooterSuffix({
-            isBereaved,
-            seniority
-        })}`.trim(),
+        middleLine: phrase,
+        bottomLine: `${senderName} ${getFooterSuffix({ isBereaved, seniority })}`,
         validEndings: format.endings,
         footerOptions: ['敬輓', '泣輓', '拜輓'],
-        internalId: [
-            safeLastName,
-            safeFirstName,
-            safeGender === 'male' ? 'M' : 'F',
-            age || '?',
-            Date.now().toString(36).slice(-4)
-        ].join('-')
+        internalId: [lastName || '', firstName || '', safeGender === 'male' ? 'M' : 'F',
+                     age || '?', Date.now().toString(36).slice(-4)].join('-')
     };
 }
 
