@@ -47,9 +47,30 @@ const funeralPhraseDB = {
             footer: '{送禮人} {敬語}',
             endings: ['千古', '仙逝', '往生蓮邦', '往生淨土']
         },
-        // 基督教／天主教稱謂寫法尚未經核對，generateCardFormat 會直接擋下
-        christian: { endings: ['安息主懷', '榮歸天家', '榮歸天國'] },
-        catholic:  { endings: ['蒙主恩召', '魂歸天國'] }
+        christian: {
+    male: {
+        baptized: '主內 {姓}{名} 弟兄 安息',
+        general: '敬悼 {姓}{名} 先生'
+    },
+    female: {
+        baptized: '主內 {姓}{名} 姊妹 安息',
+        general: '敬悼 {姓}{名} 女士'
+    },
+    footer: '{送禮人} {敬語}',
+    endings: ['']
+},
+catholic: {
+    male: {
+        baptized: '故 {姓}{名} 弟兄 蒙主恩召',
+        general: '故 {姓}{名} 先生'
+    },
+    female: {
+        baptized: '故 {姓}{名} 姊妹 蒙主恩召',
+        general: '故 {姓}{名} 女士'
+    },
+    footer: '{送禮人} {敬語}',
+    endings: ['']
+}
     },
 
     // ===== 男喪 =====
