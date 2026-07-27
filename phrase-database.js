@@ -1,5 +1,3 @@
-
-
 const AGE_BANDS = {
     under49:   [0, 49],
     age50to69: [50, 69],
