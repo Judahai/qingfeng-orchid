@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -50,8 +49,6 @@
         .phrase-buttons { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
         .phrase-btn { padding: 8px 16px; border: 1px solid var(--border); background: var(--bg-light); border-radius: 20px; cursor: pointer; font-size: 0.95rem; color: var(--text-mid); transition: 0.2s; }
         .phrase-btn:hover, .phrase-btn.active { background: var(--primary-green); color: #fff; border-color: var(--primary-green); }
-
-        .fmt-warn { color: #B8860B; font-size: 0.9rem; margin-top: 10px; padding: 10px 12px; background: #FDF8EC; border-radius: 8px; }
 
         .preview-area { position: sticky; top: 100px; }
         /* ===== 直書三欄卡片（html2canvas 安全版）===== */
@@ -274,7 +271,6 @@
             let currentPhrases = [];
 
             // 下款敬語的判斷依據是「送花的人」，不是往生者。
-            // 一題關係同時決定：是否喪家、輩分、能不能用友人詞。
             const RELATION_MAP = {
                 peer:     { isBereaved: false, seniority: 'peer',   isFriend: true  },
                 bereaved: { isBereaved: true,  seniority: 'junior', isFriend: false },
@@ -287,7 +283,7 @@
                 ? SAFE_PHRASES
                 : ['音容宛在', '典範長存', '德範永存', '永懷不忘'];
 
-            // 全名自動拆成姓＋名（供既有資料庫函式使用，複姓自動判斷）
+            // 全名自動拆成姓＋名（複姓自動判斷）
             function parseFullName() {
                 const full = document.getElementById('f-fullname').value.trim();
                 const compound = ['歐陽','司馬','司徒','張簡','范姜','陳黃','諸葛','上官','夏侯','東方'];
@@ -295,22 +291,6 @@
                     return { lastName: full.slice(0, 2), firstName: full.slice(2) };
                 }
                 return { lastName: full.slice(0, 1), firstName: full.slice(1) };
-            }
-
-            function showFormatWarning(msg) {
-                let el = document.getElementById('fmt-warn');
-                if (!el) {
-                    el = document.createElement('p');
-                    el.id = 'fmt-warn';
-                    el.className = 'fmt-warn';
-                    elPhraseContainer.parentNode.appendChild(el);
-                }
-                el.innerText = msg;
-            }
-
-            function clearFormatWarning() {
-                const el = document.getElementById('fmt-warn');
-                if (el) el.remove();
             }
 
             function updateUI() {
@@ -336,13 +316,15 @@
                     mode: 'free'
                 };
 
-                // 取得推薦詞（過濾邏輯已在資料庫函式內處理，這裡不再另外加工）
+                // 取得推薦詞
                 currentPhrases = getFuneralPhrases(options) || [];
-                if (!currentPhrases.length) currentPhrases = FALLBACK.slice();
 
-                // 通用安全詞排前面，避免冷門詞佔滿前 15 個位置
-                currentPhrases.sort((a, b) =>
-                    (FALLBACK.includes(b) ? 1 : 0) - (FALLBACK.includes(a) ? 1 : 0));
+                // 基督教／天主教：只顯示該宗教專用詞，不混一般詞
+                if (options.religion === 'christian' || options.religion === 'catholic') {
+                    currentPhrases = [...funeralPhraseDB.religion[options.religion]];
+                }
+
+                if (!currentPhrases.length) currentPhrases = FALLBACK.slice();
 
                 if (!currentPhrases.includes(elPhraseHidden.value)) {
                     elPhraseHidden.value = currentPhrases[0] || '音容宛在';
@@ -353,16 +335,14 @@
 
                 const card = generateCardFormat(options);
 
-                // 稱謂格式尚未核對的宗教會回傳 null，這裡接住，不讓整頁停住
+                // 防呆：資料庫回傳 null 時不讓整頁停住
                 if (!card) {
                     prevTop.innerText = '';
                     prevMiddle.innerText = elPhraseHidden.value;
                     prevBottom.innerText = '';
-                    showFormatWarning('此宗教的上下款稱謂格式仍在確認中，中款輓詞可正常使用。完整卡片請洽門市協助。');
                     adjustFontSize();
                     return;
                 }
-                clearFormatWarning();
 
                 // 佛教高齡女性在地稱謂
                 if (options.religion === 'buddhist' && options.gender === 'female' && options.age >= 80) {
@@ -388,14 +368,12 @@
             }
 
             function adjustFontSize() {
-                const maxHeight = 420; // 480px card height minus vertical padding
+                const maxHeight = 420;
 
-                // 暫時取消 stretch 以便量測真實文字高度
                 prevTop.style.alignSelf = 'flex-start';
                 prevMiddle.style.alignSelf = 'flex-start';
                 prevBottom.style.alignSelf = 'flex-start';
 
-                // 調整上款
                 prevTop.style.fontSize = '1.25rem';
                 let topSize = 1.25;
                 while (prevTop.offsetHeight > maxHeight && topSize > 0.7) {
@@ -403,7 +381,6 @@
                     prevTop.style.fontSize = `${topSize}rem`;
                 }
 
-                // 調整中款
                 prevMiddle.style.fontSize = '2.2rem';
                 let middleSize = 2.2;
                 while (prevMiddle.offsetHeight > maxHeight && middleSize > 1.0) {
@@ -411,7 +388,6 @@
                     prevMiddle.style.fontSize = `${middleSize}rem`;
                 }
 
-                // 調整下款
                 prevBottom.style.fontSize = '1.1rem';
                 let bottomSize = 1.1;
                 while (prevBottom.offsetHeight > maxHeight && bottomSize > 0.7) {
@@ -419,7 +395,6 @@
                     prevBottom.style.fontSize = `${bottomSize}rem`;
                 }
 
-                // 恢復 stretch 讓 flexbox 垂直置中
                 prevTop.style.alignSelf = '';
                 prevMiddle.style.alignSelf = '';
                 prevBottom.style.alignSelf = '';
@@ -427,7 +402,7 @@
 
             function renderPhraseButtons() {
                 elPhraseContainer.innerHTML = '';
-                const maxDisplay = 15; // 最多顯示15個
+                const maxDisplay = 15;
                 const toShow = currentPhrases.slice(0, maxDisplay);
                 
                 toShow.forEach(phrase => {
@@ -455,11 +430,11 @@
             updateUI();
         });
 
-        // 下載圖片 (僅下載，無 Web Share API)
+        // 下載圖片
         async function downloadCondolenceCard() {
             const previewEl = document.querySelector('.card-preview');
             const originalTransform = previewEl.style.transform;
-            previewEl.style.transform = 'none'; // 暫時移除縮放以確保清晰度
+            previewEl.style.transform = 'none';
             
             const btn = document.querySelector('.action-buttons button:first-child');
             const originalBtnText = btn.innerText;
@@ -473,31 +448,26 @@
                     useCORS: true
                 });
                 
-                // 建立 1080x1920 畫布
                 const finalCanvas = document.createElement('canvas');
                 finalCanvas.width = 1080;
                 finalCanvas.height = 1920;
                 const ctx = finalCanvas.getContext('2d');
                 
-                // 填入喪禮莊重底色 (淺灰)
                 ctx.fillStyle = '#f5f5f5';
                 ctx.fillRect(0, 0, 1080, 1920);
                 
-                // 計算置中縮放比例
                 const targetHeight = 1400;
                 const scale = targetHeight / canvas.height;
                 const targetWidth = canvas.width * scale;
                 const x = (1080 - targetWidth) / 2;
                 const y = (1920 - targetHeight) / 2 - 40;
                 
-                // 繪製陰影
                 ctx.shadowColor = 'rgba(0, 0, 0, 0.1)';
                 ctx.shadowBlur = 30;
                 ctx.shadowOffsetX = 0;
                 ctx.shadowOffsetY = 15;
                 ctx.drawImage(canvas, x, y, targetWidth, targetHeight);
                 
-                // 繪製浮水印
                 ctx.shadowColor = 'transparent';
                 ctx.fillStyle = '#999999';
                 ctx.font = '500 26px "Noto Sans TC", sans-serif';
@@ -505,7 +475,6 @@
                 ctx.fillText('免費輓聯產生器 ‧ 慶豐蘭園', 1030, 1846);
                 ctx.fillText('chingfeng.tw', 1030, 1884);
                 
-                // 直接顯示於畫面上供長按儲存，絕對不使用 Web Share API
                 finalCanvas.toBlob((blob) => {
                     const url = URL.createObjectURL(blob);
                     showImageModal(url);
@@ -697,5 +666,3 @@
     </script>
 </body>
 </html>
-```
-
