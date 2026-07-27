@@ -59,14 +59,14 @@ const funeralPhraseDB = {
             endings: ['千古', '仙逝', '往生蓮邦', '往生淨土']
         },
         christian: {
-            male:   { baptized: '主內 {姓}{名} 弟兄 安息', general: '敬悼 {姓}{名} 先生' },
-            female: { baptized: '主內 {姓}{名} 姊妹 安息', general: '敬悼 {姓}{名} 女士' },
+            male:   { baptized: '主內 {姓}{名} 弟兄 安息', general: '敬悼 {姓}{名} 先生 安息' },
+            female: { baptized: '主內 {姓}{名} 姊妹 安息', general: '敬悼 {姓}{名} 女士 安息' },
             footer: '{送禮人} {敬語}',
             endings: ['']
         },
         catholic: {
-            male:   { baptized: '故 {姓}{名} 弟兄 蒙主恩召', general: '故 {姓}{名} 先生' },
-            female: { baptized: '故 {姓}{名} 姊妹 蒙主恩召', general: '故 {姓}{名} 女士' },
+            male:   { baptized: '故 {姓}{名} 弟兄 蒙主恩召', general: '故 {姓}{名} 先生 蒙主恩召' },
+            female: { baptized: '故 {姓}{名} 姊妹 蒙主恩召', general: '故 {姓}{名} 女士 蒙主恩召' },
             footer: '{送禮人} {敬語}',
             endings: ['']
         }
