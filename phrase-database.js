@@ -1,445 +1,668 @@
-const AGE_BANDS = {
-    under49:   [0, 49],
-    age50to69: [50, 69],
-    age70to79: [70, 79],
-    age80plus: [80, 120]
-};
-
-const funeralPhraseDB = {
-
-    // ===== 卡片格式範本 =====
-    cardFormat: {
-        general: {
-            male:   { senior: '敬悼 {姓}公{名} 老先生', adult: '敬悼 {姓}{名} 先生' },
-            female: {
-                senior: '敬悼 {夫姓}媽{本姓} 老夫人',
-                seniorSingle: '敬悼 {姓}{名} 老夫人',
-                adult: '敬悼 {姓}{名} 女士'
-            },
-            footer: '{送禮人} {敬語}',
-            endings: ['千古', '仙逝', '往生蓮邦', '往生淨土']
-        },
-        christian: {
-            male:   { baptized: '主內 {姓}{名} 弟兄 安息', general: '敬悼 {姓}{名} 先生' },
-            female: { baptized: '主內 {姓}{名} 姊妹 安息', general: '敬悼 {姓}{名} 女士' },
-            footer: '{送禮人} {敬語}',
-            endings: ['']
-        },
-        catholic: {
-            male:   { baptized: '故 {姓}{名} 弟兄 蒙主恩召', general: '故 {姓}{名} 先生' },
-            female: { baptized: '故 {姓}{名} 姊妹 蒙主恩召', general: '故 {姓}{名} 女士' },
-            footer: '{送禮人} {敬語}',
-            endings: ['']
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>輓聯怎麼寫?喪禮賀卡用詞產生器|慶豐蘭園</title>
+    <meta name="description" content="免費喪禮輓聯產生器，提供上中下款寫法教學與即時預覽。符合台灣在地佛道教、基督教、天主教民俗禁忌，避免寫錯高壽或宗教用語。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-white: #FAF8F3;
+            --bg-light: #F4F1E9;
+            --text-dark: #1A1A1A;
+            --text-mid: #555555;
+            --text-light: #999999;
+            --accent-gold: #B8860B;
+            --primary-green: #1B4332;
+            --border: #E8E6DF;
+            --radius: 12px;
+            --radius-lg: 16px;
         }
-    },
 
-    // ===== 男喪 =====
-    male: {
-        under49: [
-            '星隕少微', '玉樹長埋', '壯志未酬', '天不假年', '修文赴召',
-            '少微星隕', '英年仙去', '英年玉折', '長才未盡', '同體大悲',
-            '棟折梁摧', '同悲不捨', '音容宛在', '悵望音容', '英氣頓杳',
-            '英風宛在', '英才天妒', '千秋永別', '一別千古', '典則空留', '痛隔天人'
-        ],
-        age50to69: [
-            '玉樹長埋', '英氣頓杳', '長才未盡', '痛隔天人', '星隕少微'
-        ],
-        age70to79: [
-            '遽返道山', '儀型足式', '碩德堪欽', '悵望音容', '道範長存',
-            '北斗星沉', '返璞歸真', '德業長昭', '駕鶴西歸', '典型宛在',
-            '千秋永訣', '海宇風淒', '泰山其頹', '仙凡路隔', '行誼可師',
-            '高風亮節', '英風宛在', '高風安仰', '音容如在', '庚星匿彩', '英氣長存'
-        ],
-        age80plus: [
-            '閬苑歸真', '庚星匿彩', '北斗星沉', '蓬島歸真', '羽化登仙',
-            '千秋足式', '典則空留', '歸真返璞', '高風亮節', '儀型萬方',
-            '桑梓流光', '德範永存', '德望永昭', '道範長存', '斗山安仰',
-            '典型足式', '南極星沉', '高山仰止', '碩德貽徽', '儀型足式', '高風安仰'
-        ],
-        tribute: [
-            '福壽全歸', '福慧雙修', '道範長存', '福壽雙全', '駕鶴西歸',
-            '德徽永昭', '跨鶴仙鄉', '老成凋謝', '大雅云亡', '斗山共仰',
-            '南極星沉', '德望永欽', '碩德永昭', '哲人其萎'
-        ]
-    },
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg-white); color: var(--text-dark); line-height: 1.7; padding-top: 60px; }
+        h1, h2, h3 { font-family: 'Noto Serif TC', serif; color: var(--primary-green); }
 
-    // ===== 女喪 =====
-    female: {
-        under49: [
-            '妝台月冷', '涼月淒清', '塵掩妝台', '悵望音容', '魂兮歸來',
-            '遽促芳齡', '音容如在', '音容宛在', '幽明永隔', '望斷白雲',
-            '銜哀永逝', '閭里銜哀', '音容隔世', '抱恨終天', '花落萱幃',
-            '徽音頓渺', '千秋永訣', '悲興風木'
-        ],
-        age50to69: [
-            '妝台月冷', '涼月淒清', '塵掩妝台', '悵望音容', '魂兮歸來',
-            '塵榻空留', '同體大悲', '萱萎北堂', '天不假年', '曇花萎謝',
-            '遽促芳齡', '繡幃香冷', '玉簫聲斷', '忘憂草謝', '音容如在',
-            '鵑聲月寒', '同悲不捨', '慈雲縹緲', '持家有則', '坤儀足式'
-        ],
-        age70to79: [
-            '瑤池赴召', '北堂春去', '彤管揚芬', '寶婺星沉', '慈雲縹緲',
-            '親恩永懷', '懿德長昭', '範垂巾幗', '彤管流芳', '流芳千古',
-            '坤儀足式', '閫範長存', '懿範猶存', '悲興風木', '名標彤史',
-            '淑德永昭', '母儀千古', '母儀足式', '溫恭淑慎', '慈暉永懷',
-            '孟母風高', '賢同歐母'
-        ],
-        age80plus: [
-            '萱儀足式', '萱範長存', '懿德長昭', '彤管流芳', '溫恭淑慎',
-            '淑德永昭', '母儀千古', '母儀足式', '萱萎北堂', '懿範垂型',
-            '五福全歸', '坤儀宛在', '母儀永懷', '永懷親恩', '慈暉長照', '慈暉永懷'
-        ],
-        tribute: [
-            '慈輝永昭', '懿範永存', '懿德猶存', '慈雲西逝', '女宗共仰',
-            '母儀千古', '駕返瑤池', '壺範垂型', '淑德常昭', '母儀足式'
-        ]
-    },
+        .container { max-width: 900px; margin: 0 auto; padding: 40px 24px; }
+        
+        .seo-content { margin-bottom: 40px; background: #fff; padding: 30px; border-radius: var(--radius-lg); box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
+        .seo-content h1 { font-size: 2rem; margin-bottom: 20px; }
+        .seo-content h2 { font-size: 1.25rem; margin-top: 20px; margin-bottom: 10px; }
+        .seo-content p { margin-bottom: 12px; color: var(--text-mid); }
 
-    // ===== 宗教 =====
-    religion: {
-        general: ['音容宛在', '典範長存', '駕鶴西歸', '德範永存', '永懷不忘'],
-        buddhist: [
-            '高登蓮品', '上品上生', '功德圓滿', '澤在人間', '悲願宏深',
-            '乘願再來', '花開見佛', '人天安仰', '往生蓮邦', '往生極樂',
-            '超生極樂', '神超淨域', '往生西方', '接引西方', '圓超五濁',
-            '俯謝娑婆', '神遊極樂', '神歸極樂', '神歸安養', '神歸淨土',
-            '神歸樂國', '神歸淨域', '往生樂土', '土歸寂光', '果證菩提',
-            '生西現瑞', '念佛往生', '欣登彼岸', '往生彼岸', '蛻然西歸',
-            '佛果圓成', '見佛證果', '果證無生', '悟證無生', '非去非來',
-            '復來度蒙', '倒駕慈航', '入聖超凡', '安詳捨報', '華開蓮剎',
-            '彌陀接引', '法燈隱耀', '法燈乍晦', '慧燈遽晦', '成菩提道',
-            '菩提果圓', '菩提圓成', '佛道圓成', '蓮池證果', '慧炬長明',
-            '炬光永曜', '位登上品', '駕返蓮邦', '彌陀笑迎', '蓮開寶沼',
-            '歸西證果', '西歸蓮域', '遠塵離垢', '覺行圓滿', '蓮沼映輝',
-            '蓮邦永托', '念佛生西', '慈光常住', '返真蓮域', '親近諸佛',
-            '天樂鳴空', '護國弘教', '慧光溥昭', '宏教垂範', '化生蓮邦',
-            '九品蓮登', '往生淨土', '往生佛國'
-        ],
-        yiguandao: [
-            '回歸理天', '靈歸無極', '返樸歸真', '駕返瑤池',
-            '圓覺歸真', '駕返理天', '認理歸真', '功圓果滿'
-        ],
-        tiandijiao: ['功果圓滿', '天帝寵召', '昇天歸位', '回歸自然'],
-        christian: [
-            '主懷安息', '在主懷抱', '天國永生', '安息主懷', '息勞歸主',
-            '榮歸天國', '永光照之', '永遠懷念', '睡主懷中', '耶穌是主',
-            '與主偕行', '與主永偕', '蒙主恩加', '釋勞歸主', '蒙主寵召',
-            '永息主懷', '魂登天國', '榮返天鄉', '駕返帝鄉', '永在主前',
-            '主懷長生', '永在天國'
-        ],
-        catholic: ['魂歸天國', '蒙主寵召', '永遠懷念', '榮歸天家', '安然見主']
-    },
+        .generator-grid { display: grid; grid-template-columns: 1fr 300px; gap: 30px; }
+        @media (max-width: 768px) { .generator-grid { grid-template-columns: 1fr; } }
+        
+        .form-area { background: #fff; padding: 30px; border-radius: var(--radius-lg); box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-weight: 500; margin-bottom: 8px; color: var(--text-dark); }
+        .form-control { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; font-family: inherit; }
+        select.form-control { appearance: none; background: url('data:image/svg+xml;utf8,<svg fill="%23999" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>') no-repeat right 8px center; background-size: 20px; }
+        
+        .row { display: flex; gap: 15px; }
+        .col { flex: 1; }
 
-    // ===== 職業 =====
-    profession: {
-        politician: [
-            '邦國精華', '甘棠遺愛', '國失賢良', '耆德元勛', '峴首留碑',
-            '勛猷共仰', '忠勤足式', '才厄經綸', '遺愛人間', '萬姓謳思'
-        ],
-        teacher: [
-            '馬帳安仰', '風冷杏壇', '桃李興悲', '立雪神傷', '高山安仰',
-            '教澤長存', '教澤永懷', '師表千古', '師表常尊', '永念師恩'
-        ],
-        scholar: [
-            '大雅云亡', '天喪斯文', '立言不朽', '絕學千秋', '學究天人',
-            '世失英才', '少微斂曜', '言行足式', '文壇失仰', '文曲光沉', '望尊泰斗'
-        ]
-    },
+        .phrase-buttons { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+        .phrase-btn { padding: 8px 16px; border: 1px solid var(--border); background: var(--bg-light); border-radius: 20px; cursor: pointer; font-size: 0.95rem; color: var(--text-mid); transition: 0.2s; }
+        .phrase-btn:hover, .phrase-btn.active { background: var(--primary-green); color: #fff; border-color: var(--primary-green); }
 
-    // ===== 友人通用 =====
-    friend: [
-        '痛失知音', '話冷雞窗', '心傷畏友', '響絕牙琴', '人琴俱亡',
-        '伊人宛在', '範垂巾幗', '福壽全歸', '彤管流芳', '丹管流芬',
-        '女界典型', '流芳千古', '涼月淒清', '蓼莪詩廢', '鸞軿遽返',
-        '鸞馭遐升', '閨閫之師', '坤儀足式', '坤儀宛在', '閫範空存',
-        '閫範長存', '空仰慈顏', '海宗風淒', '花落萱幃', '徽音頓渺',
-        '徽音遠播', '魂兮歸來', '巾幗稱賢', '巾幗儀型', '千秋永訣',
-        '繡閣風寒', '仙凡路隔', '仙遊上界', '賢同歐母', '香消玉殞',
-        '萱堂露冷', '萱蔭長留', '鍾郝儀型', '持家有則', '淑德永昭',
-        '慈竹風淒', '慈竹風摧', '慈雲縹緲', '懿範猶存', '懿德堪欽',
-        '懿德長昭', '瑤島仙遊', '瑤池赴召', '音容如在', '音容宛在',
-        '五福全歸', '婺星光暗', '婺彩沉輝', '溫恭淑慎', '忘憂草謝',
-        '月缺花殘', '母儀千古', '母儀足式', '母儀永式', '女宗共仰',
-        '女宗安仰', '駕返瑤池', '萱幃月冷', '萱萎北堂', '慈萱永謝',
-        '慈雲歸岫', '懿範垂型', '月冷西池'
-    ]
-};
-
-// ===============================================
-// 喜慶成語資料庫（未動）
-// ===============================================
-const celebrationPhraseDB = {
-    opening: {
-        general: [
-            '開幕誌慶', '駿業宏開', '鴻圖大展', '生意興隆', '財源廣進',
-            '日進斗金', '開張大吉', '萬商雲集', '近悅遠來', '業紹陶朱'
-        ],
-        restaurant: ['賓客盈門', '高朋滿座', '珍饈滿座', '門庭若市', '佳餚滿堂'],
-        medical: [
-            '杏林春暖', '仁心仁術', '懸壺濟世', '華佗再世', '妙手回春',
-            '功同良相', '濟世利民', '德術雙馨'
-        ],
-        legal: ['伸張正義', '法理精湛', '明鏡高懸', '公正廉明', '匡扶正義']
-    },
-    moving: {
-        general: [
-            '喬遷之喜', '華廈生輝', '德門仁第', '福地洞天', '竹苞松茂',
-            '瑞氣盈門', '門庭集慶', '美輪美奐', '堂構更新'
-        ],
-        elderly: ['福壽康寧', '安居樂業', '福澤綿延']
-    },
-    promotion: {
-        general: [
-            '步步高升', '榮任新職', '鵬程萬里', '高升志喜', '大展鴻圖',
-            '飛黃騰達', '榮陞卓越', '仕途順遂'
-        ],
-        election: [
-            '眾望所歸', '造福桑梓', '民主之光', '德孚眾望', '高票當選',
-            '眾望攸歸', '為民喉舌', '澤被蒼生'
-        ]
-    },
-    exhibition: {
-        general: [
-            '藝壇生輝', '璀璨奪目', '妙筆生花', '化腐朽為神奇',
-            '藝苑增輝', '妙造自然', '匠心獨運'
-        ]
-    },
-    wedding: {
-        general: [
-            '百年好合', '永浴愛河', '佳偶天成', '琴瑟和鳴',
-            '鸞鳳和鳴', '天作之合', '珠聯璧合', '龍鳳呈祥'
-        ]
-    },
-    birthday: {
-        general: ['生日快樂', '心想事成', '萬事如意'],
-        elderly: [
-            '福如東海', '壽比南山', '松柏長青', '鶴壽松齡',
-            '福壽康寧', '南極星輝', '德高壽永', '松鶴延年'
-        ],
-        longevity: ['福壽雙全', '壽翁晉五', '長命百歲', '耄耋康健']
-    },
-    temple: {
-        general: [
-            '神威顯赫', '香火鼎盛', '澤被蒼生', '庇佑蒼生',
-            '神恩浩蕩', '聖德長昭', '威靈顯赫', '德澤廣被'
-        ],
-        mazu: ['天后聖母', '海國長安', '航海明燈'],
-        guandi: ['義薄雲天', '忠義千秋', '浩然正氣']
-    },
-    newyear: {
-        general: [
-            '恭賀新禧', '新年快樂', '萬事如意', '心想事成', '大吉大利',
-            '吉祥如意', '財源廣進', '招財進寶', '金玉滿堂', '福星高照',
-            '迎春納福', '春到福到', '龍馬精神', '蛇年行大運', '富貴吉祥'
-        ],
-        business: ['生意興隆', '日進斗金', '財源滾滾', '鴻圖大展', '事業蒸蒸日上'],
-        family: ['闔家平安', '闔家歡樂', '天倫之樂', '福壽雙全', '百福齊臻']
-    },
-    graduation: {
-        general: [
-            '畢業快樂', '學業有成', '前程似錦', '鵬程萬里', '一帆風順',
-            '展翅高飛', '百尺竿頭', '更進一步', '學海無涯', '青雲直上'
-        ],
-        admission: ['金榜題名', '魚躍龍門', '蟾宮折桂', '及第登科', '龍門高跳'],
-        doctorate: ['學富五車', '博學多才', '學術精深', '卓越成就']
-    }
-};
-
-function getCelebrationPhrases(options) {
-    const { category, subCategory, isElderly } = options;
-    const db = celebrationPhraseDB[category];
-    if (!db) return [];
-    let results = [];
-    if (db.general) results.push(...db.general);
-    if (subCategory && db[subCategory]) results.push(...db[subCategory]);
-    if (isElderly && db.elderly) results.push(...db.elderly);
-    return results;
-}
-
-// ===============================================
-// 標籤索引：載入時自動建立
-// ===============================================
-function buildPhraseIndex(db) {
-    const index = new Map();
-    const norm = t => PHRASE_VARIANTS[t] || t;
-
-    function put(rawText, patch, source) {
-        const text = norm(rawText);
-        let rec = index.get(text);
-        if (!rec) {
-            rec = { text, gender: undefined, ageMin: undefined, ageMax: undefined,
-                    religion: new Set(), profession: new Set(), sources: new Set() };
-            index.set(text, rec);
+        .preview-area { position: sticky; top: 100px; }
+        /* ===== 直書三欄卡片（html2canvas 安全版）===== */
+        .card-preview {
+            display: flex;
+            flex-direction: row;          /* 三欄橫排：左下款、中中款、右上款 */
+            justify-content: space-between;
+            align-items: stretch;
+            width: 340px;
+            height: 480px;                /* 固定比例，產圖才穩定 */
+            margin: 0 auto;
+            padding: 30px 24px;
+            background: #fffcf8;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            position: relative;
+            box-sizing: border-box;
+            font-family: 'LXGW WenKai TC', serif;
         }
-        rec.sources.add(source);
-        if (patch.gender !== undefined) {
-            if (rec.gender === undefined) rec.gender = patch.gender;
-            else if (rec.gender !== patch.gender) rec.gender = null;
+        .card-preview::before {
+            content: '';
+            position: absolute;
+            inset: 10px;
+            border: 1px solid rgba(184, 134, 11, 0.2);
+            pointer-events: none;
         }
-        if (patch.ageMin !== undefined) {
-            rec.ageMin = rec.ageMin === undefined ? patch.ageMin : Math.min(rec.ageMin, patch.ageMin);
-            rec.ageMax = rec.ageMax === undefined ? patch.ageMax : Math.max(rec.ageMax, patch.ageMax);
-        }
-        if (patch.religion) rec.religion.add(patch.religion);
-        if (patch.profession) rec.profession.add(patch.profession);
-    }
 
-    ['male', 'female'].forEach(g => {
-        Object.entries(AGE_BANDS).forEach(([band, [lo, hi]]) => {
-            (db[g]?.[band] || []).forEach(t => put(t, { gender: g, ageMin: lo, ageMax: hi }, `${g}.${band}`));
+        /* 每一欄：窄寬度強迫一字一行 = 直書效果 */
+        .card-line {
+            width: 1.6em;                 /* 關鍵！沒有這行字就橫著跑 */
+            font-size: 1.25rem;
+            letter-spacing: 0;
+            line-height: 1.5;             /* 直書時這是「字距」 */
+            color: #1a1a1a;
+            word-break: break-all;
+            white-space: normal;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            overflow: visible;
+        }
+
+        /* 中款：最大字，垂直置中 */
+        .card-middle {
+            font-size: 2.2rem;
+            font-weight: 700;
+            width: 1.4em;
+            justify-content: center;
+        }
+
+        /* 上款：靠上（傳統格式從頂端起筆） */
+        .card-top { justify-content: flex-start; padding-top: 10px; }
+
+        /* 下款：靠下（落款收在底部） */
+        .card-bottom { justify-content: flex-end; padding-bottom: 10px; }
+
+        .cta-area { text-align: center; margin-top: 50px; padding: 40px; background: var(--primary-green); border-radius: var(--radius-lg); color: #fff; }
+        .cta-area h3 { color: #fff; margin-bottom: 10px; }
+        .btn-line { display: inline-flex; align-items: center; justify-content: center; background: #06C755; color: #fff; padding: 14px 30px; border-radius: 50px; font-weight: 700; text-decoration: none; font-size: 1.1rem; margin-top: 20px; transition: 0.3s; }
+        .btn-line:hover { background: #05b04b; transform: translateY(-2px); }
+        .btn-home { display: inline-flex; margin-top: 15px; color: rgba(255,255,255,0.7); text-decoration: none; }
+        .btn-home:hover { color: #fff; }
+    </style>
+    <!-- 引入 html2canvas 用於產圖 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+
+
+    <!-- 導覽列容器 -->
+    <div id="nav-placeholder"></div>
+
+    <div class="container">
+        <div class="seo-content">
+            <h1>輓聯怎麼寫？</h1>
+            <p>準備花籃、輓聯或奠儀卡片時，常常不知道該怎麼寫才得體？其實台灣的喪禮卡片結構主要分為「上款（寫逝者）、中款（寫輓詞）、下款（落款）」三個部分。</p>
+            <h2>1. 稱謂與性別選擇</h2>
+            <p>上款會依據逝者的性別、年齡與婚姻狀況來決定稱呼。一般來說，男性尊稱「先生/老先生」，女性尊稱「女士/老夫人」。若女性有冠夫姓，傳統上也會加入夫姓。</p>
+            <h2>2. 宗教用詞禁忌</h2>
+            <p>佛教與道教常使用「往生淨土、高登蓮品」等詞；而基督教與天主教則絕對不可使用「千古」或佛道教詞彙，應改用「安息主懷、蒙主恩召、榮歸天家」等專用語。</p>
+            <h2>3. 年齡限制</h2>
+            <p>若是年輕或中年逝者（通常70歲以下），忌諱使用「福壽全歸」、「五福全歸」等高壽功德詞彙，應改用「英年玉折」、「天不假年」等表達惋惜之意。</p>
+            <h2>4. 下款怎麼落</h2>
+            <p>下款的敬語取決於送花的人，不是往生者。喪家自己人用「泣輓」，晚輩、學生、部屬用「拜輓」，平輩朋友與一般關係用「敬輓」。</p>
+        </div>
+
+        <div class="generator-grid">
+            <div class="form-area">
+                <form id="generator-form">
+                    <div class="row">
+                        <div class="form-group col">
+                            <label>往生者性別</label>
+                            <select class="form-control" id="f-gender">
+                                <option value="male">男</option>
+                                <option value="female">女</option>
+                            </select>
+                        </div>
+                        <div class="form-group col">
+                            <label>往生者年齡 (大約即可)</label>
+                            <select class="form-control" id="f-age">
+                                <option value="85">80歲以上</option>
+                                <option value="75">70-79歲</option>
+                                <option value="60">50-69歲</option>
+                                <option value="40">49歲以下</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col">
+                            <label>宗教信仰</label>
+                            <select class="form-control" id="f-religion">
+                                <option value="general">一般（含道教）</option>
+                                <option value="buddhist">佛教</option>
+                                <option value="yiguandao">一貫道</option>
+                                <option value="tiandijiao">天帝教</option>
+                                <option value="christian">基督教</option>
+                                <option value="catholic">天主教</option>
+                            </select>
+                        </div>
+                        <div class="form-group col">
+                            <label>您與往生者的關係</label>
+                            <select class="form-control" id="f-relation">
+                                <option value="peer">朋友 / 同事 / 平輩</option>
+                                <option value="bereaved">我是家屬（子女/配偶/兄弟姊妹/孫）</option>
+                                <option value="junior">晚輩 / 學生 / 部屬</option>
+                                <option value="business">客戶 / 商業夥伴</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>往生者全名</label>
+                        <input type="text" class="form-control" id="f-fullname" placeholder="例: 陳大明" value="陳大明" maxlength="6">
+                    </div>
+
+                    <div class="form-group" id="husband-name-group" style="display: none;">
+                        <label>夫姓 (選填)</label>
+                        <input type="text" class="form-control" id="f-husbandname" placeholder="若有冠夫姓請填寫">
+                        <div style="margin-top: 8px;">
+                            <label style="font-weight: 400; display: inline-flex; align-items: center; cursor: pointer;">
+                                <input type="checkbox" id="f-usehusband" checked style="margin-right: 8px;">
+                                卡片上顯示冠夫姓
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>您的落款姓名 (或公司名稱)</label>
+                        <input type="text" class="form-control" id="f-sender" placeholder="例: 王小明" value="王小明">
+                    </div>
+
+                    <div class="form-group">
+                        <label>推薦輓詞 (請點擊選擇)</label>
+                        <div class="phrase-buttons" id="phrase-container">
+                            <!-- JS 動態生成 -->
+                        </div>
+                        <!-- 隱藏的自訂輸入框供程式內部追蹤 -->
+                        <input type="hidden" id="f-phrase" value="">
+                    </div>
+                </form>
+            </div>
+
+            <div class="preview-area">
+                <div class="card-preview">
+                    <div class="card-line card-bottom" id="preview-bottom"></div>
+                    <div class="card-line card-middle" id="preview-middle"></div>
+                    <div class="card-line card-top" id="preview-top"></div>
+                </div>
+                <div class="action-buttons" style="margin-top: 20px; text-align: center; display: flex; flex-direction: column; gap: 10px;">
+                    <div>
+                        <button type="button" class="btn" style="background: #333333; color: white; width: 100%; border-radius: 50px; font-size: 1.1rem; padding: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);" onclick="downloadCondolenceCard()">📸 生成高清輓聯圖片</button>
+                        <p style="font-size: 0.8rem; color: #888; margin-top: 8px; margin-bottom: 0;">長按圖片即可儲存至手機</p>
+                    </div>
+                    <button type="button" class="btn" style="background: white; color: #333; border: 1px solid #ccc; width: 100%; border-radius: 50px; font-size: 1.1rem; padding: 12px;" onclick="copyCardText()">📋 複製純文字</button>
+                    <div>
+                        <button type="button" class="btn" style="background: #2c5f8a; color: white; width: 100%; border-radius: 50px; font-size: 1.05rem; padding: 12px;" onclick="downloadWordFile()">📄 下載 Word 檔（標楷體可列印）</button>
+                        <p style="font-size: 0.75rem; color: #999; margin: 4px 0 0;">Word 檔適合電腦開啟列印；手機請直接使用上方圖片功能</p>
+                    </div>
+                    <button type="button" class="btn" style="background:#06C755;color:#fff;width:100%;border-radius:50px;font-size:1.05rem;padding:12px;" onclick="shareCardToFamily()">👨‍👩‍👧 傳給家人確認落款</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="cta-area">
+            <h3>寫好了？花禮含卡片代送，雲嘉當日達</h3>
+            <p>北港產地直營，代客打印卡片送達告別式會場</p>
+            <a href="#" id="line-order-btn" class="btn-line" target="_blank">LINE 直接訂購花禮</a>
+            <br>
+            <a href="index-v2.html" class="btn-home">← 回慶豐蘭園首頁</a>
+        </div>
+    </div>
+
+    <!-- 引用現有腳本 -->
+    <script src="nav.js?v=2"></script>
+    <script>
+        // 渲染導覽列
+        if(typeof renderNav === 'function') {
+            document.getElementById('nav-placeholder').innerHTML = renderNav();
+        }
+    </script>
+    <script src="phrase-database.js"></script>
+
+    <!-- 產生器邏輯 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('generator-form');
+            const inputs = form.querySelectorAll('input, select');
+            
+            const elGender = document.getElementById('f-gender');
+            const elHusbandGroup = document.getElementById('husband-name-group');
+            const elPhraseContainer = document.getElementById('phrase-container');
+            const elPhraseHidden = document.getElementById('f-phrase');
+            
+            const prevTop = document.getElementById('preview-top');
+            const prevMiddle = document.getElementById('preview-middle');
+            const prevBottom = document.getElementById('preview-bottom');
+            const lineBtn = document.getElementById('line-order-btn');
+
+            let currentPhrases = [];
+
+            // 下款敬語的判斷依據是「送花的人」，不是往生者。
+            const RELATION_MAP = {
+                peer:     { isBereaved: false, seniority: 'peer',   isFriend: true  },
+                bereaved: { isBereaved: true,  seniority: 'junior', isFriend: false },
+                junior:   { isBereaved: false, seniority: 'junior', isFriend: false },
+                business: { isBereaved: false, seniority: 'peer',   isFriend: false }
+            };
+
+            // 安全牌：資料庫有提供就用，沒有就退回這幾句通用詞
+            const FALLBACK = (typeof SAFE_PHRASES !== 'undefined' && SAFE_PHRASES.length)
+                ? SAFE_PHRASES
+                : ['音容宛在', '典範長存', '德範永存', '永懷不忘'];
+
+            // 全名自動拆成姓＋名（複姓自動判斷）
+            function parseFullName() {
+                const full = document.getElementById('f-fullname').value.trim();
+                const compound = ['歐陽','司馬','司徒','張簡','范姜','陳黃','諸葛','上官','夏侯','東方'];
+                if (compound.includes(full.slice(0, 2))) {
+                    return { lastName: full.slice(0, 2), firstName: full.slice(2) };
+                }
+                return { lastName: full.slice(0, 1), firstName: full.slice(1) };
+            }
+
+            function updateUI() {
+                // 女性顯示夫姓欄位
+                elHusbandGroup.style.display = elGender.value === 'female' ? 'block' : 'none';
+
+                const rel = RELATION_MAP[document.getElementById('f-relation').value] || RELATION_MAP.peer;
+                const name = parseFullName();
+
+                const options = {
+                    gender: elGender.value,
+                    age: parseInt(document.getElementById('f-age').value, 10),
+                    religion: document.getElementById('f-religion').value,
+                    isBereaved: rel.isBereaved,
+                    seniority: rel.seniority,
+                    isFriend: rel.isFriend,
+                    lastName: name.lastName,
+                    firstName: name.firstName,
+                    husbandName: document.getElementById('f-husbandname').value,
+                    isMarried: document.getElementById('f-husbandname').value.trim() !== '',
+                    useHusbandSurname: document.getElementById('f-usehusband').checked,
+                    senderName: document.getElementById('f-sender').value,
+                    mode: 'free'
+                };
+
+                // 取得推薦詞
+                currentPhrases = getFuneralPhrases(options) || [];
+
+                // 基督教／天主教：只顯示該宗教專用詞，不混一般詞
+                if (options.religion === 'christian' || options.religion === 'catholic') {
+                    currentPhrases = [...funeralPhraseDB.religion[options.religion]];
+                }
+
+                if (!currentPhrases.length) currentPhrases = FALLBACK.slice();
+
+                if (!currentPhrases.includes(elPhraseHidden.value)) {
+                    elPhraseHidden.value = currentPhrases[0] || '音容宛在';
+                }
+                options.phrase = elPhraseHidden.value;
+
+                renderPhraseButtons();
+
+                const card = generateCardFormat(options);
+
+                // 防呆：資料庫回傳 null 時不讓整頁停住
+                if (!card) {
+                    prevTop.innerText = '';
+                    prevMiddle.innerText = elPhraseHidden.value;
+                    prevBottom.innerText = '';
+                    adjustFontSize();
+                    return;
+                }
+
+                // 佛教高齡女性在地稱謂
+                if (options.religion === 'buddhist' && options.gender === 'female' && options.age >= 80) {
+                    card.topLine = card.topLine.replace('老夫人', '老菩薩');
+                }
+
+                prevTop.innerText = card.topLine;
+                prevMiddle.innerText = card.middleLine;
+                prevBottom.innerText = card.bottomLine;
+
+                adjustFontSize();
+
+                const lineMsg = `您好，我要訂購追思花禮：\n\n【卡片內容】\n上款：${card.topLine}\n中款：${card.middleLine}\n下款：${card.bottomLine}`;
+
+                lineBtn.removeAttribute('href');
+                lineBtn.onclick = (e) => {
+                    e.preventDefault();
+                    navigator.clipboard.writeText(lineMsg)
+                        .then(() => { alert("訂單內容已複製！\n加入好友後貼上即可送出。"); })
+                        .catch(() => { alert("請手動複製以下內容，然後加入LINE好友貼上：\n\n" + lineMsg); })
+                        .finally(() => { window.open("https://line.me/ti/p/K2LFf7aucm", "_blank"); });
+                };
+            }
+
+            function adjustFontSize() {
+                const maxHeight = 420;
+
+                prevTop.style.alignSelf = 'flex-start';
+                prevMiddle.style.alignSelf = 'flex-start';
+                prevBottom.style.alignSelf = 'flex-start';
+
+                prevTop.style.fontSize = '1.25rem';
+                let topSize = 1.25;
+                while (prevTop.offsetHeight > maxHeight && topSize > 0.7) {
+                    topSize -= 0.05;
+                    prevTop.style.fontSize = `${topSize}rem`;
+                }
+
+                prevMiddle.style.fontSize = '2.2rem';
+                let middleSize = 2.2;
+                while (prevMiddle.offsetHeight > maxHeight && middleSize > 1.0) {
+                    middleSize -= 0.1;
+                    prevMiddle.style.fontSize = `${middleSize}rem`;
+                }
+
+                prevBottom.style.fontSize = '1.1rem';
+                let bottomSize = 1.1;
+                while (prevBottom.offsetHeight > maxHeight && bottomSize > 0.7) {
+                    bottomSize -= 0.05;
+                    prevBottom.style.fontSize = `${bottomSize}rem`;
+                }
+
+                prevTop.style.alignSelf = '';
+                prevMiddle.style.alignSelf = '';
+                prevBottom.style.alignSelf = '';
+            }
+
+            function renderPhraseButtons() {
+                elPhraseContainer.innerHTML = '';
+                const maxDisplay = 15;
+                const toShow = currentPhrases.slice(0, maxDisplay);
+                
+                toShow.forEach(phrase => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = `phrase-btn ${phrase === elPhraseHidden.value ? 'active' : ''}`;
+                    btn.innerText = phrase;
+                    btn.onclick = () => {
+                        elPhraseHidden.value = phrase;
+                        updateUI();
+                    };
+                    elPhraseContainer.appendChild(btn);
+                });
+            }
+
+            // 綁定事件
+            inputs.forEach(input => {
+                input.addEventListener('change', updateUI);
+                if(input.type === 'text') {
+                    input.addEventListener('input', updateUI);
+                }
+            });
+
+            // 初始執行
+            updateUI();
         });
-        (db[g]?.tribute || []).forEach(t => put(t, { gender: g, ageMin: 0, ageMax: 120 }, `${g}.tribute`));
-    });
 
-    Object.entries(db.religion || {}).forEach(([rel, list]) =>
-        list.forEach(t => put(t, { religion: rel }, `religion.${rel}`)));
-
-    Object.entries(db.profession || {}).forEach(([prof, list]) =>
-        list.forEach(t => put(t, { profession: prof }, `profession.${prof}`)));
-
-    (db.friend || []).forEach(t => put(t, {}, 'friend'));
-
-    return [...index.values()].map(r => ({
-        text: r.text,
-        gender: r.gender === undefined ? null : r.gender,
-        ageMin: r.ageMin === undefined ? 0 : r.ageMin,
-        ageMax: r.ageMax === undefined ? 120 : r.ageMax,
-        religion: [...r.religion],
-        profession: [...r.profession],
-        friendOnly: r.sources.size === 1 && r.sources.has('friend'),
-        noChristian: NON_CHRISTIAN_PHRASES.includes(r.text),
-        enabled: !(r.text in DISABLED_PHRASES),
-        note: DISABLED_PHRASES[r.text] || '',
-        sources: [...r.sources]
-    }));
-}
-
-const PHRASE_INDEX = buildPhraseIndex(funeralPhraseDB);
-
-// 安全牌：性別不限、年齡不限、宗教不限的通用詞
-const SAFE_PHRASES = PHRASE_INDEX.filter(p =>
-    p.enabled && !p.gender && p.ageMin === 0 && p.ageMax === 120 &&
-    !p.religion.length && !p.profession.length && !p.friendOnly
-).map(p => p.text);
-
-// ===============================================
-// 查詢
-// ===============================================
-function getFuneralPhrases({ gender, age, religion, profession, isFriend, mode = 'order' } = {}) {
-    const numAge = Number(age);
-    const ageOk = Number.isFinite(numAge) && numAge >= 0 && numAge <= 120;
-    const genderOk = gender === 'male' || gender === 'female';
-
-    if (!ageOk || !genderOk) {
-        if (mode === 'free') return SAFE_PHRASES.slice();
-        console.warn('[getFuneralPhrases] ⚠️ 性別或年齡未填:', gender, age);
-        return [];
-    }
-
-    const results = PHRASE_INDEX.filter(p => {
-        if (!p.enabled) return false;
-        if (p.gender && p.gender !== gender) return false;
-        if (numAge < p.ageMin || numAge > p.ageMax) return false;
-        if (p.religion.length && !p.religion.includes(religion)) return false;
-        if (p.profession.length && (!profession || !p.profession.includes(profession))) return false;
-        if (p.friendOnly && !isFriend) return false;
-        if (religion === 'christian' || religion === 'catholic') {
-            if (p.noChristian) return false;
-            if (p.text.includes('千古')) return false;
+        // 下載圖片
+        async function downloadCondolenceCard() {
+            const previewEl = document.querySelector('.card-preview');
+            const originalTransform = previewEl.style.transform;
+            previewEl.style.transform = 'none';
+            
+            const btn = document.querySelector('.action-buttons button:first-child');
+            const originalBtnText = btn.innerText;
+            btn.innerText = '⏳ 產圖中...';
+            btn.disabled = true;
+            
+            try {
+                const canvas = await html2canvas(previewEl, {
+                    scale: 2, 
+                    backgroundColor: null,
+                    useCORS: true
+                });
+                
+                const finalCanvas = document.createElement('canvas');
+                finalCanvas.width = 1080;
+                finalCanvas.height = 1920;
+                const ctx = finalCanvas.getContext('2d');
+                
+                ctx.fillStyle = '#f5f5f5';
+                ctx.fillRect(0, 0, 1080, 1920);
+                
+                const targetHeight = 1400;
+                const scale = targetHeight / canvas.height;
+                const targetWidth = canvas.width * scale;
+                const x = (1080 - targetWidth) / 2;
+                const y = (1920 - targetHeight) / 2 - 40;
+                
+                ctx.shadowColor = 'rgba(0, 0, 0, 0.1)';
+                ctx.shadowBlur = 30;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = 15;
+                ctx.drawImage(canvas, x, y, targetWidth, targetHeight);
+                
+                ctx.shadowColor = 'transparent';
+                ctx.fillStyle = '#999999';
+                ctx.font = '500 26px "Noto Sans TC", sans-serif';
+                ctx.textAlign = 'right';
+                ctx.fillText('免費輓聯產生器 ‧ 慶豐蘭園', 1030, 1846);
+                ctx.fillText('chingfeng.tw', 1030, 1884);
+                
+                finalCanvas.toBlob((blob) => {
+                    const url = URL.createObjectURL(blob);
+                    showImageModal(url);
+                }, 'image/jpeg', 0.95);
+                
+            } catch (e) {
+                console.error('產圖失敗:', e);
+                alert('產圖失敗，請稍後再試');
+            } finally {
+                previewEl.style.transform = originalTransform;
+                btn.innerText = originalBtnText;
+                btn.disabled = false;
+            }
         }
-        return true;
-    }).map(p => p.text);
 
-    if (mode === 'free' && results.length < 5) {
-        return [...new Set([...results, ...SAFE_PHRASES])];
-    }
-    return results;
-}
+        // 顯示圖片 Modal
+        function showImageModal(url) {
+            const modal = document.createElement('div');
+            modal.style.position = 'fixed';
+            modal.style.top = '0';
+            modal.style.left = '0';
+            modal.style.width = '100vw';
+            modal.style.height = '100vh';
+            modal.style.backgroundColor = 'rgba(0,0,0,0.85)';
+            modal.style.zIndex = '9999';
+            modal.style.display = 'flex';
+            modal.style.flexDirection = 'column';
+            modal.style.alignItems = 'center';
+            modal.style.justifyContent = 'center';
+            modal.style.padding = '20px';
 
-// ===============================================
-// 卡片格式
-// ===============================================
-function assertGender(gender, fnName) {
-    if (gender !== 'male' && gender !== 'female') {
-        console.warn(`[${fnName}] ⚠️ 性別未填或無效:`, gender);
-        return null;
-    }
-    return gender;
-}
+            const closeBtn = document.createElement('button');
+            closeBtn.innerText = '✕ 關閉';
+            closeBtn.style.position = 'absolute';
+            closeBtn.style.top = '20px';
+            closeBtn.style.right = '20px';
+            closeBtn.style.background = 'transparent';
+            closeBtn.style.color = 'white';
+            closeBtn.style.border = '1px solid rgba(255,255,255,0.5)';
+            closeBtn.style.borderRadius = '20px';
+            closeBtn.style.padding = '8px 16px';
+            closeBtn.style.fontSize = '1rem';
+            closeBtn.style.cursor = 'pointer';
+            closeBtn.onclick = () => document.body.removeChild(modal);
 
-function getFooterSuffix({ isBereaved, seniority } = {}) {
-    if (isBereaved === true) return '泣輓';
-    if (isBereaved !== false) return '敬輓';
-    return seniority === 'junior' ? '拜輓' : '敬輓';
-}
+            const resultImg = document.createElement('img');
+            resultImg.src = url;
+            resultImg.style.maxWidth = '100%';
+            resultImg.style.maxHeight = '80vh';
+            resultImg.style.borderRadius = '8px';
+            resultImg.style.boxShadow = '0 10px 30px rgba(0,0,0,0.5)';
 
-function composeTopLine(nameBlock, ending, religionKey) {
-    const valid = funeralPhraseDB.cardFormat[religionKey].endings;
-    const safeEnding = valid.includes(ending) ? ending : valid[0];
-    return `${nameBlock} ${safeEnding}`.trim();
-}
+            const hint = document.createElement('p');
+            hint.innerHTML = '💡 長按上方圖片即可儲存到照片';
+            hint.style.color = 'white';
+            hint.style.marginTop = '20px';
+            hint.style.fontSize = '1.1rem';
+            hint.style.letterSpacing = '1px';
 
-const FU_AGE_THRESHOLD = 50;
+            modal.appendChild(closeBtn);
+            modal.appendChild(resultImg);
+            modal.appendChild(hint);
+            document.body.appendChild(modal);
+        }
 
-function applyFuStyle(nameBlock, lastName, age, useFuStyle) {
-    const should = (useFuStyle === undefined) ? (Number(age) < FU_AGE_THRESHOLD) : !!useFuStyle;
-    return should ? nameBlock.replace(lastName, `${lastName}府`) : nameBlock;
-}
+        // 下載 Word 檔（標楷體直書滿版，含浮水印）
+        function downloadWordFile() {
+            const top = document.getElementById('preview-top').innerText;
+            const middle = document.getElementById('preview-middle').innerText;
+            const bottom = document.getElementById('preview-bottom').innerText;
 
-function generateCardFormat(options) {
-    const {
-        gender, age, lastName, firstName, husbandName, isMarried,
-        useHusbandSurname = true, isSenior = age >= 80,
-        isBaptized, religion, senderName, phrase, ending,
-        isBereaved, seniority, useFuStyle
-    } = options;
+            const html = `
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+      xmlns:w="urn:schemas-microsoft-com:office:word"
+      xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+    <meta charset="utf-8">
+    <title>輓聯卡片</title>
+    <style>
+        @page WordSection1 {
+            size: 21.0cm 29.7cm;
+            margin: 0.5cm 0.5cm 0.5cm 0.5cm;
+        }
+        div.WordSection1 { page: WordSection1; }
+    </style>
+</head>
+<body style="font-family:標楷體, DFKai-SB, serif; margin:0; padding:0;">
+<div class="WordSection1">
+    <table width="100%" style="height:27.5cm;" cellspacing="0" cellpadding="0">
+        <tr>
+            <td width="27%" valign="bottom" align="center"
+                style="layout-flow:vertical-ideographic; font-size:70pt; font-family:標楷體;">${bottom}</td>
+            <td width="46%" valign="middle" align="center"
+                style="layout-flow:vertical-ideographic; font-size:160pt; font-weight:bold; font-family:標楷體;">${middle}</td>
+            <td width="27%" valign="top" align="center"
+                style="layout-flow:vertical-ideographic; font-size:70pt; font-family:標楷體;">${top}</td>
+        </tr>
+        <tr>
+            <td colspan="3" align="right" height="1"
+                style="font-size:8pt; color:#aaaaaa; font-family:標楷體;">卡片格式由 慶豐蘭園 免費產生 ‧ chingfeng.tw</td>
+        </tr>
+    </table>
+</div>
+</body></html>`;
 
-    const safeGender = assertGender(gender, 'generateCardFormat');
-    if (!safeGender) return null;
+            const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = '輓聯卡片_慶豐蘭園.doc';
+            a.click();
+            URL.revokeObjectURL(a.href);
+        }
 
-    const religionKey = (religion === 'christian' || religion === 'catholic') ? religion : 'general';
-    const format = funeralPhraseDB.cardFormat[religionKey];
+        // 複製純文字
+        function copyCardText() {
+            const top = document.getElementById('preview-top').innerText;
+            const middle = document.getElementById('preview-middle').innerText;
+            const bottom = document.getElementById('preview-bottom').innerText;
+            
+            const textToCopy = `上款：${top}\n中款：${middle}\n下款：${bottom}`;
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                alert('卡片文字已複製到剪貼簿！');
+            }).catch(err => {
+                console.error('複製失敗:', err);
+                alert('複製失敗，請手動圈選複製');
+            });
+        }
 
-    let nameBlock;
+        // 傳給家人確認落款（Web Share API + fallback 到長按 Modal）
+        async function shareCardToFamily() {
+            const previewEl = document.querySelector('.card-preview');
+            const originalTransform = previewEl.style.transform;
+            previewEl.style.transform = 'none';
 
-    if (religionKey !== 'general') {
-        // 基督教／天主教：表單沒問是否受洗，預設走 general（先生/女士）
-        const subType = isBaptized ? 'baptized' : 'general';
-        nameBlock = format[safeGender][subType]
-            .replace('{姓}', lastName).replace('{名}', firstName);
-    } else if (safeGender === 'male') {
-        nameBlock = (isSenior ? format.male.senior : format.male.adult)
-            .replace('{姓}', lastName).replace('{名}', firstName);
-    } else if (isSenior && isMarried && useHusbandSurname) {
-        nameBlock = format.female.senior
-            .replace('{夫姓}', husbandName || '').replace('{本姓}', lastName).replace('{名}', firstName);
-    } else if (isSenior) {
-        nameBlock = format.female.seniorSingle
-            .replace('{姓}', lastName).replace('{名}', firstName);
-    } else {
-        nameBlock = format.female.adult
-            .replace('{姓}', lastName).replace('{名}', firstName);
-    }
+            try {
+                const canvas = await html2canvas(previewEl, { scale: 2, backgroundColor: null, useCORS: true });
 
-    nameBlock = applyFuStyle(nameBlock, lastName, age, useFuStyle);
+                const finalCanvas = document.createElement('canvas');
+                finalCanvas.width = 1080;
+                finalCanvas.height = 1920;
+                const ctx = finalCanvas.getContext('2d');
+                ctx.fillStyle = '#f5f5f5';
+                ctx.fillRect(0, 0, 1080, 1920);
 
-    return {
-        topLine: composeTopLine(nameBlock, ending, religionKey),
-        middleLine: phrase,
-        bottomLine: `${senderName} ${getFooterSuffix({ isBereaved, seniority })}`,
-        validEndings: format.endings,
-        footerOptions: ['敬輓', '泣輓', '拜輓'],
-        internalId: [lastName || '', firstName || '', safeGender === 'male' ? 'M' : 'F',
-                     age || '?', Date.now().toString(36).slice(-4)].join('-')
-    };
-}
+                const targetHeight = 1400;
+                const scale = targetHeight / canvas.height;
+                const targetWidth = canvas.width * scale;
+                const x = (1080 - targetWidth) / 2;
+                const y = (1920 - targetHeight) / 2 - 40;
 
-function getValidEndings(religion) {
-    const key = (religion === 'christian' || religion === 'catholic') ? religion : 'general';
-    return funeralPhraseDB.cardFormat[key].endings;
-}
+                ctx.shadowColor = 'rgba(0, 0, 0, 0.1)';
+                ctx.shadowBlur = 30;
+                ctx.shadowOffsetY = 15;
+                ctx.drawImage(canvas, x, y, targetWidth, targetHeight);
+                ctx.shadowColor = 'transparent';
 
-if (typeof module !== 'undefined') {
-    module.exports = { funeralPhraseDB, PHRASE_INDEX, SAFE_PHRASES, getFuneralPhrases,
-                       generateCardFormat, getValidEndings };
-}
+                ctx.fillStyle = '#999999';
+                ctx.font = '500 26px "Noto Sans TC", sans-serif';
+                ctx.textAlign = 'right';
+                ctx.fillText('免費輓聯產生器 ‧ 慶豐蘭園', 1030, 1846);
+                ctx.fillText('chingfeng.tw', 1030, 1884);
+
+                const blob = await new Promise(r => finalCanvas.toBlob(r, 'image/jpeg', 0.95));
+                const file = new File([blob], 'condolence_card.jpg', { type: 'image/jpeg' });
+
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    try {
+                        await navigator.share({
+                            files: [file],
+                            title: '請幫我看一下卡片',
+                            text: '幫我確認這張卡片的落款寫得對不對？'
+                        });
+                    } catch (shareErr) {
+                        if (shareErr.name !== 'AbortError') {
+                            showImageModal(URL.createObjectURL(blob));
+                        }
+                    }
+                } else {
+                    showImageModal(URL.createObjectURL(blob));
+                }
+            } catch (e) {
+                console.error('分享失敗:', e);
+                alert('請先產生圖片，長按儲存後再用 LINE 轉傳');
+            } finally {
+                previewEl.style.transform = originalTransform;
+            }
+        }
+    </script>
+</body>
+</html>
