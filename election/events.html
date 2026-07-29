@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>近期活動｜選舉花禮</title>
+  <meta name="description" content="依縣市、鄉鎮市區與活動類型查找近期選舉活動。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=20260729-6">
+</head>
+<body class="events-page">
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <span class="logo-text">慶豐蘭園<span class="logo-sub">選舉花禮</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">候選人查詢</a>
+        <a href="events.html" class="nav-link active">近期活動</a>
+        <a href="products.html" class="nav-link">花禮品項</a>
+        <a href="info.html" class="nav-link">訂購須知</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="選單">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="index.html" class="mobile-link">候選人查詢</a>
+      <a href="events.html" class="mobile-link active">近期活動</a>
+      <a href="products.html" class="mobile-link">花禮品項</a>
+      <a href="info.html" class="mobile-link">訂購須知</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="hero-badge">2026 選舉活動</div>
+      <h1 class="hero-title">找到你附近即將登場的活動</h1>
+      <p class="hero-desc">依地區與活動類型快速篩選，複製資訊分享給親友，或直接聯絡主辦人。</p>
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-num" id="eventTotalCount">—</span><span class="stat-label">活動場次</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">近期</span><span class="stat-label">日期優先</span></div>
+      </div>
+      <a class="event-poster-create-cta" href="poster.html">免費建立活動分享海報</a>
+    </div>
+  </section>
+
+  <section class="search-section">
+    <div class="container">
+      <div class="search-panel">
+        <h2 class="search-title">查找活動</h2>
+        <div class="filter-grid">
+          <div class="filter-group">
+            <label for="eventCityFilter" class="filter-label">縣市</label>
+            <select id="eventCityFilter" class="filter-select">
+              <option value="">全部縣市</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="eventDistrictFilter" class="filter-label">鄉鎮市區</label>
+            <select id="eventDistrictFilter" class="filter-select">
+              <option value="">全部鄉鎮市區</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="eventTypeFilter" class="filter-label">活動類型</label>
+            <select id="eventTypeFilter" class="filter-select">
+              <option value="">全部活動類型</option>
+              <option value="造勢">造勢</option>
+              <option value="掃街">掃街</option>
+              <option value="座談會">座談會</option>
+              <option value="成立大會">成立大會</option>
+              <option value="競選總部活動">競選總部活動</option>
+              <option value="其他">其他</option>
+            </select>
+          </div>
+        </div>
+        <div class="search-row">
+          <div class="search-input-wrap">
+            <input type="text" id="eventSearch" class="search-input" placeholder="搜尋活動名稱或主辦人">
+          </div>
+          <button id="eventClearBtn" class="clear-btn">清除篩選</button>
+        </div>
+        <div class="result-bar">
+          <span id="eventResultCount" class="result-count">載入中</span>
+          <div class="sort-info">依開始時間排序，同日再依縣市、鄉鎮市區排序</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="candidates-section">
+    <div class="container">
+      <div id="eventGrid" class="candidate-grid">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
+      <div id="eventEmptyState" class="empty-state hidden">
+        <p class="empty-title">目前沒有符合條件的活動</p>
+        <p class="empty-sub">換個地區或活動類型再找找看。</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <span class="footer-logo">慶豐蘭園</span>
+        <p class="footer-tagline">26 年蘭業專業，雲嘉在地服務</p>
+      </div>
+      <div class="footer-links">
+        <a href="products.html">花禮品項</a>
+        <a href="info.html">訂購須知</a>
+      </div>
+      <p class="footer-note">本站採用純服務性語言，不代表任何政治立場。所有候選人卡片格式完全一致。</p>
+    </div>
+  </footer>
+
+  <script src="site-config.js?v=20260729-4"></script>
+  <script src="events.js?v=20260729-3"></script>
+</body>
+</html>

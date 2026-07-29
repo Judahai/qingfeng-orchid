@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
   <title>2026 雲嘉選舉花禮 | 慶豐蘭園</title>
   <meta name="description" content="雲嘉地區選舉競總花禮訂購服務，涵蓋競總成立花籃、當選賀蘭，LINE快速下單，全程配送。慶豐蘭園26年專業花藝。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=20260729-6">
 </head>
 <body>
 
@@ -21,6 +22,7 @@
       </a>
       <div class="nav-links">
         <a href="index.html" class="nav-link active">候選人查詢</a>
+        <a href="events.html" class="nav-link">近期活動</a>
         <a href="products.html" class="nav-link">花禮品項</a>
         <a href="info.html" class="nav-link">訂購須知</a>
       </div>
@@ -30,6 +32,7 @@
     </div>
     <div class="mobile-menu" id="mobileMenu">
       <a href="index.html" class="mobile-link active">候選人查詢</a>
+      <a href="events.html" class="mobile-link">近期活動</a>
       <a href="products.html" class="mobile-link">花禮品項</a>
       <a href="info.html" class="mobile-link">訂購須知</a>
     </div>
@@ -103,6 +106,22 @@
     </div>
   </section>
 
+  <!-- ===== RECENT EVENTS ===== -->
+  <section class="home-events-section" aria-labelledby="homeEventsTitle">
+    <div class="container">
+      <div class="home-events-heading">
+        <div>
+          <p class="home-events-eyebrow">近期活動</p>
+          <h2 id="homeEventsTitle">看看最近有哪些活動</h2>
+        </div>
+        <span class="home-events-hint">左右滑動查看更多</span>
+      </div>
+      <div id="homeEventTrack" class="home-event-track" aria-live="polite">
+        <div class="home-event-card home-event-loading">活動載入中…</div>
+      </div>
+    </div>
+  </section>
+
   <!-- ===== CANDIDATE LIST ===== -->
   <section class="candidates-section">
     <div class="container">
@@ -116,7 +135,7 @@
         <div class="empty-icon">🌸</div>
         <p class="empty-title">找不到符合條件的候選人</p>
         <p class="empty-sub">請嘗試調整篩選條件，或直接透過 LINE 聯繫我們</p>
-        <a href="https://lin.me/R/ti/p/@qingfeng" class="btn-line-solid" target="_blank" rel="noopener">聯繫慶豐蘭園</a>
+        <a href="https://line.me/ti/p/K2LFf7aucm" class="btn-line-solid" target="_blank" rel="noopener">聯繫慶豐蘭園</a>
       </div>
     </div>
   </section>
@@ -136,6 +155,8 @@
     </div>
   </footer>
 
+  <script src="site-config.js?v=20260729-4"></script>
   <script src="app.js"></script>
+  <script src="home-events.js?v=20260729-2"></script>
 </body>
 </html>

@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
   <title>花禮品項 | 2026 雲嘉選舉花禮 · 慶豐蘭園</title>
   <meta name="description" content="慶豐蘭園選舉花禮品項一覽：競總成立花籃、當選賀蘭，多種檔位任選，雲嘉全區配送。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=20260729-6">
 </head>
 <body>
 
@@ -21,6 +22,7 @@
       </a>
       <div class="nav-links">
         <a href="index.html" class="nav-link">候選人查詢</a>
+        <a href="events.html" class="nav-link">近期活動</a>
         <a href="products.html" class="nav-link active">花禮品項</a>
         <a href="info.html" class="nav-link">訂購須知</a>
       </div>
@@ -30,6 +32,7 @@
     </div>
     <div class="mobile-menu" id="mobileMenu">
       <a href="index.html" class="mobile-link">候選人查詢</a>
+      <a href="events.html" class="mobile-link">近期活動</a>
       <a href="products.html" class="mobile-link active">花禮品項</a>
       <a href="info.html" class="mobile-link">訂購須知</a>
     </div>
@@ -41,11 +44,14 @@
     <h1>花禮品項一覽</h1>
     <p>精選花籃與蝴蝶蘭組合，適用於競總成立與當選祝賀，雲嘉全區專車配送</p>
   </section>
+  <div id="productLoadStatus" class="product-load-status" role="status" aria-live="polite">
+    正在載入最新品項…
+  </div>
 
   <!-- ===== 競總成立花禮 ===== -->
   <section class="container">
     <h2 style="font-family:'Noto Serif TC',serif; font-size:1.3rem; margin-bottom:24px; color:var(--gold);">🎊 競總成立花禮</h2>
-    <div class="product-grid">
+    <div class="product-grid" id="campaignProductGrid" data-fallback="true">
 
       <!-- 品項 A -->
       <div class="product-card">
@@ -89,7 +95,7 @@
   <!-- ===== 當選賀蘭 ===== -->
   <section class="container" style="margin-top:48px;">
     <h2 style="font-family:'Noto Serif TC',serif; font-size:1.3rem; margin-bottom:24px; color:var(--gold);">🏆 當選賀蘭</h2>
-    <div class="product-grid">
+    <div class="product-grid" id="electedProductGrid" data-fallback="true">
 
       <!-- 品項 D -->
       <div class="product-card">
@@ -145,11 +151,7 @@
     </div>
   </footer>
 
-  <script>
-    // 漢堡選單（品項頁只需要這個）
-    document.getElementById('hamburger')?.addEventListener('click', () => {
-      document.getElementById('mobileMenu')?.classList.toggle('open');
-    });
-  </script>
+  <script src="site-config.js?v=20260729-4"></script>
+  <script src="products.js?v=20260729-2"></script>
 </body>
 </html>

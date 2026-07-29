@@ -5,13 +5,13 @@
 
 // ──────────── 設定區（部署時改這裡）────────────
 const CONFIG = {
-  // 貼上你的 GAS Web App URL（部署後取得）
-  GAS_URL: 'https://script.google.com/macros/s/AKfycbz72l9INkPvi7eNs45JlTp7hZGkajzZ9SlhcVCGHiGXhMveaBZ37D5292D9OU_hRr92/exec',
+  // 共用設定放在 site-config.js，避免各頁 API 網址不同步。
+  GAS_URL: window.SITE_CONFIG.GAS_URL,
 
   // 慶豐蘭園 LINE 官方帳號 OA Message 連結
   // 格式：https://line.me/R/oaMessage/@你的ID/?
   // 若還沒建 OA，先用通用分享：https://line.me/R/msg/text/?
-  LINE_OA_URL: 'https://line.me/R/oaMessage/@qingfeng/?',
+  LINE_OA_URL: 'https://line.me/ti/p/K2LFf7aucm?text=',
 };
 
 
@@ -41,7 +41,7 @@ function sortCandidates(arr) {
 // ──────────── 資料取得 ────────────
 async function fetchCandidates() {
   try {
-    const res = await fetch(CONFIG.GAS_URL);
+    const res = await fetch(CONFIG.GAS_URL + '?action=candidates');
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     allCandidates = sortCandidates(data);
@@ -60,7 +60,7 @@ async function fetchCandidates() {
         <div class="error-state">
           <p>⚠️ 資料載入失敗</p>
           <p class="error-sub">請稍後重新整理，或直接透過 LINE 聯繫我們訂購</p>
-          <a href="https://lin.me/R/ti/p/@qingfeng" class="btn-line-solid" target="_blank" rel="noopener">LINE 聯繫</a>
+          <a href="https://line.me/ti/p/K2LFf7aucm" class="btn-line-solid" target="_blank" rel="noopener">LINE 聯繫</a>
         </div>`;
     }
   }
