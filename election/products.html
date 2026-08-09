@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>花禮品項 | 2026 雲嘉選舉花禮 · 慶豐蘭園</title>
+  <meta name="description" content="慶豐蘭園選舉花禮品項一覽：競總成立花籃、當選賀蘭，多種檔位任選，雲嘉全區配送。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=20260804-1">
+</head>
+<body>
+
+  <!-- ===== NAV ===== -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <span class="logo-text">慶豐蘭園<span class="logo-sub">選舉花禮</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">候選人查詢</a>
+        <a href="events.html" class="nav-link">近期活動</a>
+        <a href="poster.html" class="nav-link">免費做海報</a>
+        <a href="products.html" class="nav-link active">花禮品項</a>
+        <a href="info.html" class="nav-link">訂購須知</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="選單">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="index.html" class="mobile-link">候選人查詢</a>
+      <a href="events.html" class="mobile-link">近期活動</a>
+      <a href="poster.html" class="mobile-link">免費做海報</a>
+      <a href="products.html" class="mobile-link active">花禮品項</a>
+      <a href="info.html" class="mobile-link">訂購須知</a>
+    </div>
+  </nav>
+
+  <!-- ===== PAGE HEADER ===== -->
+  <section class="page-header">
+    <div class="hero-bg"></div>
+    <h1>花禮品項一覽</h1>
+    <p>精選花籃與蝴蝶蘭組合，適用於競總成立與當選祝賀，雲嘉全區專車配送</p>
+  </section>
+  <div id="productLoadStatus" class="product-load-status" role="status" aria-live="polite">
+    正在載入最新品項…
+  </div>
+
+  <section class="product-showcase container" aria-labelledby="realWorkTitle">
+    <div class="product-showcase-media">
+      <img src="assets/real-celebration-orchid-purple-red-v1.png" alt="紅色喜事花器搭配紫紅蝴蝶蘭的實際花禮作品" width="1086" height="1448">
+      <span class="product-work-badge">慶豐蘭園實際作品</span>
+    </div>
+    <div class="product-showcase-copy">
+      <p class="product-showcase-kicker">選舉與祝賀場合</p>
+      <h2 id="realWorkTitle">體面花量，依預算安排</h2>
+      <p>選舉與祝賀場合重視體面。慶豐蘭園從產地直接搭配，依預算、場合與當日花況安排合適花量，不讓送禮失去份量。</p>
+      <dl class="product-work-details">
+        <div><dt>適用場合</dt><dd>競總成立、當選祝賀、服務處開幕</dd></div>
+        <div><dt>花色搭配</dt><dd>以紅、粉、紫紅等喜慶花色為主</dd></div>
+        <div><dt>花器與緞帶</dt><dd>使用喜事花器，依贈送場合搭配</dd></div>
+      </dl>
+      <div class="product-inquiry-note">
+        <strong>詢價時請告訴我們</strong>
+        <span>預算範圍、贈送對象、配送日期與地點、偏好花色</span>
+      </div>
+      <a href="https://line.me/ti/p/K2LFf7aucm" class="btn-line-solid" target="_blank" rel="noopener">透過 LINE 詢價</a>
+    </div>
+  </section>
+
+  <section class="container product-reference-section" aria-labelledby="referenceTitle">
+    <div class="product-reference-heading">
+      <p>依場合與預算調整</p>
+      <h2 id="referenceTitle">喜事花禮配置參考</h2>
+      <span>以下圖片作為花色、花器與份量溝通參考，實際配置依當日花況確認。</span>
+    </div>
+    <div class="product-reference-grid">
+      <figure class="product-reference-card">
+        <img src="assets/reference-celebration-tall-red-v1.png" alt="紅色高盆搭配多色蝴蝶蘭的喜事花禮配置參考" width="1086" height="1448" loading="lazy">
+        <figcaption>
+          <strong>高盆喜事配置</strong>
+          <span>適合需要較高視覺份量的競總成立與開幕場合</span>
+        </figcaption>
+      </figure>
+      <figure class="product-reference-card">
+        <img src="assets/reference-celebration-round-red-v1.png" alt="紅色圓盆搭配紫紅蝴蝶蘭的喜事花禮配置參考" width="1086" height="1448" loading="lazy">
+        <figcaption>
+          <strong>圓盆飽滿配置</strong>
+          <span>適合重視正面花量與整體圓滿感的祝賀場合</span>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- Products 工作表有上架資料時才顯示 -->
+  <section class="container product-live-section" id="campaignProductSection" hidden>
+    <h2>競總成立花禮</h2>
+    <div class="product-grid" id="campaignProductGrid"></div>
+  </section>
+
+  <section class="container product-live-section" id="electedProductSection" hidden>
+    <h2>當選祝賀花禮</h2>
+    <div class="product-grid" id="electedProductGrid"></div>
+  </section>
+
+  <!-- ===== 備註 ===== -->
+  <section class="container" style="padding: 48px 20px 80px;">
+    <div class="info-highlight">
+      <p>實際花色與開花程度依當日花況為準；確認預算與配送資訊後，再提供合適配置建議。</p>
+    </div>
+    <div class="cta-banner" style="margin-top:32px;">
+      <h2>需要花禮建議嗎？</h2>
+      <p>透過 LINE 告訴我們場合、預算與配送地點</p>
+      <a href="https://line.me/ti/p/K2LFf7aucm" class="btn-line-solid" target="_blank" rel="noopener">聯絡慶豐蘭園</a>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <span class="footer-logo">慶豐蘭園</span>
+        <p class="footer-tagline">26 年蘭業專業，雲嘉在地服務</p>
+      </div>
+      <div class="footer-links">
+        <a href="index.html">候選人查詢</a>
+        <a href="events.html">近期活動</a>
+        <a href="products.html" class="active" aria-current="page">花禮品項</a>
+        <a href="info.html">訂購須知</a>
+      </div>
+      <a class="footer-line-link" href="https://line.me/ti/p/K2LFf7aucm" target="_blank" rel="noopener">透過 LINE 聯絡慶豐蘭園</a>
+      <p class="footer-note">本站採用純服務性語言，不代表任何政治立場。所有候選人卡片格式完全一致。</p>
+    </div>
+  </footer>
+
+  <script src="site-config.js?v=20260804-1"></script>
+  <script src="products.js?v=20260804-2"></script>
+</body>
+</html>

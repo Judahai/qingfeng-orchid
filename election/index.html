@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026 雲嘉選舉花禮 | 慶豐蘭園</title>
+  <meta name="description" content="雲嘉地區選舉競總花禮訂購服務，涵蓋競總成立花籃、當選賀蘭，LINE快速下單，全程配送。慶豐蘭園26年專業花藝。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=20260804-1">
+</head>
+<body>
+
+  <!-- ===== NAV ===== -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <span class="logo-text">慶豐蘭園<span class="logo-sub">選舉花禮</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link active">候選人查詢</a>
+        <a href="events.html" class="nav-link">近期活動</a>
+        <a href="poster.html" class="nav-link">免費做海報</a>
+        <a href="products.html" class="nav-link">花禮品項</a>
+        <a href="info.html" class="nav-link">訂購須知</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="選單">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="index.html" class="mobile-link active">候選人查詢</a>
+      <a href="events.html" class="mobile-link">近期活動</a>
+      <a href="poster.html" class="mobile-link">免費做海報</a>
+      <a href="products.html" class="mobile-link">花禮品項</a>
+      <a href="info.html" class="mobile-link">訂購須知</a>
+    </div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="hero-badge">🗳️ 2026 選舉季服務</div>
+      <h1 class="hero-title">雲嘉地區<br><span class="hero-accent">選舉花禮</span>訂購目錄</h1>
+      <p class="hero-desc">競總成立花籃 · 當選賀蘭 · LINE 快速下單<br>慶豐蘭園 26 年在地服務，全程配送到競總</p>
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-num" id="totalCount">—</span><span class="stat-label">筆候選人資料</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">26</span><span class="stat-label">年蘭業專業</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">雲嘉</span><span class="stat-label">全區配送</span></div>
+      </div>
+    </div>
+    <div class="hero-scroll-hint">↓</div>
+  </section>
+
+  <!-- ===== SEARCH PANEL ===== -->
+  <section class="search-section">
+    <div class="container">
+      <div class="search-panel">
+        <h2 class="search-title">查詢候選人花禮</h2>
+        <div class="filter-grid">
+          <div class="filter-group">
+            <label for="cityFilter" class="filter-label">縣市</label>
+            <select id="cityFilter" class="filter-select">
+              <option value="">全部縣市</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="districtFilter" class="filter-label">鄉鎮市區</label>
+            <select id="districtFilter" class="filter-select">
+              <option value="">全部鄉鎮</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="villageFilter" class="filter-label">村里 / 選區</label>
+            <select id="villageFilter" class="filter-select">
+              <option value="">全部村里</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="levelFilter" class="filter-label">層級</label>
+            <select id="levelFilter" class="filter-select">
+              <option value="">全部層級</option>
+              <option value="縣長">縣長</option>
+              <option value="議員">議員</option>
+              <option value="鄉鎮市長">鄉鎮市長</option>
+              <option value="里長">里長</option>
+            </select>
+          </div>
+        </div>
+        <div class="search-row">
+          <div class="search-input-wrap">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="nameSearch" class="search-input" placeholder="輸入姓名搜尋…">
+          </div>
+          <button id="clearBtn" class="clear-btn">清除篩選</button>
+        </div>
+        <div class="result-bar">
+          <span id="resultCount" class="result-count">載入中…</span>
+          <div class="sort-info">排序：選區 → 號次（未登記者依姓氏筆畫）</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CANDIDATE LIST ===== -->
+  <section class="candidates-section">
+    <div class="container">
+      <div id="candidateGrid" class="candidate-grid">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
+      <div id="emptyState" class="empty-state hidden">
+        <div class="empty-icon">🌸</div>
+        <p class="empty-title">找不到符合條件的候選人</p>
+        <p class="empty-sub">請嘗試調整篩選條件，或直接透過 LINE 聯繫我們</p>
+        <a href="https://line.me/ti/p/K2LFf7aucm" class="btn-line-solid" target="_blank" rel="noopener">聯繫慶豐蘭園</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== RECENT EVENTS ===== -->
+  <section class="home-events-section" aria-labelledby="homeEventsTitle">
+    <div class="container">
+      <div class="home-events-heading">
+        <div>
+          <p class="home-events-eyebrow">近期活動</p>
+          <h2 id="homeEventsTitle">看看最近有哪些活動</h2>
+        </div>
+        <span class="home-events-hint">左右滑動查看更多</span>
+      </div>
+      <div id="homeEventTrack" class="home-event-track" aria-live="polite">
+        <div class="home-event-card home-event-loading">活動載入中…</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <span class="footer-logo">慶豐蘭園</span>
+        <p class="footer-tagline">26 年蘭業專業，雲嘉在地服務</p>
+      </div>
+      <div class="footer-links">
+        <a href="index.html" class="active" aria-current="page">候選人查詢</a>
+        <a href="events.html">近期活動</a>
+        <a href="products.html">花禮品項</a>
+        <a href="info.html">訂購須知</a>
+      </div>
+      <a class="footer-line-link" href="https://line.me/ti/p/K2LFf7aucm" target="_blank" rel="noopener">透過 LINE 聯絡慶豐蘭園</a>
+      <p class="footer-note">本站採用純服務性語言，不代表任何政治立場。所有候選人卡片格式完全一致。</p>
+    </div>
+  </footer>
+
+  <script src="site-config.js?v=20260804-1"></script>
+  <script src="app.js?v=20260804-1"></script>
+  <script src="home-events.js?v=20260804-1"></script>
+</body>
+</html>
