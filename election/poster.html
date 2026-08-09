@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20260804-1">
+  <link rel="stylesheet" href="style.css?v=20260809-3">
 </head>
 <body class="poster-page">
   <nav class="nav">
@@ -41,7 +41,7 @@
       <div class="poster-page-heading">
         <a id="posterBackLink" class="event-detail-back" href="events.html">← 返回活動</a>
         <h1 id="posterPageTitle">活動海報預覽</h1>
-        <p id="posterPageDescription">海報內容會依最新活動資料自動排版。</p>
+        <p id="posterPageDescription">不用自己排版，填寫活動時間與地點，就能立即產生三款海報、下載圖片或分享至 LINE，並同步建立活動頁。</p>
       </div>
 
       <div id="posterState" class="poster-state" aria-live="polite">
@@ -50,8 +50,8 @@
 
       <form id="posterSubmissionForm" class="poster-submission-form hidden">
         <div class="poster-form-intro">
-          <h2>填寫活動資料</h2>
-          <p>填寫時會同步更新海報。送出後活動先以「審核中」顯示。</p>
+          <h2>先填基本活動資訊</h2>
+          <p>只需填寫活動名稱、時間、地點與聯絡人，其餘可以選填。右側會即時預覽，送出後可下載 JPG，或從手機分享選單傳給 LINE 好友。</p>
         </div>
 
         <div class="poster-form-grid">
@@ -72,8 +72,8 @@
             </select>
           </label>
           <label class="poster-form-field">
-            <span>活動層級</span>
-            <select name="活動層級" required>
+            <span>活動層級（選填）</span>
+            <select name="活動層級">
               <option value="">請選擇</option>
               <option value="縣市長">縣市長</option>
               <option value="縣市議員">縣市議員</option>
@@ -92,39 +92,56 @@
             <input name="結束時間" type="datetime-local">
           </label>
           <label class="poster-form-field">
-            <span>下架日</span>
-            <input name="下架日" type="date" required>
+            <span>下架日（選填）</span>
+            <input name="下架日" type="date">
           </label>
           <label class="poster-form-field">
             <span>縣市</span>
             <select id="posterCity" name="縣市" required>
               <option value="">請選擇</option>
+              <option value="基隆市">基隆市</option>
+              <option value="臺北市">臺北市</option>
+              <option value="新北市">新北市</option>
+              <option value="桃園市">桃園市</option>
+              <option value="新竹市">新竹市</option>
+              <option value="新竹縣">新竹縣</option>
+              <option value="苗栗縣">苗栗縣</option>
+              <option value="臺中市">臺中市</option>
+              <option value="彰化縣">彰化縣</option>
+              <option value="南投縣">南投縣</option>
               <option value="雲林縣">雲林縣</option>
               <option value="嘉義縣">嘉義縣</option>
               <option value="嘉義市">嘉義市</option>
+              <option value="臺南市">臺南市</option>
+              <option value="高雄市">高雄市</option>
+              <option value="屏東縣">屏東縣</option>
+              <option value="宜蘭縣">宜蘭縣</option>
+              <option value="花蓮縣">花蓮縣</option>
+              <option value="臺東縣">臺東縣</option>
+              <option value="澎湖縣">澎湖縣</option>
+              <option value="金門縣">金門縣</option>
+              <option value="連江縣">連江縣</option>
             </select>
           </label>
           <label class="poster-form-field">
-            <span>鄉鎮市區</span>
-            <select id="posterDistrict" name="鄉鎮市區" required disabled>
-              <option value="">請先選擇縣市</option>
-            </select>
+            <span>鄉鎮市區（選填）</span>
+            <input id="posterDistrict" name="鄉鎮市區" type="text" maxlength="40" placeholder="例如：北港鎮">
           </label>
           <label class="poster-form-field poster-form-field-wide">
             <span>地點名稱</span>
             <input name="地點名稱" type="text" maxlength="60" required placeholder="例如：競選總部或活動廣場">
           </label>
           <label class="poster-form-field poster-form-field-wide">
-            <span>詳細地址</span>
-            <input name="詳細地址" type="text" maxlength="100" required placeholder="請填寫完整門牌">
+            <span>詳細地址（選填）</span>
+            <input name="詳細地址" type="text" maxlength="100" placeholder="可於需要時填寫完整門牌">
           </label>
           <label class="poster-form-field">
             <span>主辦人姓名</span>
             <input name="主辦人姓名" type="text" maxlength="40" required>
           </label>
           <label class="poster-form-field">
-            <span>身分</span>
-            <select name="身分" required>
+            <span>身分（選填）</span>
+            <select name="身分">
               <option value="">請選擇</option>
               <option value="候選人">候選人</option>
               <option value="競選團隊">競選團隊</option>
@@ -137,11 +154,10 @@
             <input name="電話" type="tel" maxlength="30" required inputmode="tel">
           </label>
           <label class="poster-form-field">
-            <span>電話是否公開</span>
-            <select name="電話公開" required>
-              <option value="">請選擇</option>
+            <span>電話是否公開（選填）</span>
+            <select name="電話公開">
               <option value="是">是，確認後可公開</option>
-              <option value="否">否，只供平台核對</option>
+              <option value="否" selected>否，只供平台聯絡</option>
             </select>
           </label>
           <label class="poster-form-field poster-form-field-wide">
@@ -149,8 +165,8 @@
             <input name="LINE" type="url" maxlength="300" placeholder="https://line.me/...">
           </label>
           <label class="poster-form-field poster-form-field-wide">
-            <span>活動簡介</span>
-            <textarea name="簡介" rows="4" maxlength="500" required placeholder="簡短說明活動內容"></textarea>
+            <span>活動簡介（選填）</span>
+            <textarea name="簡介" rows="4" maxlength="500" placeholder="簡短說明活動內容"></textarea>
           </label>
           <label class="poster-form-field poster-form-field-wide">
             <span>照片網址（選填）</span>
@@ -169,7 +185,7 @@
           </label>
         </div>
 
-        <button id="posterSubmitButton" type="submit" class="poster-submit-button">建立海報並送出活動資料</button>
+        <button id="posterSubmitButton" type="submit" class="poster-submit-button">免費建立海報並送出</button>
         <p id="posterSubmitStatus" class="poster-submit-status" role="status" aria-live="polite"></p>
       </form>
 
@@ -199,7 +215,6 @@
           <article id="posterCanvas" class="event-poster poster-template-bold">
             <img id="posterBackground" class="event-poster-background" alt="" crossorigin="anonymous">
             <div class="event-poster-overlay"></div>
-            <div id="posterPendingMark" class="event-poster-pending-mark hidden">主辦人提供・資料審核中</div>
             <div class="event-poster-content">
               <div>
                 <p id="posterType" class="event-poster-type"></p>
@@ -259,14 +274,14 @@
         <a href="products.html">花禮品項</a>
         <a href="info.html">訂購須知</a>
       </div>
-      <a class="footer-line-link" href="https://line.me/ti/p/K2LFf7aucm" target="_blank" rel="noopener">透過 LINE 聯絡慶豐蘭園</a>
+      <a class="footer-line-link" href="https://line.me/R/ti/p/%40775yvfxq" target="_blank" rel="noopener">透過 LINE 聯絡慶豐蘭園</a>
       <p class="footer-note">本站採用純服務性語言，不代表任何政治立場。活動海報資訊以主辦人提供內容為準。</p>
     </div>
   </footer>
 
-  <script src="site-config.js?v=20260804-1"></script>
+  <script src="site-config.js?v=20260809-3"></script>
   <script src="assets/html2canvas.min.js?v=1.4.1"></script>
   <script src="assets/qrcode.min.js?v=1.0.0"></script>
-  <script src="poster.js?v=20260804-1"></script>
+  <script src="poster.js?v=20260809-3"></script>
 </body>
 </html>

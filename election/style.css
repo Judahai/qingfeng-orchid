@@ -2261,25 +2261,6 @@ img { max-width: 100%; display: block; }
   background: rgba(244, 240, 231, 0.82);
 }
 
-.event-poster-pending-mark {
-  position: absolute;
-  top: 43%;
-  left: 50%;
-  z-index: 3;
-  width: 82%;
-  padding: 18px 24px;
-  transform: translate(-50%, -50%) rotate(-7deg);
-  background: rgba(244, 240, 231, 0.94);
-  border: 5px solid var(--poster-red);
-  color: var(--poster-red);
-  font-family: 'Noto Serif TC', serif;
-  font-size: 42px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-align: center;
-  pointer-events: none;
-}
-
 .event-poster-content {
   position: relative;
   z-index: 1;

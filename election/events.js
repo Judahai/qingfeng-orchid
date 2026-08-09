@@ -1,7 +1,7 @@
 const EVENT_CONFIG = {
   GAS_URL: window.SITE_CONFIG.GAS_URL,
-  LINE_URL: 'https://line.me/ti/p/K2LFf7aucm?text=',
-  SHARE_LINE_URL: 'https://line.me/R/msg/text/?',
+  LINE_URL: 'https://line.me/R/oaMessage/%40775yvfxq/?',
+  SHARE_LINE_URL: 'https://line.me/R/share?text=',
 };
 
 let allEvents = [];
@@ -74,7 +74,7 @@ async function fetchEvents(force = false) {
           <p>活動資料暫時無法載入</p>
           <p class="error-sub">Google 資料暫時沒有回應，可以重新載入或透過 LINE 聯絡。</p>
           <button type="button" class="btn-retry" id="retryEvents">重新載入</button>
-          <a href="https://line.me/ti/p/K2LFf7aucm" class="btn-line-solid" target="_blank" rel="noopener">LINE 聯絡</a>
+          <a href="https://line.me/R/ti/p/%40775yvfxq" class="btn-line-solid" target="_blank" rel="noopener">LINE 聯絡</a>
         </div>`;
       document.getElementById('retryEvents')?.addEventListener('click', () => fetchEvents(true));
     }
@@ -174,16 +174,21 @@ function eventLineMessage(event) {
   const district = eventValue(event, '鄉鎮市區');
   const organizer = eventValue(event, '主辦人姓名', '主辦人', '主辦單位');
   const pending = eventValue(event, '狀態') === '審核中';
+  const fullLocation = [city, district, location, address].filter(Boolean).join(' ');
+  const mapUrl = fullLocation
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fullLocation)}`
+    : '';
   const detailUrl = id
     ? new URL(`event.html?id=${encodeURIComponent(id)}`, window.location.href).href
     : '';
 
   return [
     `邀請你參加：${name}`,
+    pending ? '狀態：未確認，參加前請再確認活動資訊' : '',
     `時間：${formatEventDate(date, rawDate)}`,
-    `地點：${[city, district, location, address].filter(Boolean).join(' ')}`,
+    `地點：${fullLocation}`,
+    mapUrl,
     organizer ? `主辦：${organizer}` : '',
-    pending ? '※ 此活動由主辦人提供，資料尚未完成確認。' : '',
     detailUrl,
   ].filter(Boolean).join('\n');
 }
@@ -227,11 +232,11 @@ function renderEventCards(events) {
     const contactLabel = phone ? `聯絡主辦人 ${phone}` : 'LINE 聯絡主辦人';
     const contactClass = phone ? 'btn-contact' : 'btn-line';
     const contactButton = pending
-      ? '<span class="btn-secondary is-disabled">資料確認後開放</span>'
+      ? '<span class="btn-secondary is-disabled">聯絡資料未提供</span>'
       : `<a href="${escapeEventHtml(contactLink)}" class="${contactClass}" ${contactLink.startsWith('http') ? 'target="_blank" rel="noopener"' : ''}>${escapeEventHtml(contactLabel)}</a>`;
 
     return `
-      <article class="candidate-card event-card-position-${index % 3}${pending ? ' event-card-pending' : ''}${id ? ' event-card-linkable' : ''}"
+      <article class="candidate-card event-card-position-${index % 3}${id ? ' event-card-linkable' : ''}"
         data-event-index="${index}"
         style="--event-card-image: url('${escapeEventHtml(photoUrl.replace(/'/g, '%27'))}')"
         ${id ? `data-detail-url="event.html?id=${encodeURIComponent(id)}" role="link" tabindex="0"` : ''}>
@@ -239,9 +244,7 @@ function renderEventCards(events) {
           <div class="card-name-row">
             <h2 class="card-name">${escapeEventHtml(name)}</h2>
             <span class="card-badge status-active">${escapeEventHtml(type)}</span>
-          </div>
-          <div class="event-status-row">
-            <span class="event-status-badge${pending ? ' is-pending' : ' is-confirmed'}">${escapeEventHtml(status)}</span>
+            ${pending ? '<span class="event-status-badge is-pending">未確認</span>' : ''}
           </div>
           <div class="card-meta-row">
             <span class="card-level">${escapeEventHtml(formatEventDate(date, rawDate))}</span>
@@ -251,7 +254,6 @@ function renderEventCards(events) {
         <div class="card-body">
           <div class="card-info-row"><span class="info-label">地點</span><span>${escapeEventHtml([city, district, location, address].filter(Boolean).join(' ') || '地點待確認')}</span></div>
           <div class="card-info-row"><span class="info-label">主辦</span><span>${escapeEventHtml(organizer)}</span></div>
-          ${pending ? '<p class="event-pending-note">此活動由主辦人提供，資料尚未完成確認。</p>' : ''}
         </div>
         <div class="card-footer">
           ${id ? `<a href="event.html?id=${encodeURIComponent(id)}" class="btn-secondary event-detail-button">查看詳情</a>` : ''}
