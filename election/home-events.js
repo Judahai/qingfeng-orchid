@@ -67,7 +67,7 @@ function renderHomeEvents(items) {
       return `
         <a class="home-event-card${pending ? ' is-pending' : ''}" href="${id ? `event.html?id=${encodeURIComponent(id)}` : 'events.html'}">
           <span class="home-event-card-type">${escapeHomeEventHtml(type)}</span>
-          <span class="home-event-card-status${pending ? ' is-pending' : ' is-confirmed'}">${escapeHomeEventHtml(status)}</span>
+          ${pending ? '<span class="home-event-card-status is-pending">未確認</span>' : ''}
           <h3>${escapeHomeEventHtml(name || '活動名稱待確認')}</h3>
           <p><span class="home-event-meta-label">時間</span>${escapeHomeEventHtml(formatHomeEventDate(start))}</p>
           <p><span class="home-event-meta-label">地點</span>${escapeHomeEventHtml(location)}</p>

@@ -9,9 +9,8 @@ const CONFIG = {
   GAS_URL: window.SITE_CONFIG.GAS_URL,
 
   // 慶豐蘭園 LINE 官方帳號 OA Message 連結
-  // 格式：https://line.me/R/oaMessage/@你的ID/?
-  // 若還沒建 OA，先用通用分享：https://line.me/R/msg/text/?
-  LINE_OA_URL: 'https://line.me/ti/p/K2LFf7aucm?text=',
+  // 官方帳號 ID @775yvfxq；@ 依 LINE 規範編碼為 %40
+  LINE_OA_URL: 'https://line.me/R/oaMessage/%40775yvfxq/?',
 };
 
 
@@ -64,7 +63,7 @@ async function fetchCandidates(force = false) {
           <p>⚠️ 資料載入失敗</p>
           <p class="error-sub">Google 資料暫時沒有回應，可以重新載入或透過 LINE 聯繫。</p>
           <button type="button" class="btn-retry" id="retryCandidates">重新載入</button>
-          <a href="https://line.me/ti/p/K2LFf7aucm" class="btn-line-solid" target="_blank" rel="noopener">LINE 聯繫</a>
+          <a href="https://line.me/R/ti/p/%40775yvfxq" class="btn-line-solid" target="_blank" rel="noopener">LINE 聯繫</a>
         </div>`;
       document.getElementById('retryCandidates')?.addEventListener('click', () => fetchCandidates(true));
     }
@@ -182,6 +181,12 @@ function renderCards(candidates) {
 
     // 地址（GAS 已經處理未確認 → '私訊代查'）
     const hqAddr = c.HQ_Address || '私訊代查';
+    const hqLocation = [c.City, c.District, c.Village, hqAddr !== '私訊代查' ? hqAddr : '']
+      .filter(Boolean)
+      .join(' ');
+    const hqMapUrl = hqAddr !== '私訊代查' && hqLocation
+      ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(hqLocation)}`
+      : '';
 
     // 日期格式化
     let hqDate = null;
@@ -207,11 +212,13 @@ function renderCards(candidates) {
       '',
       `候選人：${c.Name}`,
       `選區：${c.City || ''} ${c.District || ''} ${c.Village || ''}`,
+      hqAddr !== '私訊代查' ? `地址：${hqLocation}` : '',
+      hqMapUrl,
       '活動：競總成立花禮',
       '品項：（請告知預算或品項編號）',
       '',
       '感謝慶豐蘭園',
-    ].join('\n');
+    ].filter(Boolean).join('\n');
     const lineLink = CONFIG.LINE_OA_URL + encodeURIComponent(orderMsg);
 
     return `

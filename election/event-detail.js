@@ -1,8 +1,8 @@
 const EVENT_DETAIL_CONFIG = {
   GAS_URL: window.SITE_CONFIG.GAS_URL,
   INTEREST_ENABLED: window.SITE_CONFIG.FEATURES?.INTEREST_ENABLED === true,
-  DEFAULT_LINE_URL: 'https://line.me/ti/p/K2LFf7aucm?text=',
-  SHARE_LINE_URL: 'https://line.me/R/msg/text/?',
+  DEFAULT_LINE_URL: 'https://line.me/R/oaMessage/%40775yvfxq/?',
+  SHARE_LINE_URL: 'https://line.me/R/share?text=',
 };
 
 function detailValue(item, ...keys) {
@@ -127,6 +127,9 @@ function renderEventDetail(item) {
   const phone = detailValue(item, '電話');
   const lineUrl = safeDetailUrl(detailValue(item, 'LINE'));
   const fullLocation = [city, district, place, address].filter(Boolean).join(' ') || '地點待確認';
+  const mapUrl = fullLocation && fullLocation !== '地點待確認'
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fullLocation)}`
+    : '';
   const contactUrl = phone
     ? `tel:${String(phone).replace(/[^\d+]/g, '')}`
     : (lineUrl || EVENT_DETAIL_CONFIG.DEFAULT_LINE_URL + encodeURIComponent(`您好，我想詢問「${name}」活動。`));
@@ -134,9 +137,10 @@ function renderEventDetail(item) {
   const pageUrl = window.location.href;
   const shareMessage = [
     name,
+    pending ? '狀態：未確認，參加前請再確認活動資訊' : '',
     `時間：${formatDetailDate(start)}${end ? ` 至 ${formatDetailDate(end)}` : ''}`,
     `地點：${fullLocation}`,
-    pending ? '※ 此活動由主辦人提供，資料尚未完成確認。' : '',
+    mapUrl,
     pageUrl,
   ].filter(Boolean).join('\n');
   const shareUrl = EVENT_DETAIL_CONFIG.SHARE_LINE_URL + encodeURIComponent(shareMessage);
@@ -150,10 +154,9 @@ function renderEventDetail(item) {
         <div class="event-detail-badges">
           <span class="event-detail-badge">${escapeDetailHtml(type)}</span>
           ${level ? `<span class="event-detail-badge">${escapeDetailHtml(level)}</span>` : ''}
-          <span class="event-status-badge${pending ? ' is-pending' : ' is-confirmed'}">${escapeDetailHtml(status)}</span>
+          ${pending ? '<span class="event-detail-badge event-status-badge is-pending">未確認</span>' : ''}
         </div>
         <h1 class="event-detail-title">${escapeDetailHtml(name)}</h1>
-        ${pending ? '<div class="event-detail-pending-warning"><strong>資料尚未完成確認</strong><p>此活動由主辦人提供，請勿僅依此頁安排行程。資料確認後才會開放完整地址與聯絡方式。</p></div>' : ''}
         <div class="event-detail-facts">
           <div class="event-detail-fact"><span>🗓</span><span>${escapeDetailHtml(formatDetailDate(start))}${end ? ` 至 ${escapeDetailHtml(formatDetailDate(end))}` : ''}</span></div>
           <div class="event-detail-fact"><span>📍</span><span>${escapeDetailHtml(fullLocation)}</span></div>
@@ -173,7 +176,7 @@ function renderEventDetail(item) {
         <div class="event-detail-actions">
           <a class="btn-line" href="${escapeDetailHtml(shareUrl)}" target="_blank" rel="noopener">分享到 LINE</a>
           ${pending
-            ? '<span class="btn-secondary is-disabled">資料確認後開放</span>'
+            ? '<span class="btn-secondary is-disabled">聯絡資料未提供</span>'
             : `<a class="btn-secondary" href="${escapeDetailHtml(contactUrl)}"${contactUrl.startsWith('http') ? ' target="_blank" rel="noopener"' : ''}>${escapeDetailHtml(contactLabel)}</a>`}
           ${posterUrl ? `<a class="btn-secondary event-poster-link" href="${escapeDetailHtml(posterUrl)}">產生海報</a>` : ''}
           <a class="btn-secondary" href="products.html">送花去</a>

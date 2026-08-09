@@ -3,14 +3,14 @@ const POSTER_CONFIG = {
   FALLBACK_IMAGE: 'assets/event-orchid-botanical-v3.jpg',
 };
 
-const POSTER_DISTRICTS = {
-  雲林縣: ['斗六市', '斗南鎮', '虎尾鎮', '西螺鎮', '土庫鎮', '北港鎮', '古坑鄉', '大埤鄉', '莿桐鄉', '林內鄉', '二崙鄉', '崙背鄉', '麥寮鄉', '東勢鄉', '褒忠鄉', '臺西鄉', '元長鄉', '四湖鄉', '口湖鄉', '水林鄉'],
-  嘉義縣: ['太保市', '朴子市', '布袋鎮', '大林鎮', '民雄鄉', '溪口鄉', '新港鄉', '六腳鄉', '東石鄉', '義竹鄉', '鹿草鄉', '水上鄉', '中埔鄉', '竹崎鄉', '梅山鄉', '番路鄉', '大埔鄉', '阿里山鄉'],
-  嘉義市: ['東區', '西區'],
-};
-
 let posterDownloadFilename = '活動海報.jpg';
 let posterMode = 'existing';
+let posterShareMessage = '活動海報，請查看圖片內容。';
+
+function posterMapUrl(location) {
+  const query = String(location || '').trim();
+  return query ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}` : '';
+}
 
 function posterValue(item, ...keys) {
   for (const key of keys) {
@@ -149,8 +149,8 @@ function renderPosterQrCode(id) {
 function renderPoster(item, options = {}) {
   const id = posterValue(item, '編號');
   const status = posterValue(item, '狀態');
-  const pending = options.pending ?? status === '審核中';
   const confirmed = status === '已確認' || status === '通過';
+  const pending = status === '審核中' || status === '未確認';
   const showActions = options.showActions !== false;
   const name = String(posterValue(item, '活動名稱') || '活動名稱待確認');
   const type = posterValue(item, '活動類型') || '活動';
@@ -162,8 +162,18 @@ function renderPoster(item, options = {}) {
     posterValue(item, '鄉鎮市區'),
     posterValue(item, '詳細地址'),
   ].filter(Boolean).join(' ');
+  const fullLocation = [address, place].filter(Boolean).join(' ');
   const organizer = posterValue(item, '主辦人姓名', '主辦人', '主辦單位') || '主辦人待確認';
   posterDownloadFilename = `${safePosterFilename(name)}_${formatPosterFilenameDate(start)}.jpg`;
+  posterShareMessage = [
+    name,
+    pending ? '狀態：未確認，參加前請再確認活動資訊' : '',
+    `時間：${formatPosterDate(start, end)}`,
+    `地點：${fullLocation}`,
+    posterMapUrl(fullLocation),
+    `主辦：${organizer}`,
+    id ? new URL(`event.html?id=${encodeURIComponent(id)}`, window.location.href).href : '',
+  ].filter(Boolean).join('\n');
 
   setPosterText('posterType', type);
   setPosterText('posterTitle', name);
@@ -173,7 +183,7 @@ function renderPoster(item, options = {}) {
   setPosterText('posterOrganizer', organizer);
   setPosterText(
     'posterFooterNote',
-    pending ? '此海報資料尚未完成確認' : '請以活動詳情頁的最新內容為準'
+    '請以活動詳情頁的最新內容為準'
   );
 
   const title = document.getElementById('posterTitle');
@@ -191,10 +201,8 @@ function renderPoster(item, options = {}) {
 
   const backLink = document.getElementById('posterBackLink');
   if (backLink && id) backLink.href = `event.html?id=${encodeURIComponent(id)}`;
-  const pendingMark = document.getElementById('posterPendingMark');
-  pendingMark?.classList.toggle('hidden', !pending);
   const qrGroup = document.getElementById('posterQrGroup');
-  const showQr = Boolean(id && confirmed && !pending);
+  const showQr = Boolean(id && confirmed);
   qrGroup?.classList.toggle('hidden', !showQr);
   renderPosterQrCode(showQr ? id : '');
 
@@ -204,9 +212,7 @@ function renderPoster(item, options = {}) {
   document.getElementById('posterActions')?.classList.toggle('hidden', !showActions);
   if (options.updateTitle !== false) document.title = `${name}｜活動海報`;
   const downloadStatus = document.getElementById('posterDownloadStatus');
-  if (downloadStatus && pending) {
-    downloadStatus.textContent = '審核中海報固定帶未確認標示，且不含 QR Code。';
-  } else if (downloadStatus && window.location.protocol === 'file:') {
+  if (downloadStatus && window.location.protocol === 'file:') {
     downloadStatus.textContent = '本機 QR 僅供版面測試；正式上線後才會帶入公開活動網址。';
   }
   updatePosterScale();
@@ -289,7 +295,7 @@ async function sharePoster() {
     const shareData = {
       files: [file],
       title: '活動海報',
-      text: '活動海報，請查看圖片內容。',
+      text: posterShareMessage,
     };
 
     if (!navigator.share || !navigator.canShare?.({ files: [file] })) {
@@ -337,39 +343,14 @@ function posterFormItem(form) {
   return item;
 }
 
-function updatePosterDistricts() {
-  const city = document.getElementById('posterCity')?.value || '';
-  const district = document.getElementById('posterDistrict');
-  if (!district) return;
-
-  const currentValue = district.value;
-  const options = POSTER_DISTRICTS[city] || [];
-  district.replaceChildren();
-
-  const placeholder = document.createElement('option');
-  placeholder.value = '';
-  placeholder.textContent = city ? '請選擇' : '請先選擇縣市';
-  district.appendChild(placeholder);
-  options.forEach(name => {
-    const option = document.createElement('option');
-    option.value = name;
-    option.textContent = name;
-    district.appendChild(option);
-  });
-  district.disabled = options.length === 0;
-  if (options.includes(currentValue)) district.value = currentValue;
-}
-
 function updateSubmissionPreview() {
   const form = document.getElementById('posterSubmissionForm');
   if (!form) return;
   renderPoster(
     {
       ...posterFormItem(form),
-      狀態: '審核中',
     },
     {
-      pending: true,
       showActions: false,
       updateTitle: false,
     }
@@ -427,16 +408,15 @@ async function submitPosterForm(event) {
       control.disabled = true;
     });
     button.textContent = '資料已送出';
-    status.textContent = `已收到，編號 ${result.id}。目前標示為審核中，可下載或分享含審核標示的海報。`;
+    status.textContent = `已收到，編號 ${result.id}。現在可以下載或分享海報。`;
     status.classList.add('is-success');
     renderPoster(
       {
         ...item,
         編號: result.id,
-        狀態: '審核中',
+        狀態: result.status || '審核中',
       },
       {
-        pending: true,
         showActions: true,
       }
     );
@@ -445,7 +425,7 @@ async function submitPosterForm(event) {
     status.textContent = error.message || '目前無法送出活動資料，請稍後再試。';
     status.classList.add('is-error');
     button.disabled = false;
-    button.textContent = '建立海報並送出活動資料';
+    button.textContent = '免費建立海報並送出';
   }
 }
 
@@ -454,7 +434,7 @@ function initSubmissionMode() {
   const shell = document.querySelector('.poster-page-shell');
   shell?.classList.add('is-submission');
   setPosterText('posterPageTitle', '免費建立活動分享海報');
-  setPosterText('posterPageDescription', '填一次活動資料，同步建立活動頁與三款分享海報。');
+  setPosterText('posterPageDescription', '不用自己排版，填寫活動時間與地點，就能立即產生三款海報、下載圖片或分享至 LINE，並同步建立活動頁。');
 
   const backLink = document.getElementById('posterBackLink');
   if (backLink) backLink.textContent = '← 查看近期活動';
@@ -477,7 +457,6 @@ function initSubmissionMode() {
   if (endInput) endInput.min = `${todayValue}T00:00`;
   if (expireInput) expireInput.min = todayValue;
 
-  updatePosterDistricts();
   updateSubmissionPreview();
   document.title = '免費建立活動分享海報';
 }
@@ -517,13 +496,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const submissionForm = document.getElementById('posterSubmissionForm');
   submissionForm?.addEventListener('input', updateSubmissionPreview);
   submissionForm?.addEventListener('change', event => {
-    if (event.target.name === '縣市') updatePosterDistricts();
     if (event.target.name === '開始時間') {
       const startDate = String(event.target.value || '').slice(0, 10);
       const expireInput = submissionForm.elements['下架日'];
       if (startDate && expireInput) {
         expireInput.min = startDate;
-        if (!expireInput.value || expireInput.value < startDate) expireInput.value = startDate;
+        if (expireInput.value && expireInput.value < startDate) expireInput.value = startDate;
       }
     }
     updateSubmissionPreview();
