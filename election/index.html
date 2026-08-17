@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>2026 雲嘉選舉花禮 | 慶豐蘭園</title>
-  <meta name="description" content="雲嘉地區選舉競總花禮訂購服務，涵蓋競總成立花籃、當選賀蘭，LINE快速下單，全程配送。慶豐蘭園26年專業花藝。">
+  <title>雲嘉人物與花禮查詢 | 慶豐蘭園</title>
+  <meta name="description" content="查詢雲嘉候選人與現任公職的公開資料，並透過慶豐蘭園 LINE 詢問競總、服務處與活動花禮。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20260809-3">
+  <link rel="stylesheet" href="style.css?v=20260817-4">
 </head>
 <body>
 
@@ -19,7 +19,7 @@
         <span class="logo-text">慶豐蘭園<span class="logo-sub">選舉花禮</span></span>
       </a>
       <div class="nav-links">
-        <a href="index.html" class="nav-link active">候選人查詢</a>
+        <a href="index.html" class="nav-link active">人物查詢</a>
         <a href="events.html" class="nav-link">近期活動</a>
         <a href="poster.html" class="nav-link">免費做海報</a>
         <a href="products.html" class="nav-link">花禮品項</a>
@@ -30,7 +30,7 @@
       </button>
     </div>
     <div class="mobile-menu" id="mobileMenu">
-      <a href="index.html" class="mobile-link active">候選人查詢</a>
+      <a href="index.html" class="mobile-link active">人物查詢</a>
       <a href="events.html" class="mobile-link">近期活動</a>
       <a href="poster.html" class="mobile-link">免費做海報</a>
       <a href="products.html" class="mobile-link">花禮品項</a>
@@ -43,14 +43,14 @@
     <div class="hero-bg"></div>
     <div class="hero-content">
       <div class="hero-badge">🗳️ 2026 選舉季服務</div>
-      <h1 class="hero-title">雲嘉地區<br><span class="hero-accent">選舉花禮</span>訂購目錄</h1>
-      <p class="hero-desc">競總成立花籃 · 當選賀蘭 · LINE 快速下單<br>慶豐蘭園 26 年在地服務，全程配送到競總</p>
+      <h1 class="hero-title">雲嘉地區<br><span class="hero-accent">人物與花禮</span>查詢</h1>
+      <p class="hero-desc">候選人與現任公職分流查詢 · 公開聯絡資料 · LINE 快速詢問<br>慶豐蘭園 26 年在地服務，協助送達競總、服務處與活動現場</p>
       <div class="hero-stats">
-        <div class="stat"><span class="stat-num" id="totalCount">—</span><span class="stat-label">筆候選人資料</span></div>
+        <div class="stat"><span class="stat-num" id="totalCount">—</span><span class="stat-label">人物資料</span></div>
         <div class="stat-divider"></div>
-        <div class="stat"><span class="stat-num">26</span><span class="stat-label">年蘭業專業</span></div>
+        <div class="stat"><span class="stat-num" id="candidateCount">—</span><span class="stat-label">候選人</span></div>
         <div class="stat-divider"></div>
-        <div class="stat"><span class="stat-num">雲嘉</span><span class="stat-label">全區配送</span></div>
+        <div class="stat"><span class="stat-num" id="officialCount">—</span><span class="stat-label">現任公職</span></div>
       </div>
     </div>
     <div class="hero-scroll-hint">↓</div>
@@ -60,8 +60,16 @@
   <section class="search-section">
     <div class="container">
       <div class="search-panel">
-        <h2 class="search-title">查詢候選人花禮</h2>
+        <h2 class="search-title">查詢候選人與現任公職</h2>
         <div class="filter-grid">
+          <div class="filter-group">
+            <label for="typeFilter" class="filter-label">資料類型</label>
+            <select id="typeFilter" class="filter-select">
+              <option value="">全部人物</option>
+              <option value="candidate">候選人</option>
+              <option value="official">現任公職</option>
+            </select>
+          </div>
           <div class="filter-group">
             <label for="cityFilter" class="filter-label">縣市</label>
             <select id="cityFilter" class="filter-select">
@@ -74,8 +82,8 @@
               <option value="">全部鄉鎮</option>
             </select>
           </div>
-          <div class="filter-group">
-            <label for="villageFilter" class="filter-label">村里 / 選區</label>
+          <div class="filter-group" id="villageFilterGroup" hidden>
+            <label for="villageFilter" class="filter-label">村里／選區</label>
             <select id="villageFilter" class="filter-select">
               <option value="">全部村里</option>
             </select>
@@ -84,10 +92,6 @@
             <label for="levelFilter" class="filter-label">層級</label>
             <select id="levelFilter" class="filter-select">
               <option value="">全部層級</option>
-              <option value="縣長">縣長</option>
-              <option value="議員">議員</option>
-              <option value="鄉鎮市長">鄉鎮市長</option>
-              <option value="里長">里長</option>
             </select>
           </div>
         </div>
@@ -100,7 +104,7 @@
         </div>
         <div class="result-bar">
           <span id="resultCount" class="result-count">載入中…</span>
-          <div class="sort-info">排序：選區 → 號次（未登記者依姓氏筆畫）</div>
+          <div class="sort-info">排序：縣市 → 鄉鎮 → 村里／號次 → 姓名</div>
         </div>
       </div>
     </div>
@@ -117,7 +121,7 @@
       </div>
       <div id="emptyState" class="empty-state hidden">
         <div class="empty-icon">🌸</div>
-        <p class="empty-title">找不到符合條件的候選人</p>
+        <p class="empty-title">找不到符合條件的人物</p>
         <p class="empty-sub">請嘗試調整篩選條件，或直接透過 LINE 聯繫我們</p>
         <a href="https://line.me/R/ti/p/%40775yvfxq" class="btn-line-solid" target="_blank" rel="noopener">聯繫慶豐蘭園</a>
       </div>
@@ -148,18 +152,18 @@
         <p class="footer-tagline">26 年蘭業專業，雲嘉在地服務</p>
       </div>
       <div class="footer-links">
-        <a href="index.html" class="active" aria-current="page">候選人查詢</a>
+        <a href="index.html" class="active" aria-current="page">人物查詢</a>
         <a href="events.html">近期活動</a>
         <a href="products.html">花禮品項</a>
         <a href="info.html">訂購須知</a>
       </div>
       <a class="footer-line-link" href="https://line.me/R/ti/p/%40775yvfxq" target="_blank" rel="noopener">透過 LINE 聯絡慶豐蘭園</a>
-      <p class="footer-note">本站採用純服務性語言，不代表任何政治立場。所有候選人卡片格式完全一致。</p>
+      <p class="footer-note">本站採用純服務性語言，不代表任何政治立場；候選人與現任公職身分會清楚分開標示。</p>
     </div>
   </footer>
 
   <script src="site-config.js?v=20260809-3"></script>
-  <script src="app.js?v=20260809-3"></script>
+  <script src="app.js?v=20260817-5"></script>
   <script src="home-events.js?v=20260809-3"></script>
 </body>
 </html>

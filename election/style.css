@@ -318,7 +318,7 @@ img { max-width: 100%; display: block; }
 
 .filter-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 16px;
   margin-bottom: 16px;
 }
@@ -460,6 +460,69 @@ img { max-width: 100%; display: block; }
   border-color: var(--border-light);
   transform: translateY(-2px);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.person-card {
+  position: relative;
+}
+
+.person-type-strip {
+  padding: 7px 20px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.candidate-type {
+  background: rgba(201, 168, 76, 0.1);
+  color: var(--gold);
+}
+
+.official-person {
+  border-color: rgba(76, 135, 139, 0.45);
+}
+
+.official-type {
+  background: rgba(76, 135, 139, 0.12);
+  color: #76b2b5;
+}
+
+.status-incumbent {
+  background: rgba(76, 135, 139, 0.16);
+  color: #83bdc0;
+}
+
+.person-card .card-info-row a {
+  color: var(--gold-dim);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.2s var(--ease);
+}
+
+.person-card .card-info-row a:hover {
+  text-decoration-color: currentColor;
+}
+
+.contact-unavailable {
+  color: var(--text-muted);
+}
+
+.official-source-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 6px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.72rem;
+}
+
+.official-source-row a {
+  color: #83bdc0;
 }
 
 .event-card-linkable {
@@ -922,6 +985,25 @@ img { max-width: 100%; display: block; }
   background: var(--line-hover);
   transform: translateY(-1px);
   box-shadow: 0 4px 16px rgba(6, 199, 85, 0.3);
+}
+
+.btn-call {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 16px;
+  background: #356e72;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s var(--ease);
+}
+
+.btn-call:hover {
+  background: #43868a;
+  transform: translateY(-1px);
 }
 
 .line-icon {
@@ -2575,6 +2657,10 @@ img { max-width: 100%; display: block; }
    RESPONSIVE
    ==================================================== */
 @media (max-width: 1000px) and (min-width: 769px) {
+  .filter-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .home-event-track {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
