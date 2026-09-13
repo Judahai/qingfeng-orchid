@@ -94,6 +94,16 @@
               <option value="">全部層級</option>
             </select>
           </div>
+          <div class="filter-group">
+            <label for="hqDateFilter" class="filter-label">競總成立時間</label>
+            <select id="hqDateFilter" class="filter-select">
+              <option value="">全部時間</option>
+              <option value="upcoming">尚未到期</option>
+              <option value="next30">未來 30 天</option>
+              <option value="known">已有日期</option>
+              <option value="past">日期已過</option>
+            </select>
+          </div>
         </div>
         <div class="search-row">
           <div class="search-input-wrap">
@@ -106,6 +116,8 @@
           <span id="resultCount" class="result-count">載入中…</span>
           <div class="sort-info">排序：縣市 → 鄉鎮 → 村里／號次 → 姓名</div>
         </div>
+        <p id="coverageSummary" class="coverage-summary" aria-live="polite"></p>
+        <p class="coverage-note">人物名單依已查核資料持續擴充；名單涵蓋地區不等於配送範圍，其他地區可透過 LINE 確認。</p>
       </div>
     </div>
   </section>

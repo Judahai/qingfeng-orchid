@@ -1194,7 +1194,7 @@
             <div class="step-header">
                 <div class="step-number">4</div>
                 <h2 class="step-title">送出訂單</h2>
-                <p class="step-desc">確認資訊後，透過 LINE 送出</p>
+                <p class="step-desc">送出後，請開啟官方 LINE 確認花色、配送與付款</p>
             </div>
 
             <div id="orderSummary"
@@ -1212,6 +1212,16 @@
                 <p class="form-hint">開幕、祝賀常見送一對；一對的卡片文字兩盆相同</p>
             </div>
 
+            <div class="form-group">
+                <label class="form-label" for="flowerPreference">偏好花色（選填）</label>
+                <input class="form-input" id="flowerPreference" maxlength="40" placeholder="例：白色、粉色；留白由店家建議">
+                <label class="form-label" for="flowerSubstitution" style="margin-top:12px;">花色無法提供時</label>
+                <select class="form-input" id="flowerSubstitution">
+                    <option>請先與我確認替代花色</option>
+                    <option>可由店家搭配同價位花色</option>
+                </select>
+                <p class="form-hint">依當週花況確認，非保證供貨。此偏好會放入下一步的 LINE 訊息，請開啟官方 LINE 後按傳送，讓客服確認。</p>
+            </div>
             <div class="form-group">
                 <label class="form-label">聯絡電話 <span class="required">*</span></label>
                 <input type="tel" class="form-input" id="buyerPhone" placeholder="09xxxxxxxx" maxlength="10">
@@ -1246,9 +1256,9 @@
             <div id="transferInfoBlock" style="display:none; background:#FFF8E7; border:1px solid #E8D9A0; border-radius:10px; padding:14px; margin-bottom:16px;">
                 <p style="font-weight:700; margin-bottom:8px;">💰 轉帳流程說明</p>
                 <div style="font-size:0.9rem; color:var(--text-mid); line-height:1.8;">
-                    <p>❶ 送出訂單後，畫面會顯示轉帳帳號</p>
-                    <p>❷ 完成轉帳後，請加 LINE 回傳帳號<strong>末五碼</strong></p>
-                    <p>❸ 核對無誤後，當日安排出貨</p>
+                    <p>❶ 送出後，透過官方 LINE 確認花色、配送與應付金額</p>
+                    <p>❷ 客服提供付款資訊後再轉帳，並於官方 LINE 回報帳號<strong>末五碼</strong></p>
+                    <p>❸ 核對付款後，依雙方確認的日期安排配送</p>
                 </div>
                 <div class="form-group" style="margin-top:12px; margin-bottom:0;">
                     <label class="form-label">轉帳後五碼（選填，也可稍後透過 LINE 回報）</label>
@@ -1258,11 +1268,11 @@
             <div class="form-group">
                 <label class="form-label">訂購人姓名 <span class="required">*</span></label>
                 <input type="text" class="form-input" id="buyerName" placeholder="您的姓名">
-                <p class="form-hint">此為本流程唯一需要打字的地方</p>
+                <p class="form-hint">供客服核對訂單與聯絡使用</p>
             </div>
 
             <div class="btn-row" style="flex-direction:column; align-items:center; gap:12px;">
-                <button class="btn btn-line" onclick="submitToLine()">透過 LINE 送出訂單</button>
+                <button class="btn btn-line" onclick="submitToLine()">送出訂單，下一步確認</button>
                 <button class="btn btn-secondary" onclick="goStep('3b')">返回修改</button>
             </div>
         </div>
@@ -1274,9 +1284,9 @@
             慶豐蘭園</p>
         <p>雲林縣北港鎮 ・ 產地直送</p>
         <p>電話：<a href="tel:0988811607">0988-811-607</a></p>
-        <p style="margin-top:16px;">如果您需要直接諮詢：<a href="https://line.me/ti/p/K2LFf7aucm" target="_blank"
+        <p style="margin-top:16px;">如果您需要直接諮詢：<a href="https://line.me/R/ti/p/%40775yvfxq" target="_blank"
                 rel="noopener">直接
-                LINE 聯繫</a></p>
+                官方 LINE 聯繫</a></p>
         <p style="margin-top: 16px; font-size: 0.8rem; color: rgba(255,255,255,0.4);">
             實用工具：<a href="condolence.html" style="color: var(--accent-gold); text-decoration: none;">輓聯產生器</a> | <a
                 href="greeting.html" style="color: var(--accent-gold); text-decoration: none;">賀詞產生器</a>
@@ -1291,7 +1301,58 @@
 
     <script>
         // ===== Constants =====
-        const LINE_URL = 'https://line.me/ti/p/K2LFf7aucm';
+        const LINE_URL = 'https://line.me/R/ti/p/%40775yvfxq';
+        const LINE_PROFILE_URL = 'https://line.me/R/home/public/profile?id=775yvfxq';
+        const LINE_MESSAGE_URL = 'https://line.me/R/oaMessage/%40775yvfxq/?';
+        let orderSubmitted = false;
+        let orderSubmitting = false;
+
+        function escapeOrderText(value) {
+            return String(value ?? '').replace(/[&<>"']/g, ch => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            })[ch]);
+        }
+
+        async function copyOrderMessage() {
+            const field = document.getElementById('lineOrderMessage');
+            const status = document.getElementById('copyOrderStatus');
+            try {
+                await navigator.clipboard.writeText(field.value);
+                status.textContent = '已複製，請到官方 LINE 貼上並傳送。';
+            } catch (_) {
+                field.focus();
+                field.select();
+                status.textContent = '請長按下方文字手動複製，再到官方 LINE 貼上。';
+            }
+        }
+
+        function lineConfirmationHtml(message, orderConfirmed = false) {
+            const nextSteps = orderConfirmed ? `
+                <div style="margin:20px 0;text-align:left;display:grid;gap:12px;">
+                    <div style="padding:14px;border-radius:10px;background:#edf8f0;border:1px solid #b7dbc0;">
+                        <strong>✓ 步驟 1：網站訂單已成功建立</strong><br>
+                        <span style="font-size:0.9rem;color:var(--text-mid);">請保留上方訂單編號，客服尚未完成花況與配送確認。</span>
+                    </div>
+                    <div style="padding:14px;border-radius:10px;background:var(--bg-light);border:1px solid var(--border);">
+                        <strong>步驟 2：加入慶豐官方 LINE</strong><br>
+                        <span style="font-size:0.9rem;color:var(--text-mid);">已經是好友可直接前往步驟 3。</span><br>
+                        <a href="${LINE_PROFILE_URL}" target="_blank" rel="noopener" class="btn btn-line" style="display:inline-block;margin-top:10px;text-decoration:none;">加入官方 LINE（@775yvfxq）</a>
+                    </div>
+                    <div style="padding:14px;border-radius:10px;background:var(--bg-light);border:1px solid var(--border);">
+                        <strong>步驟 3：傳送訂單確認訊息</strong><br>
+                        <span style="font-size:0.9rem;color:var(--text-mid);">加入好友不會自動傳出訂單，開啟聊天室後還要按「傳送」。</span><br>
+                        <a href="${LINE_MESSAGE_URL + encodeURIComponent(message)}" target="_blank" rel="noopener" class="btn btn-line" style="display:inline-block;margin-top:10px;text-decoration:none;">開啟聊天室並帶入訂單</a>
+                    </div>
+                </div>` : `
+                <p>請開啟官方 LINE，將下方查單文字傳給客服。開啟頁面不代表訊息已送出。</p>
+                <a href="${LINE_MESSAGE_URL + encodeURIComponent(message)}" target="_blank" rel="noopener" class="btn btn-line" style="display:inline-block;margin-top:12px;text-decoration:none;">開啟官方 LINE 查詢訂單</a>
+                <p style="margin-top:12px;">第一次聯絡？<a href="${LINE_PROFILE_URL}" target="_blank" rel="noopener">先加入慶豐官方 LINE（@775yvfxq）</a></p>`;
+            return `${nextSteps}
+                <label class="form-label" for="lineOrderMessage" style="margin-top:16px;">若 LINE 未帶入文字，請複製以下內容傳送</label>
+                <textarea id="lineOrderMessage" class="form-input" readonly rows="6">${escapeOrderText(message)}</textarea>
+                <button type="button" class="btn btn-secondary" onclick="copyOrderMessage()" style="margin-top:12px;">複製確認訊息</button>
+                <p id="copyOrderStatus" role="status" aria-live="polite"></p>`;
+        }
 
         const GAS_URL = 'https://script.google.com/macros/s/AKfycbzdvvO4vzVSebbsSDh9GPVpu0Xa8uvsCQi9gxyi0nsg2ou0Ih7-LQxR0C17Ed_T0MVWWQ/exec';
 
@@ -1299,7 +1360,7 @@
         const FIXED_PRODUCTS = [
             { id: 'level7',     name: '經典款',     price: 2800, note: '產地直送' },
             { id: 'level10',    name: '進階款',     price: 4000, note: '產地直送' },
-            { id: 'level12',    name: '尊榮款',     price: 4800, note: '產地直送' },
+            { id: 'level12',    name: '尊榮款',     price: 4800, note: '產地直送', imageUrl: 'images/products/level12.png' },
             { id: 'levelhight', name: '頂級款',     price: 6000, note: '產地直送' }
         ];
 
@@ -1386,16 +1447,19 @@
         // ===== Step 2: Products =====
         function renderProducts() {
             const grid = document.getElementById('productGrid');
-            const cardHtml = p => `
+            const cardHtml = p => {
+                const productImage = p.imageUrl || `images/products/${p.id}.jpg`;
+                return `
             <div class="product-card${p.id === order.productId ? ' selected' : ''}"
                  onclick="selectProduct('${p.id}','${p.name.replace(/'/g, '')}',${p.price},this)">
-                <img src="images/products/${p.id}.jpg" alt="${p.name}" style="width:80px;height:80px;border-radius:10px;object-fit:cover;flex-shrink:0;" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="product-photo-placeholder" style="display:none;">照片<br>準備中</div>
+                <img src="${escapeOrderText(productImage)}" alt="${escapeOrderText(p.name)}" style="width:80px;height:80px;border-radius:10px;object-fit:cover;flex-shrink:0;" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="product-photo-placeholder" style="display:none;">照片<br>準備中</div>
                 <div class="product-info">
-                    <div class="product-name">${p.name}</div>
+                    <div class="product-name">${escapeOrderText(p.name)}</div>
                     <div class="product-price">NT$ ${p.price.toLocaleString()}</div>
-                    <div class="product-note">${p.note || '產地直送'}</div>
+                    <div class="product-note">${escapeOrderText(p.note || '產地直送')}</div>
                 </div>
             </div>`;
+            };
 
             let html = FIXED_PRODUCTS.map(cardHtml).join('');
 
@@ -1655,13 +1719,13 @@
             const summary = document.getElementById('orderSummary');
             summary.innerHTML = `
             <div style="margin-bottom:12px;"><strong>場合：</strong>${SCENE_LABELS[order.scene]}</div>
-            <div style="margin-bottom:12px;"><strong>品項：</strong>${order.productName} × ${order.quantity} — 共 NT$ ${(order.productPrice * order.quantity).toLocaleString()}</div>
-            <div style="margin-bottom:12px;"><strong>卡片用詞：</strong>${phrase}</div>
-            <div style="margin-bottom:12px;"><strong>送禮人：</strong>${order.senderName} ${order.footerSuffix}</div>
+            <div style="margin-bottom:12px;"><strong>品項：</strong>${escapeOrderText(order.productName)} × ${order.quantity} — 共 NT$ ${(order.productPrice * order.quantity).toLocaleString()}</div>
+            <div style="margin-bottom:12px;"><strong>卡片用詞：</strong>${escapeOrderText(phrase)}</div>
+            <div style="margin-bottom:12px;"><strong>送禮人：</strong>${escapeOrderText(order.senderName)} ${escapeOrderText(order.footerSuffix)}</div>
             <div style="margin-bottom:12px;"><strong>付款方式：</strong>轉帳 / 貨到付款</div>
             <div style="font-size:0.9rem; color:#721c24; background-color:#f8d7da; border:1px solid #f5c6cb; border-radius:8px; padding:12px; margin-top:16px;">
                 ⚠️ <strong>注意：本系統不提供線上刷卡。</strong><br>
-                選擇轉帳者，轉帳完成後<strong>請務必於 LINE 回傳您的帳號末五碼</strong>，核對無誤後始安排出貨。<br>🌸 花材為當日現場現組，實際花況、株型與網頁圖片可能略有差異，皆保持同等級品質，介意者請 LINE 告知。
+                請先於官方 LINE 確認花色、配送與金額，再依客服提供的資訊付款。<br>🌸 花材依當週花況搭配，偏好花色會帶入下一步的 LINE 確認訊息。
             </div>
         `;
         }
@@ -1674,6 +1738,7 @@
         }
 
         async function submitToLine() {
+            if (orderSubmitted || orderSubmitting) return;
             const buyerName = document.getElementById('buyerName')?.value?.trim();
             const phone = document.getElementById('buyerPhone')?.value?.trim();
             const date = document.getElementById('deliveryDate')?.value;
@@ -1686,6 +1751,9 @@
             if (!area) return alert('請選擇配送區域');
             if (!address) return alert('請填寫會場或收件地址');
             if (!order.payment) return alert('請選擇付款方式');
+            const flowerPreference = document.getElementById('flowerPreference').value.trim() || '由店家建議';
+            const flowerSubstitution = document.getElementById('flowerSubstitution').value;
+            const preferenceMessage = `偏好花色：${flowerPreference}\n花色無法提供時：${flowerSubstitution}`;
 
             const prod = [...FIXED_PRODUCTS, ...EXTRA_PRODUCTS].find(p => p.id === order.productId) || {};
 
@@ -1707,42 +1775,42 @@
                 imageUrl: prod.imageUrl || ''
             };
 
-            const btn = document.querySelector('#step4 .btn-line');
+            const btn = document.querySelector('#step4 > .btn-row .btn-line');
+            orderSubmitting = true;
             btn.disabled = true;
             btn.textContent = '訂單送出中…';
 
             try {
                 const res = await fetch(GAS_URL, { method: 'POST', body: JSON.stringify(payload) });
                 const out = await res.json();
-                if (out.status !== 'success') throw new Error(out.error || '送出失敗');
+                if (!res.ok || out.status !== 'success' || !out.orderId) throw new Error(out.error || '無法確認送出結果');
+                orderSubmitted = true;
 
-                const bankInfo = order.payment === '轉帳' ? `
-                    <div style="background:#FFF8E7; border:1px solid #E8D9A0; border-radius:10px; padding:14px; margin-top:14px; text-align:left;">
-                        <p style="font-weight:700; margin-bottom:6px;">💰 轉帳資訊</p>
-                        <p style="font-size:1.05rem;">合作金庫（006）<br>戶名：蔡哲宇<br>帳號：<strong style="letter-spacing:1px;">0270988010526</strong></p>
-                        <p style="font-size:0.85rem; color:var(--text-mid); margin-top:8px;">轉帳完成後，請透過下方 LINE 回傳帳號末五碼，核對後即安排出貨。</p>
-                    </div>` : '';
+                const message = `您好，我要確認訂單 ${out.orderId}\n品項：${order.productName} × ${order.quantity}\n${preferenceMessage}\n付款方式：${order.payment}\n請協助確認花況、配送日期與應付金額。`;
 
                 document.getElementById('orderSummary').innerHTML = `
                     <div style="text-align:center; padding:20px;">
                         <div style="font-size:2.5rem;">✅</div>
-                        <h3 style="margin:10px 0;">訂單已送出</h3>
-                        <p style="font-size:1.3rem; font-weight:700; color:var(--accent-gold);">訂單編號：${out.orderId}</p>
-                        ${bankInfo}
-                        <p style="color:var(--text-mid); font-size:0.9rem; margin-top:10px;">我們將盡快與您電話確認。<br>也可以加入 LINE 追蹤訂單、傳送轉帳末五碼：</p>
-                        <a href="${LINE_URL}" target="_blank" class="btn btn-line" style="display:inline-block; margin-top:12px; text-decoration:none;">加入 LINE 好友</a>
+                        <h3 style="margin:10px 0;">訂單已成功建立</h3>
+                        <p style="font-size:1.3rem; font-weight:700; color:var(--accent-gold);">訂單編號：${escapeOrderText(out.orderId)}</p>
+                        <p>我們已收到網站訂單；花色、配送與應付金額仍需由客服確認。</p>
+                        ${lineConfirmationHtml(message, true)}
                     </div>`;
                 btn.style.display = 'none';
-                document.querySelector('#step4 .btn-secondary').style.display = 'none';
+                document.querySelector('#step4 > .btn-row .btn-secondary').style.display = 'none';
                 document.querySelectorAll('#step4 .form-group, #step4 .form-row').forEach(el => el.style.display = 'none');
+                document.getElementById('transferInfoBlock').style.display = 'none';
+                document.getElementById('orderSummary').setAttribute('tabindex', '-1');
+                document.getElementById('orderSummary').focus();
+                document.getElementById('orderSummary').scrollIntoView({ behavior: 'smooth', block: 'start' });
             } catch (err) {
                 btn.disabled = false;
-                btn.textContent = '透過 LINE 送出訂單';
-                const msg = `訂購【${payload.scene}】【${payload.productName}】× ${payload.quantity}\n總計：$${payload.total}\n卡片：${payload.cardTop}｜${payload.cardMiddle}｜${payload.cardBottom}\n送達：${date} ${area}${address}\n付款：${order.payment}\n訂購人：${buyerName} ${phone}`;
-                navigator.clipboard.writeText(msg).then(() => {
-                    alert('系統忙碌中，訂單內容已幫您複製！\n請加入 LINE 好友後貼上送出。');
-                    window.open(LINE_URL, '_blank');
-                });
+                btn.textContent = '確認未成立後，重新送出';
+                const msg = `網站未能確認送出結果，請先協助查單，避免重複。\n訂購【${payload.scene}】【${payload.productName}】× ${payload.quantity}\n總計：$${payload.total}\n${preferenceMessage}\n卡片：${payload.cardTop}｜${payload.cardMiddle}｜${payload.cardBottom}\n送達：${date} ${area}${address}\n付款：${order.payment}\n訂購人：${buyerName} ${phone}`;
+                document.getElementById('orderSummary').innerHTML = `<h3>尚無法確認訂單是否收到</h3><p>請先透過官方 LINE 查詢，避免重複下單。填寫內容仍保留在此頁。</p>${lineConfirmationHtml(msg)}`;
+                document.getElementById('orderSummary').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } finally {
+                orderSubmitting = false;
             }
         }
 

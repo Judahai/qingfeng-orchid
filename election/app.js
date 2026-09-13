@@ -124,8 +124,49 @@ async function fetchPeople(force = false) {
 
   allPeople = sortPeople([...candidates, ...officials]);
   updateHeroStats(candidates.length, officials.length);
+  updateCoverageSummary(candidates);
   rebuildAllDropdowns();
   applyFilters();
+}
+
+function updateCoverageSummary(candidates) {
+  const summary = document.getElementById('coverageSummary');
+  if (!summary) return;
+  const counts = new Map();
+  candidates.forEach(candidate => {
+    const city = String(candidate.City || '').trim();
+    if (city) counts.set(city, (counts.get(city) || 0) + 1);
+  });
+  const labels = [...counts.entries()]
+    .sort(([a], [b]) => a.localeCompare(b, 'zh-TW'))
+    .map(([city, count]) => `${city} ${count} 位`);
+  summary.textContent = labels.length ? `目前候選人名單：${labels.join('、')}` : '目前尚無已查核的候選人名單';
+}
+
+function parsePublicDate(value) {
+  const match = /^(\d{4})\/(\d{2})\/(\d{2})$/.exec(String(value || '').trim());
+  if (!match) return null;
+  const date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+  if (date.getFullYear() !== Number(match[1]) || date.getMonth() !== Number(match[2]) - 1 || date.getDate() !== Number(match[3])) return null;
+  date.setHours(0, 0, 0, 0);
+  return date;
+}
+
+function matchesHqDate(person, filter, today = new Date()) {
+  if (!filter) return true;
+  if (person.DataType !== 'candidate') return false;
+  const date = parsePublicDate(person.HQ_Date);
+  if (filter === 'known') return Boolean(date);
+  if (!date) return false;
+  const start = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  if (filter === 'upcoming') return date >= start;
+  if (filter === 'past') return date < start;
+  if (filter === 'next30') {
+    const end = new Date(start);
+    end.setDate(end.getDate() + 30);
+    return date >= start && date <= end;
+  }
+  return true;
 }
 
 function showLoadError() {
@@ -241,6 +282,7 @@ function applyFilters() {
   const district = document.getElementById('districtFilter')?.value || '';
   const village = document.getElementById('villageFilter')?.value || '';
   const level = document.getElementById('levelFilter')?.value || '';
+  const hqDate = document.getElementById('hqDateFilter')?.value || '';
   const name = document.getElementById('nameSearch')?.value.trim() || '';
 
   const filtered = allPeople.filter(person =>
@@ -249,6 +291,7 @@ function applyFilters() {
     personMatchesDistrict(person, district) &&
     (!village || person.Village === village) &&
     (!level || person.Level === level) &&
+    matchesHqDate(person, hqDate) &&
     (!name || (person.Name || '').includes(name))
   );
 
@@ -404,7 +447,7 @@ function escapeAttribute(value) {
 }
 
 function resetFilters() {
-  ['typeFilter', 'cityFilter', 'districtFilter', 'villageFilter', 'levelFilter']
+  ['typeFilter', 'cityFilter', 'districtFilter', 'villageFilter', 'levelFilter', 'hqDateFilter']
     .forEach(id => {
       const element = document.getElementById(id);
       if (element) element.value = '';
@@ -421,6 +464,7 @@ function initEventListeners() {
   const district = document.getElementById('districtFilter');
   const village = document.getElementById('villageFilter');
   const level = document.getElementById('levelFilter');
+  const hqDate = document.getElementById('hqDateFilter');
   const name = document.getElementById('nameSearch');
   const clear = document.getElementById('clearBtn');
   const hamburger = document.getElementById('hamburger');
@@ -442,6 +486,7 @@ function initEventListeners() {
   });
   village?.addEventListener('change', applyFilters);
   level?.addEventListener('change', applyFilters);
+  hqDate?.addEventListener('change', applyFilters);
   clear?.addEventListener('click', resetFilters);
 
   let searchTimer;

@@ -9,7 +9,7 @@
     'use strict';
 
     // ----- 設定 -----
-    const LINE_URL = 'https://line.me/ti/p/K2LFf7aucm';
+    const LINE_URL = 'https://line.me/R/ti/p/%40775yvfxq';
     const NAV_ITEMS = [
         { label: '訂花', href: 'index.html', icon: svgFlower() },
         { label: '選舉花禮', href: 'election/index.html', icon: svgVote() },
