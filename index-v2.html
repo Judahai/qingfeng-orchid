@@ -1254,11 +1254,12 @@
                 </div>
             </div>
             <div id="transferInfoBlock" style="display:none; background:#FFF8E7; border:1px solid #E8D9A0; border-radius:10px; padding:14px; margin-bottom:16px;">
-                <p style="font-weight:700; margin-bottom:8px;">💰 轉帳流程說明</p>
+                <p style="font-weight:700; margin-bottom:8px;">💰 轉帳資訊</p>
                 <div style="font-size:0.9rem; color:var(--text-mid); line-height:1.8;">
-                    <p>❶ 送出後，透過官方 LINE 確認花色、配送與應付金額</p>
-                    <p>❷ 客服提供付款資訊後再轉帳，並於官方 LINE 回報帳號<strong>末五碼</strong></p>
-                    <p>❸ 核對付款後，依雙方確認的日期安排配送</p>
+                    <p style="font-size:1.05rem; color:var(--text-dark);">合作金庫（006）<br>戶名：蔡哲宇<br>帳號：<strong style="letter-spacing:1px;">0270988010526</strong></p>
+                    <p>❶ 送出訂單後即可轉帳</p>
+                    <p>❷ 轉帳後於官方 LINE 回報帳號<strong>末五碼</strong></p>
+                    <p>❸ 核對付款後，客服確認花色、配送與日期</p>
                 </div>
                 <div class="form-group" style="margin-top:12px; margin-bottom:0;">
                     <label class="form-label">轉帳後五碼（選填，也可稍後透過 LINE 回報）</label>
@@ -1787,6 +1788,12 @@
                 orderSubmitted = true;
 
                 const message = `您好，我要確認訂單 ${out.orderId}\n品項：${order.productName} × ${order.quantity}\n${preferenceMessage}\n付款方式：${order.payment}\n請協助確認花況、配送日期與應付金額。`;
+                const bankInfo = order.payment === '轉帳' ? `
+                    <div style="background:#FFF8E7; border:1px solid #E8D9A0; border-radius:10px; padding:14px; margin:16px 0; text-align:left;">
+                        <p style="font-weight:700; margin-bottom:6px;">💰 轉帳資訊</p>
+                        <p style="font-size:1.05rem; line-height:1.7;">合作金庫（006）<br>戶名：蔡哲宇<br>帳號：<strong style="letter-spacing:1px;">0270988010526</strong></p>
+                        <p style="font-size:0.85rem; color:var(--text-mid); margin-top:8px;">轉帳後請到官方 LINE 回報帳號末五碼，客服核對後確認配送。</p>
+                    </div>` : '';
 
                 document.getElementById('orderSummary').innerHTML = `
                     <div style="text-align:center; padding:20px;">
@@ -1794,6 +1801,7 @@
                         <h3 style="margin:10px 0;">訂單已成功建立</h3>
                         <p style="font-size:1.3rem; font-weight:700; color:var(--accent-gold);">訂單編號：${escapeOrderText(out.orderId)}</p>
                         <p>我們已收到網站訂單；花色、配送與應付金額仍需由客服確認。</p>
+                        ${bankInfo}
                         ${lineConfirmationHtml(message, true)}
                     </div>`;
                 btn.style.display = 'none';
