@@ -102,8 +102,24 @@ async function fetchPeople(force = false) {
     officialRequest,
   ]);
 
-  const candidates = candidateResult.status === 'fulfilled' && Array.isArray(candidateResult.value)
-    ? candidateResult.value.filter(item => item && item.ID && item.Name).map(normalizeCandidate)
+  let candidateData = candidateResult.status === 'fulfilled' && Array.isArray(candidateResult.value)
+    ? candidateResult.value
+    : null;
+  let usingBackup = false;
+  if (!candidateData) {
+    try {
+      candidateData = await window.SITE_DATA.fetchJson('assets/candidates-backup-20260915.json', {
+        cacheKey: 'candidates-backup-20260915',
+        timeoutMs: 5000,
+      });
+      usingBackup = Array.isArray(candidateData);
+    } catch (error) {
+      console.warn('備援候選人名單也無法載入:', error);
+    }
+  }
+
+  const candidates = Array.isArray(candidateData)
+    ? candidateData.filter(item => item && item.ID && item.Name).map(normalizeCandidate)
     : [];
 
   // 舊版 GAS 遇到未知 action 會回傳 Candidates，因此必須驗證 CurrentOfficials 專屬欄位。
@@ -120,7 +136,10 @@ async function fetchPeople(force = false) {
     console.warn('現任公職資料尚未啟用:', officialResult.reason);
   }
 
-  if (candidateResult.status === 'rejected' && officialResult.status === 'rejected') {
+  const backupNotice = document.getElementById('backupNotice');
+  if (backupNotice) backupNotice.hidden = !usingBackup;
+
+  if (!candidates.length && !officials.length) {
     showLoadError();
     return;
   }
