@@ -1,10 +1,9 @@
 // ============================================================
 // 慶豐蘭園 · 人物查詢 — 候選人與現任公職統一介面
-// 資料仍分開：Candidates / CurrentOfficials → GAS → UI
+// 候選人名單由網站靜態檔案提供，不依賴 Google 試算表即時回應。
 // ============================================================
 
 const CONFIG = {
-  GAS_URL: window.SITE_CONFIG.GAS_URL,
   LINE_OA_URL: 'https://line.me/R/oaMessage/%40775yvfxq/?',
 };
 
@@ -88,56 +87,24 @@ async function fetchPeople(force = false) {
   const grid = document.getElementById('candidateGrid');
   if (force && grid) grid.innerHTML = '<div class="loading-state">人物資料重新載入中…</div>';
 
-  const candidateRequest = window.SITE_DATA.fetchJson(
-    CONFIG.GAS_URL + '?action=candidates',
-    { cacheKey: 'candidates', force }
-  );
-  const officialRequest = window.SITE_DATA.fetchJson(
-    CONFIG.GAS_URL + '?action=currentOfficials',
-    { cacheKey: 'current-officials', force }
-  );
-
-  const [candidateResult, officialResult] = await Promise.allSettled([
-    candidateRequest,
-    officialRequest,
-  ]);
-
-  let candidateData = candidateResult.status === 'fulfilled' && Array.isArray(candidateResult.value)
-    ? candidateResult.value
-    : null;
-  let usingBackup = false;
-  if (!candidateData) {
-    try {
-      candidateData = await window.SITE_DATA.fetchJson('assets/candidates-backup-20260915.json', {
-        cacheKey: 'candidates-backup-20260915',
-        timeoutMs: 5000,
-      });
-      usingBackup = Array.isArray(candidateData);
-    } catch (error) {
-      console.warn('備援候選人名單也無法載入:', error);
-    }
+  let candidateData;
+  try {
+    candidateData = await window.SITE_DATA.fetchJson('assets/candidates-backup-20260915.json', {
+      cacheKey: 'candidates-static-20260915',
+      force,
+      timeoutMs: 5000,
+    });
+  } catch (error) {
+    console.error('網站名單載入失敗:', error);
+    showLoadError();
+    return;
   }
 
   const candidates = Array.isArray(candidateData)
     ? candidateData.filter(item => item && item.ID && item.Name).map(normalizeCandidate)
     : [];
 
-  // 舊版 GAS 遇到未知 action 會回傳 Candidates，因此必須驗證 CurrentOfficials 專屬欄位。
-  const officials = officialResult.status === 'fulfilled' && Array.isArray(officialResult.value)
-    ? officialResult.value
-      .filter(item => item && item.Official_ID && item.Current_Level && item.Name)
-      .map(normalizeOfficial)
-    : [];
-
-  if (candidateResult.status === 'rejected') {
-    console.error('候選人資料載入失敗:', candidateResult.reason);
-  }
-  if (officialResult.status === 'rejected') {
-    console.warn('現任公職資料尚未啟用:', officialResult.reason);
-  }
-
-  const backupNotice = document.getElementById('backupNotice');
-  if (backupNotice) backupNotice.hidden = !usingBackup;
+  const officials = [];
 
   if (!candidates.length && !officials.length) {
     showLoadError();

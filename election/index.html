@@ -118,8 +118,7 @@
         </div>
         <p id="coverageSummary" class="coverage-summary" aria-live="polite"></p>
         <p class="review-notice">目前顯示的是登記申請人名單，資格仍由中選會審定；通過後才是正式候選人。</p>
-        <p id="backupNotice" class="review-notice" hidden>Google 資料暫時沒有回應；目前顯示 2026/09/15 已驗證的備援名單。最新更動請稍後重新載入。</p>
-        <p class="coverage-note">人物名單依公開資料持續更新；名單涵蓋地區不等於配送範圍，配送請透過 LINE 確認。</p>
+        <p class="coverage-note">名單更新日期：2026/09/15。試算表的新修改需同步到網站才會顯示；名單涵蓋地區不等於配送範圍，配送請透過 LINE 確認。</p>
       </div>
     </div>
   </section>
@@ -154,10 +153,13 @@
           <p class="home-events-eyebrow">近期活動</p>
           <h2 id="homeEventsTitle">看看最近有哪些活動</h2>
         </div>
-        <span class="home-events-hint">左右滑動查看更多</span>
+        <span class="home-events-hint">點選下方連結查看活動</span>
       </div>
-      <div id="homeEventTrack" class="home-event-track" aria-live="polite">
-        <div class="home-event-card home-event-loading">活動載入中…</div>
+      <div class="home-event-track">
+        <a class="home-event-card home-event-more" href="events.html">
+          <strong>查看近期活動</strong>
+          <span>前往活動列表</span>
+        </a>
       </div>
     </div>
   </section>
@@ -181,7 +183,6 @@
   </footer>
 
   <script src="site-config.js?v=20260809-3"></script>
-  <script src="app.js?v=20260915-2"></script>
-  <script src="home-events.js?v=20260809-3"></script>
+  <script src="app.js?v=20260915-3"></script>
 </body>
 </html>
