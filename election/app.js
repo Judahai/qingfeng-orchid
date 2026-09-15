@@ -9,6 +9,9 @@ const CONFIG = {
 };
 
 let allPeople = [];
+let filteredPeople = [];
+let visiblePeopleCount = 60;
+const PEOPLE_PAGE_SIZE = 60;
 
 function normalizeCandidate(candidate) {
   return {
@@ -285,7 +288,7 @@ function applyFilters() {
   const hqDate = document.getElementById('hqDateFilter')?.value || '';
   const name = document.getElementById('nameSearch')?.value.trim() || '';
 
-  const filtered = allPeople.filter(person =>
+  filteredPeople = allPeople.filter(person =>
     (!type || person.DataType === type) &&
     (!city || person.City === city) &&
     personMatchesDistrict(person, district) &&
@@ -295,33 +298,46 @@ function applyFilters() {
     (!name || (person.Name || '').includes(name))
   );
 
-  const candidateCount = filtered.filter(person => person.DataType === 'candidate').length;
-  const officialCount = filtered.length - candidateCount;
+  const candidateCount = filteredPeople.filter(person => person.DataType === 'candidate').length;
+  const officialCount = filteredPeople.length - candidateCount;
   const count = document.getElementById('resultCount');
   if (count) {
-    count.textContent = `共 ${filtered.length} 位（候選人 ${candidateCount}／現任公職 ${officialCount}）`;
+    count.textContent = `共 ${filteredPeople.length} 位（候選人 ${candidateCount}／現任公職 ${officialCount}）`;
   }
 
-  renderPeople(filtered);
+  visiblePeopleCount = PEOPLE_PAGE_SIZE;
+  renderPeople();
 }
 
-function renderPeople(people) {
+function renderPeople() {
   const grid = document.getElementById('candidateGrid');
   const empty = document.getElementById('emptyState');
+  const loadMore = document.getElementById('loadMorePeople');
+  const visibleCount = document.getElementById('visibleCount');
   if (!grid) return;
 
-  if (people.length === 0) {
+  if (filteredPeople.length === 0) {
     grid.innerHTML = '';
     if (empty) empty.classList.remove('hidden');
+    if (loadMore) loadMore.hidden = true;
     return;
   }
   if (empty) empty.classList.add('hidden');
 
-  grid.innerHTML = people.map(person =>
+  const visiblePeople = filteredPeople.slice(0, visiblePeopleCount);
+  grid.innerHTML = visiblePeople.map(person =>
     person.DataType === 'official'
       ? renderOfficialCard(person)
       : renderCandidateCard(person)
   ).join('');
+
+  if (visibleCount) visibleCount.textContent = `目前顯示 ${visiblePeople.length}／${filteredPeople.length} 位`;
+  if (loadMore) loadMore.hidden = visiblePeople.length >= filteredPeople.length;
+}
+
+function showMorePeople() {
+  visiblePeopleCount += PEOPLE_PAGE_SIZE;
+  renderPeople();
 }
 
 function renderCandidateCard(candidate) {
@@ -467,6 +483,7 @@ function initEventListeners() {
   const hqDate = document.getElementById('hqDateFilter');
   const name = document.getElementById('nameSearch');
   const clear = document.getElementById('clearBtn');
+  const loadMore = document.getElementById('loadMorePeople');
   const hamburger = document.getElementById('hamburger');
   const mobileMenu = document.getElementById('mobileMenu');
 
@@ -488,6 +505,7 @@ function initEventListeners() {
   level?.addEventListener('change', applyFilters);
   hqDate?.addEventListener('change', applyFilters);
   clear?.addEventListener('click', resetFilters);
+  loadMore?.addEventListener('click', showMorePeople);
 
   let searchTimer;
   name?.addEventListener('input', () => {

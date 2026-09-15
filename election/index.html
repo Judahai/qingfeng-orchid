@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>雲嘉人物與花禮查詢 | 慶豐蘭園</title>
-  <meta name="description" content="查詢雲嘉候選人與現任公職的公開資料，並透過慶豐蘭園 LINE 詢問競總、服務處與活動花禮。">
+  <title>全台候選人與花禮查詢 | 慶豐蘭園</title>
+  <meta name="description" content="查詢全台 2026 地方選舉登記申請人與現任公職公開資料，並透過慶豐蘭園 LINE 詢問競總、服務處與活動花禮。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20260817-4">
+  <link rel="stylesheet" href="style.css?v=20260915-1">
 </head>
 <body>
 
@@ -43,7 +43,7 @@
     <div class="hero-bg"></div>
     <div class="hero-content">
       <div class="hero-badge">🗳️ 2026 選舉季服務</div>
-      <h1 class="hero-title">雲嘉地區<br><span class="hero-accent">人物與花禮</span>查詢</h1>
+      <h1 class="hero-title">全台選舉<br><span class="hero-accent">人物與花禮</span>查詢</h1>
       <p class="hero-desc">候選人與現任公職分流查詢 · 公開聯絡資料 · LINE 快速詢問<br>慶豐蘭園 26 年在地服務，協助送達競總、服務處與活動現場</p>
       <div class="hero-stats">
         <div class="stat"><span class="stat-num" id="totalCount">—</span><span class="stat-label">人物資料</span></div>
@@ -77,7 +77,7 @@
             </select>
           </div>
           <div class="filter-group">
-            <label for="districtFilter" class="filter-label">鄉鎮市區</label>
+            <label for="districtFilter" class="filter-label">鄉鎮市區／選舉區</label>
             <select id="districtFilter" class="filter-select">
               <option value="">全部鄉鎮</option>
             </select>
@@ -117,7 +117,8 @@
           <div class="sort-info">排序：縣市 → 鄉鎮 → 村里／號次 → 姓名</div>
         </div>
         <p id="coverageSummary" class="coverage-summary" aria-live="polite"></p>
-        <p class="coverage-note">人物名單依已查核資料持續擴充；名單涵蓋地區不等於配送範圍，其他地區可透過 LINE 確認。</p>
+        <p class="review-notice">目前顯示的是登記申請人名單，資格仍由中選會審定；通過後才是正式候選人。</p>
+        <p class="coverage-note">人物名單依公開資料持續更新；名單涵蓋地區不等於配送範圍，配送請透過 LINE 確認。</p>
       </div>
     </div>
   </section>
@@ -130,6 +131,10 @@
         <div class="skeleton-card"></div>
         <div class="skeleton-card"></div>
         <div class="skeleton-card"></div>
+      </div>
+      <div class="load-more-wrap">
+        <span id="visibleCount" class="visible-count"></span>
+        <button type="button" id="loadMorePeople" class="load-more-btn" hidden>顯示更多</button>
       </div>
       <div id="emptyState" class="empty-state hidden">
         <div class="empty-icon">🌸</div>
@@ -175,7 +180,7 @@
   </footer>
 
   <script src="site-config.js?v=20260809-3"></script>
-  <script src="app.js?v=20260817-5"></script>
+  <script src="app.js?v=20260915-1"></script>
   <script src="home-events.js?v=20260809-3"></script>
 </body>
 </html>
