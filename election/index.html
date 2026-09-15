@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=20260915-1">
+  <link rel="stylesheet" href="style.css?v=20260915-2">
 </head>
 <body>
 
@@ -145,6 +145,15 @@
     </div>
   </section>
 
+  <!-- ===== PERSON CARD PREVIEW ===== -->
+  <div id="personCardModal" class="person-card-modal" hidden>
+    <button type="button" class="person-card-backdrop" data-close-person-card aria-label="關閉人物卡"></button>
+    <section class="person-card-dialog" role="dialog" aria-modal="true" aria-labelledby="personCardName">
+      <button type="button" class="person-card-close" data-close-person-card aria-label="關閉人物卡">×</button>
+      <div id="personCardContent"></div>
+    </section>
+  </div>
+
   <!-- ===== RECENT EVENTS ===== -->
   <section class="home-events-section" aria-labelledby="homeEventsTitle">
     <div class="container">
@@ -183,6 +192,6 @@
   </footer>
 
   <script src="site-config.js?v=20260809-3"></script>
-  <script src="app.js?v=20260915-3"></script>
+  <script src="app.js?v=20260915-4"></script>
 </body>
 </html>

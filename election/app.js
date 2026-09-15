@@ -365,9 +365,88 @@ function renderCandidateCard(candidate) {
       </div>
       <div class="card-footer">
         <a href="${escapeAttribute(orderLink)}" target="_blank" rel="noopener" class="btn-line">LINE 快速訂花</a>
+        <button type="button" class="btn-secondary btn-person-card" data-person-card-id="${escapeAttribute(candidate.Person_ID || '')}">查看人物卡</button>
         <a href="products.html" class="btn-secondary">查看品項</a>
       </div>
     </article>`;
+}
+
+function formatPersonCardDate(value) {
+  const match = /^(\d{4})\/(\d{2})\/(\d{2})$/.exec(String(value || '').trim());
+  return match ? `${match[1]} 年 ${Number(match[2])} 月 ${Number(match[3])} 日` : '';
+}
+
+function renderPersonCardDetail(candidate) {
+  const rawNumber = String(candidate.Number || '').trim();
+  const numberRow = /^\d+$/.test(rawNumber)
+    ? `<div class="person-detail-row"><span>號次</span><strong>第 ${escapeHtml(rawNumber)} 號</strong></div>`
+    : '';
+  const phone = String(candidate.ServiceOffice_Phone || '').trim();
+  const address = String(candidate.HQ_Address || '').trim();
+  const hqDate = parsePublicDate(candidate.HQ_Date);
+  const displayDate = hqDate ? formatPersonCardDate(candidate.HQ_Date) : '';
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const isUpcoming = hqDate && hqDate >= today;
+  const orderLink = buildOrderLink(candidate, '候選人');
+  const sameArea = allPeople
+    .filter(person =>
+      person.DataType === 'candidate' &&
+      person.Person_ID !== candidate.Person_ID &&
+      person.City === candidate.City &&
+      person.District === candidate.District
+    )
+    .slice(0, 6);
+
+  return `
+    <div class="person-detail-header">
+      <span class="person-detail-region">🌸 ${escapeHtml(formatLocation(candidate))}</span>
+      <h2 id="personCardName">${escapeHtml(candidate.Name || '')}</h2>
+      <p>${escapeHtml(candidate.DisplayLevel || '候選人')}</p>
+    </div>
+    <div class="person-detail-body">
+      <div class="person-detail-row"><span>狀態</span><strong>${escapeHtml(candidate.Status || '準備中')}</strong></div>
+      ${numberRow}
+      ${address ? `<div class="person-detail-row"><span>競總／服務處</span><strong>${escapeHtml(address)}</strong></div>` : ''}
+      ${phone ? `<div class="person-detail-row"><span>電話</span><strong>${escapeHtml(phone)}</strong></div>` : ''}
+    </div>
+    ${displayDate ? `
+      <div class="person-detail-event ${isUpcoming ? 'is-upcoming' : ''}">
+        <span>${isUpcoming ? '即將到來' : '已公開日期'}</span>
+        <strong>競選總部成立</strong>
+        <time>${escapeHtml(displayDate)}</time>
+      </div>` : ''}
+    <div class="person-detail-action">
+      <a href="${escapeAttribute(orderLink)}" target="_blank" rel="noopener" class="btn-line">
+        ${isUpcoming ? '為這場活動送上一盆' : '詢問這個地區的選舉花禮'}
+      </a>
+      <small>點擊開啟官方 LINE，候選人資訊會自動帶入</small>
+    </div>
+    ${sameArea.length ? `
+      <div class="person-detail-more">
+        <span>同選區其他人物</span>
+        <div>${sameArea.map(person => `
+          <button type="button" data-person-card-id="${escapeAttribute(person.Person_ID || '')}">${escapeHtml(person.Name || '')}</button>
+        `).join('')}</div>
+      </div>` : ''}`;
+}
+
+function openPersonCard(personId) {
+  const candidate = allPeople.find(person => person.Person_ID === personId && person.DataType === 'candidate');
+  const modal = document.getElementById('personCardModal');
+  const content = document.getElementById('personCardContent');
+  if (!candidate || !modal || !content) return;
+  content.innerHTML = renderPersonCardDetail(candidate);
+  modal.hidden = false;
+  document.body.classList.add('person-card-open');
+  modal.querySelector('.person-card-close')?.focus();
+}
+
+function closePersonCard() {
+  const modal = document.getElementById('personCardModal');
+  if (!modal) return;
+  modal.hidden = true;
+  document.body.classList.remove('person-card-open');
 }
 
 function renderOfficialCard(official) {
@@ -472,6 +551,8 @@ function initEventListeners() {
   const loadMore = document.getElementById('loadMorePeople');
   const hamburger = document.getElementById('hamburger');
   const mobileMenu = document.getElementById('mobileMenu');
+  const candidateGrid = document.getElementById('candidateGrid');
+  const personCardModal = document.getElementById('personCardModal');
 
   type?.addEventListener('change', () => {
     rebuildAllDropdowns();
@@ -492,6 +573,21 @@ function initEventListeners() {
   hqDate?.addEventListener('change', applyFilters);
   clear?.addEventListener('click', resetFilters);
   loadMore?.addEventListener('click', showMorePeople);
+  candidateGrid?.addEventListener('click', event => {
+    const trigger = event.target.closest('[data-person-card-id]');
+    if (trigger) openPersonCard(trigger.dataset.personCardId);
+  });
+  personCardModal?.addEventListener('click', event => {
+    const personTrigger = event.target.closest('[data-person-card-id]');
+    if (personTrigger) {
+      openPersonCard(personTrigger.dataset.personCardId);
+      return;
+    }
+    if (event.target.closest('[data-close-person-card]')) closePersonCard();
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') closePersonCard();
+  });
 
   let searchTimer;
   name?.addEventListener('input', () => {

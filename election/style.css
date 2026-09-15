@@ -1090,6 +1090,197 @@ img { max-width: 100%; display: block; }
   opacity: 0.68;
 }
 
+/* 人物卡本機試作：同一份模板套用候選人資料 */
+.btn-person-card {
+  background: rgba(125, 105, 146, 0.12);
+  border-color: rgba(173, 145, 196, 0.55);
+  color: #d8c4e8;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.person-card-modal[hidden] {
+  display: none;
+}
+
+.person-card-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.person-card-backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: rgba(18, 16, 20, 0.78);
+  cursor: pointer;
+}
+
+.person-card-dialog {
+  position: relative;
+  z-index: 1;
+  width: min(390px, 100%);
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  background: #fffdfb;
+  border: 1px solid #dbd3e3;
+  border-radius: 18px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
+  color: #2d2930;
+}
+
+.person-card-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  z-index: 2;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  background: rgba(45, 37, 51, 0.24);
+  color: #fff;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.person-detail-header {
+  padding: 26px 58px 24px 24px;
+  background: linear-gradient(135deg, #5c4a6d, #7d6992);
+  color: #fff;
+}
+
+.person-detail-region {
+  display: inline-flex;
+  margin-bottom: 14px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  font-size: 12px;
+}
+
+.person-detail-header h2 {
+  margin: 0 0 4px;
+  font-family: 'Noto Serif TC', serif;
+  font-size: 29px;
+  letter-spacing: 0.04em;
+}
+
+.person-detail-header p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 14px;
+}
+
+.person-detail-body {
+  padding: 14px 24px 4px;
+}
+
+.person-detail-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 11px 0;
+  border-bottom: 1px solid #eee9f0;
+  font-size: 14px;
+}
+
+.person-detail-row span {
+  flex: 0 0 84px;
+  color: #817888;
+}
+
+.person-detail-row strong {
+  text-align: right;
+  font-weight: 600;
+}
+
+.person-detail-event {
+  display: grid;
+  gap: 3px;
+  margin: 14px 24px 0;
+  padding: 14px 16px;
+  border: 1px solid #e3d8c4;
+  border-radius: 11px;
+  background: #faf6ee;
+}
+
+.person-detail-event span {
+  color: #89774f;
+  font-size: 12px;
+}
+
+.person-detail-event strong {
+  font-size: 15px;
+}
+
+.person-detail-event time {
+  color: #6e655a;
+  font-size: 13px;
+}
+
+.person-detail-event.is-upcoming {
+  border-left: 4px solid #7d6992;
+}
+
+.person-detail-action {
+  padding: 16px 24px 20px;
+}
+
+.person-detail-action .btn-line {
+  width: 100%;
+  min-height: 48px;
+}
+
+.person-detail-action small {
+  display: block;
+  margin-top: 8px;
+  color: #817888;
+  text-align: center;
+}
+
+.person-detail-more {
+  padding: 15px 24px 20px;
+  border-top: 1px solid #eee9f0;
+}
+
+.person-detail-more > span {
+  display: block;
+  margin-bottom: 10px;
+  color: #817888;
+  font-size: 12px;
+}
+
+.person-detail-more > div {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+}
+
+.person-detail-more button {
+  flex: 0 0 auto;
+  padding: 7px 13px;
+  border: 0;
+  border-radius: 999px;
+  background: #f0eaf3;
+  color: #5c4a6d;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+body.person-card-open {
+  overflow: hidden;
+}
+
 .btn-line-solid {
   display: inline-flex;
   align-items: center;
