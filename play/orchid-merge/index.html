@@ -56,6 +56,7 @@ h1{margin:2px 0 0;font-family:var(--round);font-weight:700;font-size:2.4rem;lett
 .cell{border-radius:14px;background:var(--bench);position:relative;min-width:0;overflow:hidden}
 .cell.full{background:#F7FBF8}
 .cell svg{position:absolute;inset:4% 6% 18%;width:88%;height:78%}
+.cell .character-img{position:absolute;inset:2% 4% 17%;width:92%;height:81%;object-fit:contain}
 .cell .nm{position:absolute;left:0;right:0;bottom:5%;text-align:center;font-family:var(--round);font-weight:700;font-size:clamp(.52rem,2.4vw,.72rem);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 3px}
 .cell[data-l="10"]{background:#FFF6DC}
 .cell[data-l="11"]{background:#FBE7A8}
@@ -87,7 +88,9 @@ h1{margin:2px 0 0;font-family:var(--round);font-weight:700;font-size:2.4rem;lett
 .shelf{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
 .card{background:#fff;border-radius:14px;padding:6px 4px 8px;text-align:center;font-size:.72rem;color:var(--leaf-soft)}
 .card svg{width:100%;height:auto;display:block}
+.card .character-img{width:100%;aspect-ratio:1;object-fit:contain;display:block}
 .card.no svg{filter:grayscale(1) brightness(1.15);opacity:.35}
+.card.no .character-img{filter:brightness(0);opacity:.12}
 .card.yes{color:var(--leaf);font-weight:500}
 .card.yes{cursor:pointer;border:0;font:inherit}
 .card.yes:focus-visible{outline:3px solid var(--orchid);outline-offset:2px}
@@ -102,6 +105,9 @@ h1{margin:2px 0 0;font-family:var(--round);font-weight:700;font-size:2.4rem;lett
 .detailbox{padding:20px;text-align:center;position:relative}
 .detailclose{position:absolute;right:12px;top:12px;border:0;background:var(--leaf);color:#fff;border-radius:50%;width:36px;height:36px;font-size:1.2rem}
 .detailart{width:220px;max-width:70%;margin:0 auto}
+.detailart .character-img{width:100%;display:block}
+.charwrap{position:relative;display:block}
+.charwrap.gold::after{content:'♛';position:absolute;right:8%;top:5%;width:25%;aspect-ratio:1;display:grid;place-items:center;border-radius:50%;background:var(--gold);color:#fff;font-size:clamp(14px,5vw,28px);box-shadow:0 2px 8px rgba(90,65,10,.25)}
 .detail h2{font-family:var(--round);font-size:1.7rem;margin:4px 0}
 .detail .accessory{color:var(--orchid);font-weight:700;margin:0 0 10px}
 .detail .personality{font-family:var(--round);font-size:1.05rem;margin:0 0 8px}
@@ -229,18 +235,18 @@ const LINE_OA='%40775yvfxq';
 /* ===================================== */
 const N=['小苗','中苗','大苗','抽梗','花苞','初開','單梗花','雙梗花','三梗花','珍藏花','鎮園蘭'];
 const CHARACTERS=[
-  {place:'北港',name:'北港蘭',slug:'beigang',accessory:'藝閣彩旗',secondary:'小鑼鼓',symbol:'🚩',personality:'一聽到鑼鼓聲就想出門',fact:'北港以藝閣、糕餅與麻油文化聞名，也是慶豐的老家。',color:'#FFE3A3',expression:'excited',weight:.35,route:'temple'},
-  {place:'虎尾',name:'虎尾蘭',slug:'huwei',accessory:'布袋戲帽',secondary:'迷你五分車',symbol:'🎭',personality:'一開口就自帶布袋戲口白',fact:'虎尾的布袋戲與糖業文化，都是地方重要記憶。',color:'#FFB59E',expression:'proud',weight:1,route:'plain'},
-  {place:'西螺',name:'西螺蘭',slug:'xiluo',accessory:'醬油小壺',secondary:'米粒腰包',symbol:'壺',personality:'每件事都要調到剛剛好',fact:'西螺以稻米和醬油聞名，也被稱為米醬小鎮。',color:'#EEF2FF',expression:'calm',weight:1,route:'plain'},
-  {place:'斗六',name:'斗六蘭',slug:'douliu',accessory:'文旦帽',secondary:'',symbol:'柚',personality:'中秋節最忙，平常最從容',fact:'斗六文旦果肉細緻香甜，是雲林具代表性的水果。',color:'#FFE0F0',expression:'calm',weight:1,route:'plain'},
-  {place:'古坑',name:'古坑蘭',slug:'gukeng',accessory:'咖啡杯',secondary:'咖啡葉',symbol:'☕',personality:'喝完咖啡才願意開花',fact:'古坑以咖啡、柳丁與山林休閒聞名。',color:'#FFD08A',expression:'sleepy',weight:1,route:'hill'},
-  {place:'口湖',name:'口湖蘭',slug:'kouhu',accessory:'烏魚子圍巾',secondary:'台灣鯛小包',symbol:'🐟',personality:'冬天才肯把珍藏拿出來',fact:'口湖盛產台灣鯛、烏魚子、鹹鴨蛋與小番茄。',color:'#C9F0C8',expression:'shy',weight:1,route:'coast'},
-  {place:'大埤',name:'大埤蘭',slug:'dapi',accessory:'酸菜葉披風',secondary:'',symbol:'菜',personality:'表情有點酸，熟了其實很溫柔',fact:'大埤酸菜是雲林具代表性的地方農產。',color:'#FF9E9E',expression:'serious',weight:1,route:'plain'},
-  {place:'元長',name:'元長蘭',slug:'yuanchang',accessory:'黑金剛花生帽',secondary:'',symbol:'🥜',personality:'緊張時會一直剝花生',fact:'元長的黑金剛花生，是地方鮮明的農產代表。',color:'#FFFFFF',expression:'shy',weight:1,route:'plain'},
-  {place:'水林',name:'水林蘭',slug:'shuilin',accessory:'黃金番薯背包',secondary:'',symbol:'🍠',personality:'曬過太陽，心裡就甜甜的',fact:'水林是臺灣重要的番薯產地，有番薯之鄉之稱。',color:'#D9C2F2',expression:'happy',weight:1,route:'coast'},
-  {place:'新港',name:'新港蘭',slug:'xingang',accessory:'糖紙蝴蝶結',secondary:'',symbol:'🍬',personality:'說話甜，但不會黏人',fact:'新港飴是嘉義新港流傳已久的地方甜點。',color:'#FFE066',expression:'happy',weight:1,route:'temple'},
-  {place:'東石',name:'東石蘭',slug:'dongshi',accessory:'蚵殼小帽',secondary:'潮汐水紋',symbol:'蚵',personality:'退潮後才慢慢探出頭',fact:'東石的養蚵文化與潮間帶景觀緊密相連。',color:'#E8506A',expression:'calm',weight:1,route:'coast'},
-  {place:'嘉義市',name:'嘉義市蘭',slug:'chiayi-city',accessory:'火雞肉飯碗',secondary:'木湯匙',symbol:'🍚',personality:'中午一到就準時消失',fact:'火雞肉飯是嘉義市廣為人知的庶民美食。',color:'#E8C39E',expression:'excited',weight:1,route:'hill'}
+  {place:'北港',name:'北港蘭',slug:'beigang',image:'characters/beigang.png',accessory:'藝閣彩旗',secondary:'小鑼鼓',symbol:'🚩',personality:'一聽到鑼鼓聲就想出門',fact:'北港以藝閣、糕餅與麻油文化聞名，也是慶豐的老家。',color:'#FFE3A3',expression:'excited',weight:.35,route:'temple'},
+  {place:'虎尾',name:'虎尾蘭',slug:'huwei',image:'characters/huwei.png',accessory:'布袋戲帽',secondary:'迷你五分車',symbol:'🎭',personality:'一開口就自帶布袋戲口白',fact:'虎尾的布袋戲與糖業文化，都是地方重要記憶。',color:'#FFB59E',expression:'proud',weight:1,route:'plain'},
+  {place:'西螺',name:'西螺蘭',slug:'xiluo',image:'characters/xiluo.png',accessory:'醬油小壺',secondary:'米粒腰包',symbol:'壺',personality:'每件事都要調到剛剛好',fact:'西螺以稻米和醬油聞名，也被稱為米醬小鎮。',color:'#EEF2FF',expression:'calm',weight:1,route:'plain'},
+  {place:'斗六',name:'斗六蘭',slug:'douliu',image:'characters/douliu.png',accessory:'文旦帽',secondary:'',symbol:'柚',personality:'中秋節最忙，平常最從容',fact:'斗六文旦果肉細緻香甜，是雲林具代表性的水果。',color:'#FFE0F0',expression:'calm',weight:1,route:'plain'},
+  {place:'古坑',name:'古坑蘭',slug:'gukeng',image:'characters/gukeng.png',accessory:'咖啡杯',secondary:'咖啡葉',symbol:'☕',personality:'喝完咖啡才願意開花',fact:'古坑以咖啡、柳丁與山林休閒聞名。',color:'#FFD08A',expression:'sleepy',weight:1,route:'hill'},
+  {place:'口湖',name:'口湖蘭',slug:'kouhu',image:'characters/kouhu.png',accessory:'烏魚子圍巾',secondary:'台灣鯛小包',symbol:'🐟',personality:'冬天才肯把珍藏拿出來',fact:'口湖盛產台灣鯛、烏魚子、鹹鴨蛋與小番茄。',color:'#C9F0C8',expression:'shy',weight:1,route:'coast'},
+  {place:'大埤',name:'大埤蘭',slug:'dapi',image:'characters/dapi.png',accessory:'酸菜葉披風',secondary:'',symbol:'菜',personality:'表情有點酸，熟了其實很溫柔',fact:'大埤酸菜是雲林具代表性的地方農產。',color:'#FF9E9E',expression:'serious',weight:1,route:'plain'},
+  {place:'元長',name:'元長蘭',slug:'yuanchang',image:'characters/yuanchang.png',accessory:'黑金剛花生帽',secondary:'',symbol:'🥜',personality:'緊張時會一直剝花生',fact:'元長的黑金剛花生，是地方鮮明的農產代表。',color:'#FFFFFF',expression:'shy',weight:1,route:'plain'},
+  {place:'水林',name:'水林蘭',slug:'shuilin',image:'characters/shuilin.png',accessory:'黃金番薯背包',secondary:'',symbol:'🍠',personality:'曬過太陽，心裡就甜甜的',fact:'水林是臺灣重要的番薯產地，有番薯之鄉之稱。',color:'#D9C2F2',expression:'happy',weight:1,route:'coast'},
+  {place:'新港',name:'新港蘭',slug:'xingang',image:'characters/xingang.png',accessory:'糖紙蝴蝶結',secondary:'',symbol:'🍬',personality:'說話甜，但不會黏人',fact:'新港飴是嘉義新港流傳已久的地方甜點。',color:'#FFE066',expression:'happy',weight:1,route:'temple'},
+  {place:'東石',name:'東石蘭',slug:'dongshi',image:'characters/dongshi.png',accessory:'蚵殼小帽',secondary:'潮汐水紋',symbol:'蚵',personality:'退潮後才慢慢探出頭',fact:'東石的養蚵文化與潮間帶景觀緊密相連。',color:'#E8506A',expression:'calm',weight:1,route:'coast'},
+  {place:'嘉義市',name:'嘉義市蘭',slug:'chiayi-city',image:'characters/chiayi-city.png',accessory:'火雞肉飯碗',secondary:'木湯匙',symbol:'🍚',personality:'中午一到就準時消失',fact:'火雞肉飯是嘉義市廣為人知的庶民美食。',color:'#E8C39E',expression:'excited',weight:1,route:'hill'}
 ];
 const ROUTES=[
   {id:'temple',name:'廟街線',places:['北港','新港']},
@@ -288,6 +294,7 @@ function characterFace(trait){
   return eye+mouth+brow+'<circle cx="24" cy="54" r="2.2" fill="#F3A5B8" opacity=".6"/><circle cx="40" cy="54" r="2.2" fill="#F3A5B8" opacity=".6"/>';
 }
 function accessory(trait){if(trait==null)return '';const c=CHARACTERS[trait],text=c.symbol.length<=2?c.symbol:c.symbol.slice(0,2);return `<g><circle cx="48" cy="17" r="8" fill="#FFF9E9" stroke="#E9B949" stroke-width="1"/><text x="48" y="20.2" text-anchor="middle" font-size="${text.length>1?5.7:9}" font-family="sans-serif" font-weight="700" fill="#1F4D3A">${text}</text></g>`}
+function characterMarkup(trait,gold=false){const c=CHARACTERS[trait];return `<span class="charwrap${gold?' gold':''}"><img class="character-img" src="${c.image}" alt="" width="512" height="512"></span>`}
 function art(level,trait,sk){
   const gold=level===11, p=level>=10&&trait!=null?TRAIT[trait]:PETAL[sk], l=LIP[sk];
   const pot=gold?'#E9B949':POT[sk];
@@ -318,7 +325,7 @@ function draw(merged=new Set(),spawned=null){
     const i=r*G+c,cell=document.createElement('div');
     cell.className='cell'+(v?' full':'')+(merged.has(i)?' merge':'')+(i===spawned?' spawn':'');
     cell.setAttribute('role','gridcell');
-    if(v){cell.dataset.l=v;const name=v>=10&&traits[r][c]!=null?C[traits[r][c]]:N[v-1];cell.setAttribute('aria-label',name);cell.innerHTML=art(v,traits[r][c],skin)+`<span class="nm">${name}</span>`}
+    if(v){cell.dataset.l=v;const name=v>=10&&traits[r][c]!=null?C[traits[r][c]]:N[v-1],visual=v>=10&&traits[r][c]!=null?characterMarkup(traits[r][c],v===11):art(v,traits[r][c],skin);cell.setAttribute('aria-label',name);cell.innerHTML=visual+`<span class="nm">${name}</span>`}
     else cell.setAttribute('aria-label','空格');
     host.append(cell)}));
   $('score').textContent=score.toLocaleString();$('highest').textContent=N[peak-1];
@@ -327,9 +334,9 @@ function drawCollection(){
   const dex=$('dex'),cab=$('cabinet');dex.replaceChildren();cab.replaceChildren();
   C.forEach((name,i)=>{
     const d=document.createElement(saved.seen[i]?'button':'div');d.className='card '+(saved.seen[i]?'yes':'no');
-    d.innerHTML=art(10,i,0)+(saved.seen[i]?name:'？？？');if(saved.seen[i]){d.type='button';d.setAttribute('aria-label','查看'+name);d.onclick=()=>openCharacter(i)}dex.append(d);
+    d.innerHTML=characterMarkup(i)+(saved.seen[i]?name:'？？？');if(saved.seen[i]){d.type='button';d.setAttribute('aria-label','查看'+name);d.onclick=()=>openCharacter(i)}dex.append(d);
     const k=document.createElement('div');const n=saved.counts[i];k.className='card '+(n?'yes':'no');
-    k.innerHTML=art(11,i,0)+(n?name+`<span class="count">×${n}</span>`:'空位');cab.append(k)});
+    k.innerHTML=characterMarkup(i,true)+(n?name+`<span class="count">×${n}</span>`:'空位');cab.append(k)});
   $('dexcount').textContent=saved.seen.filter(Boolean).length+'/12';
   const badges=$('routeBadges');badges.replaceChildren();
   ROUTES.forEach(route=>{const on=routeComplete(route);const b=document.createElement('span');b.className='badge'+(on?' on':'');b.textContent=(on?'✓ ':'○ ')+route.name;badges.append(b)});
@@ -343,7 +350,7 @@ function routeComplete(route){return route.places.every(place=>saved.seen[CHARAC
 function completedRoutes(){return new Set(ROUTES.filter(routeComplete).map(r=>r.id))}
 let detailIndex=null;
 function openCharacter(i){
-  const c=CHARACTERS[i];detailIndex=i;$('detailArt').innerHTML=art(10,i,0);$('detailName').textContent=c.name;
+  const c=CHARACTERS[i];detailIndex=i;$('detailArt').innerHTML=characterMarkup(i);$('detailName').textContent=c.name;
   $('detailAccessory').textContent=c.accessory+(c.secondary?'・'+c.secondary:'');$('detailPersonality').textContent=c.personality;$('detailFact').textContent=c.fact;
   const dialog=$('characterDetail');if(typeof dialog.showModal==='function')dialog.showModal();else dialog.setAttribute('open','');
 }
@@ -450,8 +457,10 @@ $('makeCard').onclick=async()=>{
   x.fillStyle='#C9DCCF';x.beginPath();x.roundRect?x.roundRect(60,180,600,440,40):x.rect(60,180,600,440);x.fill();
   x.textAlign='center';x.fillStyle='#5E7F6E';x.font='500 28px '+F;x.fillText('北港慶豐蘭園的溫室',W/2,78);
   x.fillStyle='#1F4D3A';x.font='700 64px '+F;x.fillText('合成蘭花',W/2,150);
-  const svg=art(peak,peakTrait(),skin).replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" ');
-  const img=new Image();await new Promise(ok=>{img.onload=ok;img.onerror=ok;img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)});
+  const trait=peakTrait(),img=new Image();let imgSrc;
+  if(peak>=10&&trait!=null)imgSrc=new URL(CHARACTERS[trait].image,location.href).href;
+  else{const svg=art(peak,trait,skin).replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" ');imgSrc='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)}
+  await new Promise(ok=>{img.onload=ok;img.onerror=ok;img.src=imgSrc});
   try{x.drawImage(img,160,190,400,400)}catch{}
   x.fillStyle='#1F4D3A';x.font='700 44px '+F;x.fillText((nick()?nick()+' ':'')+'長到「'+N[peak-1]+'」',W/2,690);
   x.fillStyle='#C2407A';x.font='700 76px '+F;x.fillText(score.toLocaleString()+' 分',W/2,782);
