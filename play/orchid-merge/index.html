@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>合成蘭花｜慶豐蘭園溫室</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chiron+GoRound+TC:wght@500;700&family=Noto+Sans+TC:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --glass:#E6F0EA; --leaf:#1F4D3A; --leaf-soft:#5E7F6E; --moss:#C9DCCF;
+  --orchid:#C2407A; --petal:#FFFFFF; --gold:#E9B949; --bench:#D5E4DA;
+  --round:'Chiron GoRound TC','Noto Sans TC',system-ui,sans-serif;
+  --sans:'Noto Sans TC',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;overscroll-behavior:none;background:var(--glass);color:var(--leaf);font-family:var(--sans)}
+body{padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+.wrap{max-width:460px;margin:auto;padding:18px 18px 40px}
+button{font:inherit;cursor:pointer;color:inherit}
+button:focus-visible{outline:3px solid var(--orchid);outline-offset:2px}
+
+.top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.place{margin:0;font-size:.8rem;color:var(--leaf-soft)}
+h1{margin:2px 0 0;font-family:var(--round);font-weight:700;font-size:2.4rem;letter-spacing:.02em;line-height:1.1}
+.icon-btn{border:0;background:var(--leaf);color:#fff;width:44px;height:44px;border-radius:50%;font-size:1.3rem;flex:none}
+
+.meta{display:flex;gap:18px;margin:14px 0 12px;font-size:.85rem;color:var(--leaf-soft)}
+.meta b{display:block;font-family:var(--round);font-size:1.35rem;color:var(--leaf);font-weight:700;position:relative}
+.plus{position:absolute;left:0;top:-4px;font-size:.9rem;color:var(--orchid);opacity:0;pointer-events:none}
+.plus.go{animation:rise .7s ease-out}
+@keyframes rise{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-18px)}}
+
+.skins{display:flex;gap:10px;margin-bottom:14px}
+.skin{border:0;background:none;padding:0;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.72rem;color:var(--leaf-soft)}
+.skin i{width:30px;height:30px;border-radius:50%;display:block;border:2px solid transparent;box-shadow:inset 0 0 0 1px rgba(31,77,58,.15)}
+.skin[aria-pressed=true] i{border-color:var(--leaf)}
+.skin[aria-pressed=true]{color:var(--leaf)}
+.skin:disabled{opacity:.45;cursor:default}
+
+.stage{position:relative;margin:0 6px}
+.board{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;padding:8px;border-radius:22px;background:var(--moss);aspect-ratio:1;touch-action:none;user-select:none;-webkit-user-select:none}
+.cell{border-radius:14px;background:var(--bench);position:relative;min-width:0;overflow:hidden}
+.cell.full{background:#F7FBF8}
+.cell svg{position:absolute;inset:4% 6% 18%;width:88%;height:78%}
+.cell .nm{position:absolute;left:0;right:0;bottom:5%;text-align:center;font-family:var(--round);font-weight:700;font-size:clamp(.52rem,2.4vw,.72rem);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 3px}
+.cell[data-l="10"]{background:#FFF6DC}
+.cell[data-l="11"]{background:#FBE7A8}
+.cell.spawn{animation:spawn .18s ease-out}
+.cell.merge{animation:merge .22s ease-out}
+@keyframes spawn{0%{transform:scale(.5);opacity:0}100%{transform:scale(1);opacity:1}}
+@keyframes merge{0%{transform:scale(1)}45%{transform:scale(1.13)}100%{transform:scale(1)}}
+
+.end{position:absolute;inset:0;border-radius:22px;background:rgba(230,240,234,.93);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px}
+.end[hidden]{display:none}
+.end h2{font-family:var(--round);margin:0 0 6px;font-size:1.5rem}
+.end p{margin:0 0 14px;color:var(--leaf-soft)}
+.primary{border:0;background:var(--leaf);color:#fff;border-radius:999px;padding:11px 22px;font-weight:500}
+
+.hint{font-size:.8rem;color:var(--leaf-soft);text-align:center;margin:10px 0 0}
+.arrows{display:none;justify-content:center;gap:6px;margin-top:10px}
+.arrows button{width:44px;height:38px;border-radius:10px;border:1px solid var(--moss);background:#fff}
+@media (hover:hover) and (pointer:fine){.arrows{display:flex}}
+
+.toast{position:fixed;left:50%;top:calc(14px + env(safe-area-inset-top));transform:translate(-50%,-140%);background:var(--leaf);color:#fff;border-radius:999px;padding:10px 18px;font-size:.9rem;transition:transform .3s ease;z-index:5;white-space:nowrap}
+.toast.show{transform:translate(-50%,0)}
+
+.tabs{display:flex;gap:6px;margin:26px 0 0;border-bottom:1px solid var(--moss)}
+.tab{border:0;background:none;padding:10px 12px;font-size:.92rem;color:var(--leaf-soft);border-bottom:3px solid transparent;margin-bottom:-1px}
+.tab[aria-selected=true]{color:var(--leaf);border-bottom-color:var(--orchid);font-weight:500}
+.pane{padding:16px 0}
+.pane[hidden]{display:none}
+.pane>p{margin:0 0 12px;font-size:.85rem;color:var(--leaf-soft);line-height:1.6}
+.shelf{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.card{background:#fff;border-radius:14px;padding:6px 4px 8px;text-align:center;font-size:.72rem;color:var(--leaf-soft)}
+.card svg{width:100%;height:auto;display:block}
+.card.no svg{filter:grayscale(1) brightness(1.15);opacity:.35}
+.card.yes{color:var(--leaf);font-weight:500}
+.count{display:inline-block;background:var(--gold);color:var(--leaf);border-radius:999px;padding:0 6px;margin-left:2px;font-size:.68rem}
+
+.save label{display:block;font-size:.85rem;margin:16px 0 6px}
+.save input{width:100%;font:inherit;padding:11px 12px;border:1px solid var(--moss);border-radius:12px;background:#fff;color:var(--leaf)}
+.save .row{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.ghost{border:1px solid var(--leaf);background:none;border-radius:999px;padding:9px 16px}
+.codebox{margin-top:12px;background:#fff;border-radius:12px;padding:12px;font-family:var(--round);font-size:1.05rem;word-break:break-all}
+.codebox[hidden],#line[hidden]{display:none}
+#line{display:inline-block;margin-top:10px;background:#06C755;color:#fff;text-decoration:none;border-radius:999px;padding:10px 18px;font-size:.9rem}
+.msg{font-size:.85rem;margin:10px 0 0;min-height:1.2em}
+
+
+.vs{background:#FBE3EE;color:#7A1F4A;border-radius:14px;padding:10px 14px;margin:0 6px 12px;font-size:.9rem;line-height:1.5}
+.vs[hidden],.cardout[hidden]{display:none}
+.endbtns{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+#nick{font:inherit;width:100%;max-width:220px;padding:9px 12px;border:1px solid var(--moss);border-radius:12px;margin:0 0 12px;text-align:center;background:#fff;color:var(--leaf)}
+.cardout{margin:16px 6px 0;text-align:center}
+.cardout img{width:100%;border-radius:18px;display:block}
+.cardout p{font-size:.8rem;color:var(--leaf-soft);margin:8px 0}
+.unlock{margin-top:22px;padding-top:16px;border-top:1px solid var(--moss)}
+.unlock a{display:inline-block;background:#06C755;color:#fff;text-decoration:none;border-radius:999px;padding:9px 16px;font-size:.88rem}
+footer{margin-top:28px;font-size:.78rem;color:var(--leaf-soft);text-align:center;line-height:1.7}
+footer a{color:var(--leaf)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="top">
+    <div>
+      <p class="place">北港慶豐蘭園的溫室</p>
+      <h1>合成蘭花</h1>
+    </div>
+    <button id="restart" class="icon-btn" aria-label="重新開始">↻</button>
+  </div>
+
+  <div class="meta">
+    <div>分數<b><span id="score">0</span><span id="plus" class="plus"></span></b></div>
+    <div>長到<b id="highest">小苗</b></div>
+    <div>圖鑑<b id="dexcount">0/12</b></div>
+  </div>
+
+  <div id="skins" class="skins" aria-label="花盆造型"></div>
+
+  <div id="vs" class="vs" hidden></div>
+  <div class="stage">
+    <div id="board" class="board" role="grid" aria-label="五乘五蘭花盤面"></div>
+    <div id="end" class="end" hidden>
+      <h2>溫室滿了</h2>
+      <p id="result"></p>
+      <input id="nick" maxlength="8" placeholder="你的暱稱（可以不填）" autocomplete="off">
+      <div class="endbtns"><button id="again" class="primary">再種一盆</button><button id="dare" class="ghost">下戰帖給朋友</button><button id="makeCard" class="ghost">產生成績圖卡</button></div>
+    </div>
+  </div>
+  <p class="hint">往任何方向滑，兩盆一樣的會長成下一階</p>
+  <section id="cardOut" class="cardout" hidden>
+    <img id="cardImg" alt="成績圖卡">
+    <p>長按圖片可以儲存，或直接分享</p>
+    <button id="shareCard" class="primary">分享圖卡</button>
+  </section>
+  <div class="arrows">
+    <button data-dir="left" aria-label="向左">←</button>
+    <button data-dir="up" aria-label="向上">↑</button>
+    <button data-dir="down" aria-label="向下">↓</button>
+    <button data-dir="right" aria-label="向右">→</button>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-pane="dexPane">圖鑑</button>
+    <button class="tab" role="tab" aria-selected="false" data-pane="cabPane">展示櫃</button>
+    <button class="tab" role="tab" aria-selected="false" data-pane="savePane">保存收藏</button>
+  </div>
+  <section id="dexPane" class="pane">
+    <p>長到第 10 階時，會遇見一位新夥伴。每位只要遇見一次就會留在這裡。</p>
+    <div id="dex" class="shelf"></div>
+  </section>
+  <section id="cabPane" class="pane" hidden>
+    <p>兩位第 10 階的夥伴合在一起，會變成鎮園蘭，永久擺在櫃子上。</p>
+    <div id="cabinet" class="shelf"></div>
+  </section>
+  <section id="savePane" class="pane save" hidden>
+    <p>收藏存在這支手機的瀏覽器裡。換手機、清除資料，或從 LINE 裡打開，都會看不到。先存一組收藏碼比較保險。</p>
+    <button id="backup" class="primary">產生收藏碼</button>
+    <div id="codebox" class="codebox" hidden></div>
+    <a id="line" hidden target="_blank" rel="noopener">傳到慶豐官方 LINE 保管</a>
+    <label for="restore">換手機了？輸入收藏碼</label>
+    <input id="restore" placeholder="QF1-…" spellcheck="false" autocomplete="off">
+    <div class="row"><button id="import" class="ghost">還原收藏</button></div>
+    <p id="message" class="msg" role="status"></p>
+    <div class="unlock">
+      <p style="font-size:.85rem;color:var(--leaf-soft);margin:0 0 10px;line-height:1.6">加入慶豐官方 LINE，歡迎訊息裡有一組解鎖碼，可以打開限定的「慶豐」花盆。</p>
+      <a id="lineAdd" href="https://line.me/R/ti/p/%40775yvfxq" target="_blank" rel="noopener">加入官方 LINE</a>
+      <label for="unlockCode">輸入解鎖碼</label>
+      <input id="unlockCode" placeholder="解鎖碼" autocomplete="off" spellcheck="false">
+      <div class="row"><button id="unlockBtn" class="ghost">解鎖花盆</button></div>
+    </div>
+  </section>
+
+  <footer>這座溫室是遊戲。真的蘭花在雲林北港，慶豐蘭園種了 26 年。<br><a id="lineFoot" href="https://line.me/R/ti/p/%40775yvfxq" target="_blank" rel="noopener">加入官方 LINE</a></footer>
+</main>
+<div id="toast" class="toast" role="status"></div>
+
+<script>
+(()=>{'use strict';
+/* ===== 設定區：上線前只需要改這裡 ===== */
+const GA_ID='';                 // Google Analytics 評估 ID（例：G-XXXXXXX），留空就不統計
+const LINE_UNLOCK_CODE='QF2026'; // 要和官方 LINE 歡迎訊息裡寫的解鎖碼一樣
+const LINE_OA='%40775yvfxq';
+/* ===================================== */
+const N=['小苗','中苗','大苗','抽梗','花苞','初開','單梗花','雙梗花','三梗花','珍藏花','鎮園蘭'];
+const C=['晨光','晚霞','月白','星點','蜜糖','青芽','珊瑚','雪絮','紫雲','金雨','紅豆','小鹿'];
+const S=['白雪','紅運','黃金','斑點','慶豐'];
+const PETAL=['#FFFFFF','#F0708A','#FFD466','#F6DCEB','#FFFFFF'];
+const LIP=['#C2407A','#9E2240','#C27A12','#A8387A','#1F4D3A'];
+const POT=['#F4EFE6','#F7D9D2','#F6E7B8','#EADDF0','#9CC9AA'];
+const TRAIT=['#FFE3A3','#FFB59E','#EEF2FF','#FFE0F0','#FFD08A','#C9F0C8','#FF9E9E','#FFFFFF','#D9C2F2','#FFE066','#E8506A','#E8C39E'];
+const G=5;
+const $=id=>document.getElementById(id);
+const KEY='qf-merge-preview-v1';
+const params=new URLSearchParams(location.search);
+const SRC=(params.get('src')||'').replace(/[^\w-]/g,'').slice(0,20);
+const store={get(k){try{return localStorage.getItem(k)}catch{return null}},set(k,v){try{localStorage.setItem(k,v)}catch{}}};
+let lineUnlocked=store.get('qf-merge-line')==='1';
+if(GA_ID){const g=document.createElement('script');g.async=true;g.src='https://www.googletagmanager.com/gtag/js?id='+GA_ID;document.head.append(g);window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag('js',new Date());gtag('config',GA_ID)}
+function track(e,p={}){try{if(window.gtag)gtag('event',e,Object.assign({src:SRC||'direct'},p))}catch{}}
+const lineMsg=t=>'https://line.me/R/oaMessage/'+LINE_OA+'/?'+encodeURIComponent(t+'｜來源:merge-game'+(SRC?'-'+SRC:''));
+const vsScore=parseInt(params.get('vs'),10),vsLv=parseInt(params.get('lv'),10),vsName=(params.get('n')||'').trim().slice(0,8)||'朋友';
+const hasVs=Number.isSafeInteger(vsScore)&&vsScore>0&&vsLv>=1&&vsLv<=11;
+let board,traits,score,peak,ended,skin=0,sessionPeak=1;
+const empty=()=>({seen:Array(12).fill(false),counts:Array(12).fill(0),unlocked:0});
+let saved;try{saved=JSON.parse(localStorage.getItem(KEY))||empty()}catch{saved=empty()}
+function clean(x){const d=empty();if(!x||!Array.isArray(x.seen)||!Array.isArray(x.counts))return d;d.seen=d.seen.map((_,i)=>x.seen[i]===true);d.counts=d.counts.map((_,i)=>Number.isSafeInteger(x.counts[i])&&x.counts[i]>=0?x.counts[i]:0);d.counts.forEach((n,i)=>{if(n)d.seen[i]=true});d.unlocked=Number.isInteger(x.unlocked)?Math.max(0,Math.min(3,x.unlocked)):0;return d}
+saved=clean(saved);
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(saved))}catch{}}
+function emptyBoard(){return Array.from({length:G},()=>Array(G).fill(0))}
+
+/* 角色圖：每一階都是同一個有臉的花盆，上面的植物隨階段長大 */
+function flower(x,y,r,p,l){return `<g transform="translate(${x} ${y})"><ellipse cx="0" cy="${-r*.55}" rx="${r*.4}" ry="${r*.55}" fill="${p}" stroke="rgba(31,77,58,.18)" stroke-width=".6"/><ellipse cx="${-r*.45}" cy="${r*.45}" rx="${r*.3}" ry="${r*.5}" transform="rotate(35 ${-r*.45} ${r*.45})" fill="${p}" stroke="rgba(31,77,58,.18)" stroke-width=".6"/><ellipse cx="${r*.45}" cy="${r*.45}" rx="${r*.3}" ry="${r*.5}" transform="rotate(-35 ${r*.45} ${r*.45})" fill="${p}" stroke="rgba(31,77,58,.18)" stroke-width=".6"/><ellipse cx="${-r*.58}" cy="0" rx="${r*.58}" ry="${r*.5}" fill="${p}" stroke="rgba(31,77,58,.18)" stroke-width=".6"/><ellipse cx="${r*.58}" cy="0" rx="${r*.58}" ry="${r*.5}" fill="${p}" stroke="rgba(31,77,58,.18)" stroke-width=".6"/><circle r="${r*.24}" fill="${l}"/></g>`}
+function art(level,trait,sk){
+  const gold=level===11, p=level>=10&&trait!=null?TRAIT[trait]:PETAL[sk], l=LIP[sk];
+  const pot=gold?'#E9B949':POT[sk];
+  let g='';
+  const lv=level;
+  if(lv>=1)g+=`<ellipse cx="${lv>=3?22:25}" cy="41" rx="${lv>=3?11:8}" ry="4.2" transform="rotate(-18 24 41)" fill="#5E9E6E"/>`;
+  if(lv>=2)g+=`<ellipse cx="${lv>=3?42:39}" cy="41" rx="${lv>=3?11:8}" ry="4.2" transform="rotate(18 40 41)" fill="#4C8A5C"/>`;
+  if(lv>=3)g+=`<ellipse cx="32" cy="39" rx="7" ry="3.6" fill="#6DB07C"/>`;
+  const st=(x2,y2)=>`<path d="M32 40 Q${(32+x2)/2-3} ${y2+8} ${x2} ${y2}" fill="none" stroke="#3E7A4E" stroke-width="1.6" stroke-linecap="round"/>`;
+  if(lv===4)g+=st(38,20);
+  if(lv===5){g+=st(40,14);g+=`<circle cx="40" cy="14" r="2.4" fill="#BFE0B0"/><circle cx="37.5" cy="18.5" r="2" fill="#BFE0B0"/><circle cx="35.5" cy="23" r="1.7" fill="#BFE0B0"/>`}
+  if(lv===6){g+=st(40,16);g+=flower(41,15,8,p,l)}
+  if(lv===7){g+=st(42,10);g+=flower(36,24,5.5,p,l)+flower(40,16,6,p,l)+flower(44,8,6.2,p,l)}
+  if(lv===8){g+=st(44,12)+st(20,14);g+=flower(40,22,5.2,p,l)+flower(45,11,5.8,p,l)+flower(24,23,5.2,p,l)+flower(19,13,5.8,p,l)}
+  if(lv===9){g+=st(46,14)+st(18,16)+st(32,6);g+=flower(46,13,5.4,p,l)+flower(18,15,5.4,p,l)+flower(32,7,5.8,p,l)+flower(40,24,4.6,p,l)+flower(24,25,4.6,p,l)}
+  if(lv>=10){g+=st(32,18);g+=flower(32,19,13,p,l);g+=`<path d="M52 8 l1.5 3.5 3.5 1.5 -3.5 1.5 -1.5 3.5 -1.5 -3.5 -3.5 -1.5 3.5 -1.5z" fill="#E9B949"/>`}
+  if(lv===11)g+=`<path d="M24 6 L27 1 L32 5 L37 1 L40 6 L38 9 H26 Z" fill="#E9B949" stroke="#B88A1E" stroke-width=".6"/>`;
+  const face=`<circle cx="27.5" cy="51" r="1.9" fill="#2A3B30"/><circle cx="36.5" cy="51" r="1.9" fill="#2A3B30"/><path d="M29.6 54.2 Q32 56.4 34.4 54.2" fill="none" stroke="#2A3B30" stroke-width="1.2" stroke-linecap="round"/><circle cx="24" cy="54" r="2.2" fill="#F3A5B8" opacity=".6"/><circle cx="40" cy="54" r="2.2" fill="#F3A5B8" opacity=".6"/>`;
+  const dots=sk===3&&lv<10?`<circle cx="22" cy="47" r="1.3" fill="#C99AD6"/><circle cx="43" cy="58" r="1.1" fill="#C99AD6"/><circle cx="41" cy="46" r="1" fill="#C99AD6"/>`:'';
+  return `<svg viewBox="0 0 64 64" aria-hidden="true">${g}<rect x="15" y="41" width="34" height="6" rx="3" fill="${pot}" stroke="rgba(31,77,58,.25)" stroke-width=".8"/><path d="M17 46 H47 L43.5 61 H20.5 Z" fill="${pot}" stroke="rgba(31,77,58,.25)" stroke-width=".8"/>${dots}${face}</svg>`;
+}
+
+function spawn(){const open=[];board.forEach((row,r)=>row.forEach((v,c)=>{if(!v)open.push([r,c])}));if(!open.length)return null;const [r,c]=open[Math.floor(Math.random()*open.length)];board[r][c]=Math.random()<.9?1:2;traits[r][c]=null;peak=Math.max(peak,board[r][c]);return r*G+c}
+function canMove(){for(let r=0;r<G;r++)for(let c=0;c<G;c++){let v=board[r][c];if(!v||v<11&&((r<G-1&&board[r+1][c]===v)||(c<G-1&&board[r][c+1]===v)))return true}return false}
+function draw(merged=new Set(),spawned=null){
+  const host=$('board');host.replaceChildren();
+  board.forEach((row,r)=>row.forEach((v,c)=>{
+    const i=r*G+c,cell=document.createElement('div');
+    cell.className='cell'+(v?' full':'')+(merged.has(i)?' merge':'')+(i===spawned?' spawn':'');
+    cell.setAttribute('role','gridcell');
+    if(v){cell.dataset.l=v;const name=v>=10&&traits[r][c]!=null?C[traits[r][c]]:N[v-1];cell.setAttribute('aria-label',name);cell.innerHTML=art(v,traits[r][c],skin)+`<span class="nm">${name}</span>`}
+    else cell.setAttribute('aria-label','空格');
+    host.append(cell)}));
+  $('score').textContent=score.toLocaleString();$('highest').textContent=N[peak-1];
+}
+function drawCollection(){
+  const dex=$('dex'),cab=$('cabinet');dex.replaceChildren();cab.replaceChildren();
+  C.forEach((name,i)=>{
+    const d=document.createElement('div');d.className='card '+(saved.seen[i]?'yes':'no');
+    d.innerHTML=art(10,i,0)+(saved.seen[i]?name:'？？？');dex.append(d);
+    const k=document.createElement('div');const n=saved.counts[i];k.className='card '+(n?'yes':'no');
+    k.innerHTML=art(11,i,0)+(n?name+`<span class="count">×${n}</span>`:'空位');cab.append(k)});
+  $('dexcount').textContent=saved.seen.filter(Boolean).length+'/12';
+  const sk=$('skins');sk.replaceChildren();
+  S.forEach((name,i)=>{const b=document.createElement('button');b.className='skin';b.disabled=i<4?i>saved.unlocked:!lineUnlocked;b.setAttribute('aria-pressed',String(i===skin));
+    b.innerHTML=`<i style="background:${POT[i]}"></i>${b.disabled?'🔒':name}`;
+    if(b.disabled)b.title=i<4?'用任一造型長出三梗花就能解鎖':'加入慶豐官方 LINE 取得解鎖碼';
+    b.onclick=()=>{skin=i;drawCollection();draw()};sk.append(b)});
+}
+let toastTimer;
+function toast(t){const el=$('toast');el.textContent=t;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),1800)}
+function plus(n){if(!n)return;const el=$('plus');el.textContent='+'+n;el.classList.remove('go');void el.offsetWidth;el.classList.add('go')}
+
+function move(dir){
+  if(ended)return;
+  let next=emptyBoard(),nt=emptyBoard(),changed=false,add=0,ninth=0,tens=[],elevens=[];const merged=new Set();
+  for(let axis=0;axis<G;axis++){
+    let coords=Array.from({length:G},(_,i)=>dir==='left'?[axis,i]:dir==='right'?[axis,G-1-i]:dir==='up'?[i,axis]:[G-1-i,axis]),
+        arr=coords.map(([r,c])=>({v:board[r][c],t:traits[r][c]})).filter(x=>x.v),out=[];
+    for(let j=0;j<arr.length;j++){
+      if(arr[j].v<11&&arr[j+1]?.v===arr[j].v){
+        let level=arr[j].v+1,t=level===10?Math.floor(Math.random()*12):level===11?(Math.random()<.5?arr[j].t:arr[j+1].t):null;
+        out.push({v:level,t,m:true});add+=2**level;if(level===9)ninth++;if(level===10)tens.push(t);if(level===11)elevens.push(t);j++;
+      }else out.push(arr[j]);
+    }
+    while(out.length<G)out.push({v:0,t:null});
+    coords.forEach(([r,c],i)=>{next[r][c]=out[i].v;nt[r][c]=out[i].t;if(out[i].m)merged.add(r*G+c);if(next[r][c]!==board[r][c])changed=true});
+  }
+  if(!changed)return;
+  board=next;traits=nt;score+=add;plus(add);
+  board.forEach(row=>row.forEach(v=>peak=Math.max(peak,v)));
+  const newFriends=tens.filter(i=>!saved.seen[i]);
+  tens.forEach(i=>saved.seen[i]=true);
+  elevens.forEach(i=>{if(i!=null){saved.counts[i]++;saved.seen[i]=true}});
+  let unlockedNow=false;if(ninth&&saved.unlocked<3){saved.unlocked++;unlockedNow=true}
+  if(tens.length||elevens.length||ninth){persist();drawCollection()}
+  if(elevens.length)toast('鎮園蘭擺上展示櫃了');
+  else if(newFriends.length)toast('遇見新夥伴：'+C[newFriends[0]]);
+  else if(unlockedNow)toast('解鎖新花盆：'+S[saved.unlocked]);
+  else if(peak>sessionPeak&&peak>=4)toast('長成了：'+N[peak-1]);
+  sessionPeak=Math.max(sessionPeak,peak);
+  const sp=spawn();draw(merged,sp);
+  if(!canMove()){ended=true;let t='這一盆長到「'+N[peak-1]+'」，分數 '+score.toLocaleString();
+    if(hasVs)t+=score>vsScore?'。你贏過'+vsName+'了！':'。還差'+vsName+' '+(vsScore-score).toLocaleString()+' 分';
+    $('result').textContent=t;$('end').hidden=false;track('game_over',{level:peak,score})}
+}
+function start(){$('cardOut').hidden=true;track('game_start');board=emptyBoard();traits=emptyBoard();score=0;peak=1;sessionPeak=1;ended=false;$('end').hidden=true;spawn();const b=spawn();draw(new Set(),b);drawCollection()}
+
+let startXY=null;const host=$('board');
+host.addEventListener('touchstart',e=>{if(e.touches.length===1)startXY=[e.touches[0].clientX,e.touches[0].clientY]},{passive:true});
+host.addEventListener('touchmove',e=>{if(startXY&&e.cancelable)e.preventDefault()},{passive:false});
+host.addEventListener('touchend',e=>{if(!startXY)return;const dx=e.changedTouches[0].clientX-startXY[0],dy=e.changedTouches[0].clientY-startXY[1];startXY=null;if(Math.max(Math.abs(dx),Math.abs(dy))<24)return;move(Math.abs(dx)>Math.abs(dy)?dx>0?'right':'left':dy>0?'down':'up')});
+host.addEventListener('touchcancel',()=>startXY=null);
+document.addEventListener('keydown',e=>{const d={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right'}[e.key];if(d){e.preventDefault();move(d)}});
+document.querySelectorAll('[data-dir]').forEach(b=>b.onclick=()=>move(b.dataset.dir));
+$('restart').onclick=$('again').onclick=start;
+
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>{const on=x===t;x.setAttribute('aria-selected',String(on));$(x.dataset.pane).hidden=!on})});
+
+function check(s){let x=17;for(const ch of s)x=(x*31+ch.charCodeAt(0))%1296;return x.toString(36).toUpperCase().padStart(2,'0')}
+function encode(x){const mask=x.seen.reduce((a,v,i)=>a|(v?1<<i:0),0).toString(36).toUpperCase().padStart(3,'0');const payload=mask+'.'+x.unlocked.toString(36).toUpperCase()+'.'+x.counts.map(v=>v.toString(36).toUpperCase()).join('.');return 'QF1-'+payload+'-'+check(payload)}
+function decode(input){const m=/^QF1-([0-9A-Z.]+)-([0-9A-Z]{2})$/.exec(input.trim().toUpperCase());if(!m||m[2]!==check(m[1]))throw Error();const p=m[1].split('.');if(p.length!==14||p.some(x=>!/^[0-9A-Z]+$/.test(x)))throw Error();let n=p.map(x=>parseInt(x,36));if(n.some(x=>!Number.isSafeInteger(x))||n[0]>4095||n[1]>3)throw Error();return clean({seen:Array.from({length:12},(_,i)=>Boolean(n[0]&(1<<i))),unlocked:n[1],counts:n.slice(2)})}
+$('backup').onclick=()=>{const code=encode(saved);$('codebox').textContent=code;$('codebox').hidden=false;$('line').href=lineMsg('我的收藏碼：'+code);$('line').hidden=false;$('message').textContent='長按上面的碼可以複製，或直接傳到官方 LINE。'};
+$('import').onclick=()=>{try{const incoming=decode($('restore').value);saved.seen=saved.seen.map((v,i)=>v||incoming.seen[i]);saved.counts=saved.counts.map((v,i)=>Math.max(v,incoming.counts[i]));saved.unlocked=Math.max(saved.unlocked,incoming.unlocked);persist();drawCollection();draw();$('message').textContent='收藏還原好了。'}catch{$('message').textContent='這組收藏碼對不上，檢查一下有沒有打錯字。'}};
+
+/* 挑戰橫幅 */
+if(hasVs){$('vs').textContent=vsName+'在溫室裡長到「'+N[vsLv-1]+'」，拿了 '+vsScore.toLocaleString()+' 分。換你了。';$('vs').hidden=false}
+
+/* 暱稱 */
+$('nick').value=store.get('qf-merge-nick')||'';
+$('nick').oninput=()=>store.set('qf-merge-nick',$('nick').value.trim().slice(0,8));
+const nick=()=>$('nick').value.trim().slice(0,8);
+const pageUrl=()=>location.origin+location.pathname;
+const brag=()=>(nick()||'我')+'在慶豐的溫室長到「'+N[peak-1]+'」，拿了 '+score.toLocaleString()+' 分，你能贏我嗎？';
+
+/* 下戰帖 */
+$('dare').onclick=async()=>{
+  const url=pageUrl()+'?vs='+score+'&lv='+peak+'&n='+encodeURIComponent(nick())+'&src=dare';
+  track('share_challenge',{level:peak,score});
+  if(navigator.share){try{await navigator.share({text:brag(),url})}catch{}return}
+  try{await navigator.clipboard.writeText(brag()+' '+url);toast('已複製，貼給朋友吧')}catch{prompt('複製這段傳給朋友',brag()+' '+url)}
+};
+
+/* 成績圖卡 */
+let cardBlob=null;
+function peakTrait(){for(let r=0;r<G;r++)for(let c=0;c<G;c++)if(board[r][c]===peak)return traits[r][c];return null}
+$('makeCard').onclick=async()=>{
+  const W=720,H=900,cv=document.createElement('canvas');cv.width=W;cv.height=H;const x=cv.getContext('2d');
+  try{if(document.fonts)await document.fonts.ready}catch{}
+  const F='"Chiron GoRound TC","Noto Sans TC",sans-serif';
+  x.fillStyle='#E6F0EA';x.fillRect(0,0,W,H);
+  x.fillStyle='#C9DCCF';x.beginPath();x.roundRect?x.roundRect(60,180,600,440,40):x.rect(60,180,600,440);x.fill();
+  x.textAlign='center';x.fillStyle='#5E7F6E';x.font='500 28px '+F;x.fillText('北港慶豐蘭園的溫室',W/2,78);
+  x.fillStyle='#1F4D3A';x.font='700 64px '+F;x.fillText('合成蘭花',W/2,150);
+  const svg=art(peak,peakTrait(),skin).replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" ');
+  const img=new Image();await new Promise(ok=>{img.onload=ok;img.onerror=ok;img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)});
+  try{x.drawImage(img,160,190,400,400)}catch{}
+  x.fillStyle='#1F4D3A';x.font='700 44px '+F;x.fillText((nick()?nick()+' ':'')+'長到「'+N[peak-1]+'」',W/2,690);
+  x.fillStyle='#C2407A';x.font='700 76px '+F;x.fillText(score.toLocaleString()+' 分',W/2,782);
+  x.fillStyle='#5E7F6E';x.font='500 28px '+F;x.fillText('你能贏我嗎？ '+location.host+location.pathname,W/2,850);
+  cv.toBlob(b=>{if(!b)return;cardBlob=b;$('cardImg').src=URL.createObjectURL(b);$('cardOut').hidden=false;$('cardOut').scrollIntoView({behavior:'smooth',block:'center'})},'image/png');
+  track('make_card',{level:peak,score});
+};
+$('shareCard').onclick=async()=>{
+  if(!cardBlob)return;const file=new File([cardBlob],'orchid-score.png',{type:'image/png'});
+  track('share_card');
+  if(navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],text:brag(),url:pageUrl()+'?src=card'})}catch{}}
+  else toast('長按圖片就能儲存');
+};
+
+/* 官方 LINE 解鎖限定花盆 */
+$('unlockBtn').onclick=()=>{
+  if($('unlockCode').value.trim().toUpperCase()===LINE_UNLOCK_CODE.toUpperCase()){lineUnlocked=true;store.set('qf-merge-line','1');skin=4;drawCollection();draw();toast('解鎖了：慶豐花盆');track('line_unlock')}
+  else toast('解鎖碼不對，看一下官方 LINE 的歡迎訊息');
+};
+['lineAdd','lineFoot','line'].forEach(id=>$(id).addEventListener('click',()=>track('line_click',{from:id})));
+
+start();
+})();
+</script>
+</body>
+</html>
