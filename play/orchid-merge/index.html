@@ -89,7 +89,23 @@ h1{margin:2px 0 0;font-family:var(--round);font-weight:700;font-size:2.4rem;lett
 .card svg{width:100%;height:auto;display:block}
 .card.no svg{filter:grayscale(1) brightness(1.15);opacity:.35}
 .card.yes{color:var(--leaf);font-weight:500}
+.card.yes{cursor:pointer;border:0;font:inherit}
+.card.yes:focus-visible{outline:3px solid var(--orchid);outline-offset:2px}
 .count{display:inline-block;background:var(--gold);color:var(--leaf);border-radius:999px;padding:0 6px;margin-left:2px;font-size:.68rem}
+.badges{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 14px}
+.badge{border:1px solid var(--moss);background:rgba(255,255,255,.55);color:var(--leaf-soft);border-radius:999px;padding:6px 10px;font-size:.75rem}
+.badge.on{border-color:var(--gold);background:#FFF6DC;color:var(--leaf);font-weight:700}
+.dexnote{font-size:.72rem!important;margin:18px 0 0!important;color:var(--leaf-soft)!important}
+
+.detail{border:0;border-radius:24px;padding:0;width:min(390px,calc(100% - 28px));color:var(--leaf);background:#F7FBF8;box-shadow:0 20px 60px rgba(31,77,58,.28)}
+.detail::backdrop{background:rgba(20,45,34,.55)}
+.detailbox{padding:20px;text-align:center;position:relative}
+.detailclose{position:absolute;right:12px;top:12px;border:0;background:var(--leaf);color:#fff;border-radius:50%;width:36px;height:36px;font-size:1.2rem}
+.detailart{width:220px;max-width:70%;margin:0 auto}
+.detail h2{font-family:var(--round);font-size:1.7rem;margin:4px 0}
+.detail .accessory{color:var(--orchid);font-weight:700;margin:0 0 10px}
+.detail .personality{font-family:var(--round);font-size:1.05rem;margin:0 0 8px}
+.detail .fact{font-size:.84rem;line-height:1.65;color:var(--leaf-soft);margin:0 0 16px}
 
 .save label{display:block;font-size:.85rem;margin:16px 0 6px}
 .save input{width:100%;font:inherit;padding:11px 12px;border:1px solid var(--moss);border-radius:12px;background:#fff;color:var(--leaf)}
@@ -163,7 +179,9 @@ footer a{color:var(--leaf)}
   </div>
   <section id="dexPane" class="pane">
     <p>長到第 10 階時，會遇見一位新夥伴。每位只要遇見一次就會留在這裡。</p>
+    <div id="routeBadges" class="badges" aria-label="地方路線徽章"></div>
     <div id="dex" class="shelf"></div>
+    <p class="dexnote">遊戲角色來自慶豐熟悉的雲嘉生活圈；實際配送範圍與時間請向官方 LINE 確認。</p>
   </section>
   <section id="cabPane" class="pane" hidden>
     <p>兩位第 10 階的夥伴合在一起，會變成鎮園蘭，永久擺在櫃子上。</p>
@@ -190,6 +208,17 @@ footer a{color:var(--leaf)}
   <footer>這座溫室是遊戲。<a href="https://chingfeng.tw/">真的蘭花在雲林北港，慶豐蘭園種了 26 年。</a><br><a id="lineFoot" href="https://line.me/R/ti/p/%40775yvfxq" target="_blank" rel="noopener">加入官方 LINE</a></footer>
 </main>
 <div id="toast" class="toast" role="status"></div>
+<dialog id="characterDetail" class="detail">
+  <div class="detailbox">
+    <button id="detailClose" class="detailclose" aria-label="關閉">×</button>
+    <div id="detailArt" class="detailart"></div>
+    <h2 id="detailName"></h2>
+    <p id="detailAccessory" class="accessory"></p>
+    <p id="detailPersonality" class="personality"></p>
+    <p id="detailFact" class="fact"></p>
+    <button id="shareCharacter" class="primary">分享家鄉角色</button>
+  </div>
+</dialog>
 
 <script>
 (()=>{'use strict';
@@ -199,12 +228,32 @@ const LINE_UNLOCK_CODE='QF2026'; // 要和官方 LINE 歡迎訊息裡寫的解�
 const LINE_OA='%40775yvfxq';
 /* ===================================== */
 const N=['小苗','中苗','大苗','抽梗','花苞','初開','單梗花','雙梗花','三梗花','珍藏花','鎮園蘭'];
-const C=['晨光','晚霞','月白','星點','蜜糖','青芽','珊瑚','雪絮','紫雲','金雨','紅豆','小鹿'];
+const CHARACTERS=[
+  {place:'北港',name:'北港蘭',slug:'beigang',accessory:'藝閣彩旗',secondary:'小鑼鼓',symbol:'🚩',personality:'一聽到鑼鼓聲就想出門',fact:'北港以藝閣、糕餅與麻油文化聞名，也是慶豐的老家。',color:'#FFE3A3',expression:'excited',weight:.35,route:'temple'},
+  {place:'虎尾',name:'虎尾蘭',slug:'huwei',accessory:'布袋戲帽',secondary:'迷你五分車',symbol:'🎭',personality:'一開口就自帶布袋戲口白',fact:'虎尾的布袋戲與糖業文化，都是地方重要記憶。',color:'#FFB59E',expression:'proud',weight:1,route:'plain'},
+  {place:'西螺',name:'西螺蘭',slug:'xiluo',accessory:'醬油小壺',secondary:'米粒腰包',symbol:'壺',personality:'每件事都要調到剛剛好',fact:'西螺以稻米和醬油聞名，也被稱為米醬小鎮。',color:'#EEF2FF',expression:'calm',weight:1,route:'plain'},
+  {place:'斗六',name:'斗六蘭',slug:'douliu',accessory:'文旦帽',secondary:'',symbol:'柚',personality:'中秋節最忙，平常最從容',fact:'斗六文旦果肉細緻香甜，是雲林具代表性的水果。',color:'#FFE0F0',expression:'calm',weight:1,route:'plain'},
+  {place:'古坑',name:'古坑蘭',slug:'gukeng',accessory:'咖啡杯',secondary:'咖啡葉',symbol:'☕',personality:'喝完咖啡才願意開花',fact:'古坑以咖啡、柳丁與山林休閒聞名。',color:'#FFD08A',expression:'sleepy',weight:1,route:'hill'},
+  {place:'口湖',name:'口湖蘭',slug:'kouhu',accessory:'烏魚子圍巾',secondary:'台灣鯛小包',symbol:'🐟',personality:'冬天才肯把珍藏拿出來',fact:'口湖盛產台灣鯛、烏魚子、鹹鴨蛋與小番茄。',color:'#C9F0C8',expression:'shy',weight:1,route:'coast'},
+  {place:'大埤',name:'大埤蘭',slug:'dapi',accessory:'酸菜葉披風',secondary:'',symbol:'菜',personality:'表情有點酸，熟了其實很溫柔',fact:'大埤酸菜是雲林具代表性的地方農產。',color:'#FF9E9E',expression:'serious',weight:1,route:'plain'},
+  {place:'元長',name:'元長蘭',slug:'yuanchang',accessory:'黑金剛花生帽',secondary:'',symbol:'🥜',personality:'緊張時會一直剝花生',fact:'元長的黑金剛花生，是地方鮮明的農產代表。',color:'#FFFFFF',expression:'shy',weight:1,route:'plain'},
+  {place:'水林',name:'水林蘭',slug:'shuilin',accessory:'黃金番薯背包',secondary:'',symbol:'🍠',personality:'曬過太陽，心裡就甜甜的',fact:'水林是臺灣重要的番薯產地，有番薯之鄉之稱。',color:'#D9C2F2',expression:'happy',weight:1,route:'coast'},
+  {place:'新港',name:'新港蘭',slug:'xingang',accessory:'糖紙蝴蝶結',secondary:'',symbol:'🍬',personality:'說話甜，但不會黏人',fact:'新港飴是嘉義新港流傳已久的地方甜點。',color:'#FFE066',expression:'happy',weight:1,route:'temple'},
+  {place:'東石',name:'東石蘭',slug:'dongshi',accessory:'蚵殼小帽',secondary:'潮汐水紋',symbol:'蚵',personality:'退潮後才慢慢探出頭',fact:'東石的養蚵文化與潮間帶景觀緊密相連。',color:'#E8506A',expression:'calm',weight:1,route:'coast'},
+  {place:'嘉義市',name:'嘉義市蘭',slug:'chiayi-city',accessory:'火雞肉飯碗',secondary:'木湯匙',symbol:'🍚',personality:'中午一到就準時消失',fact:'火雞肉飯是嘉義市廣為人知的庶民美食。',color:'#E8C39E',expression:'excited',weight:1,route:'hill'}
+];
+const ROUTES=[
+  {id:'temple',name:'廟街線',places:['北港','新港']},
+  {id:'coast',name:'海口線',places:['口湖','東石','水林']},
+  {id:'plain',name:'平原線',places:['虎尾','西螺','斗六','大埤','元長']},
+  {id:'hill',name:'山城線',places:['古坑','嘉義市']}
+];
+const C=CHARACTERS.map(x=>x.name);
 const S=['白雪','紅運','黃金','斑點','慶豐'];
 const PETAL=['#FFFFFF','#F0708A','#FFD466','#F6DCEB','#FFFFFF'];
 const LIP=['#C2407A','#9E2240','#C27A12','#A8387A','#1F4D3A'];
 const POT=['#F4EFE6','#F7D9D2','#F6E7B8','#EADDF0','#9CC9AA'];
-const TRAIT=['#FFE3A3','#FFB59E','#EEF2FF','#FFE0F0','#FFD08A','#C9F0C8','#FF9E9E','#FFFFFF','#D9C2F2','#FFE066','#E8506A','#E8C39E'];
+const TRAIT=CHARACTERS.map(x=>x.color);
 const G=5;
 const $=id=>document.getElementById(id);
 const KEY='qf-merge-preview-v1';
@@ -212,6 +261,10 @@ const params=new URLSearchParams(location.search);
 const SRC=(params.get('src')||'').replace(/[^\w-]/g,'').slice(0,20);
 const store={get(k){try{return localStorage.getItem(k)}catch{return null}},set(k,v){try{localStorage.setItem(k,v)}catch{}}};
 let lineUnlocked=store.get('qf-merge-line')==='1';
+const HOME_GRANTED_KEY='qf-merge-home-granted';
+const HOME_CHANCE_KEY='qf-merge-home-chance';
+let homeChanceGrantedNow=false;
+if(SRC==='line'&&store.get(HOME_GRANTED_KEY)!=='1'){store.set(HOME_GRANTED_KEY,'1');store.set(HOME_CHANCE_KEY,'1');homeChanceGrantedNow=true}
 if(GA_ID){const g=document.createElement('script');g.async=true;g.src='https://www.googletagmanager.com/gtag/js?id='+GA_ID;document.head.append(g);window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag('js',new Date());gtag('config',GA_ID)}
 function track(e,p={}){try{if(window.gtag)gtag('event',e,Object.assign({src:SRC||'direct'},p))}catch{}}
 const lineMsg=t=>'https://line.me/R/oaMessage/'+LINE_OA+'/?'+encodeURIComponent(t+'｜來源:merge-game'+(SRC?'-'+SRC:''));
@@ -227,6 +280,14 @@ function emptyBoard(){return Array.from({length:G},()=>Array(G).fill(0))}
 
 /* 角色圖：每一階都是同一個有臉的花盆，上面的植物隨階段長大 */
 function flower(x,y,r,p,l){return `<g transform="translate(${x} ${y})"><ellipse cx="0" cy="${-r*.55}" rx="${r*.4}" ry="${r*.55}" fill="${p}" stroke="rgba(31,77,58,.18)" stroke-width=".6"/><ellipse cx="${-r*.45}" cy="${r*.45}" rx="${r*.3}" ry="${r*.5}" transform="rotate(35 ${-r*.45} ${r*.45})" fill="${p}" stroke="rgba(31,77,58,.18)" stroke-width=".6"/><ellipse cx="${r*.45}" cy="${r*.45}" rx="${r*.3}" ry="${r*.5}" transform="rotate(-35 ${r*.45} ${r*.45})" fill="${p}" stroke="rgba(31,77,58,.18)" stroke-width=".6"/><ellipse cx="${-r*.58}" cy="0" rx="${r*.58}" ry="${r*.5}" fill="${p}" stroke="rgba(31,77,58,.18)" stroke-width=".6"/><ellipse cx="${r*.58}" cy="0" rx="${r*.58}" ry="${r*.5}" fill="${p}" stroke="rgba(31,77,58,.18)" stroke-width=".6"/><circle r="${r*.24}" fill="${l}"/></g>`}
+function characterFace(trait){
+  const mood=trait==null?'happy':CHARACTERS[trait].expression;
+  const eye=mood==='sleepy'?'<path d="M25.5 51 q2 -1.5 4 0 M34.5 51 q2 -1.5 4 0" fill="none" stroke="#2A3B30" stroke-width="1.2" stroke-linecap="round"/>':mood==='excited'?'<path d="M25 51 l2 -2 2 2 M35 51 l2 -2 2 2" fill="none" stroke="#2A3B30" stroke-width="1.2" stroke-linecap="round"/>':'<circle cx="27.5" cy="51" r="1.9" fill="#2A3B30"/><circle cx="36.5" cy="51" r="1.9" fill="#2A3B30"/>';
+  const mouth=mood==='serious'?'<path d="M29.8 55 H34.2" fill="none" stroke="#2A3B30" stroke-width="1.2" stroke-linecap="round"/>':mood==='shy'?'<path d="M30.2 54.7 Q32 55.8 33.8 54.7" fill="none" stroke="#2A3B30" stroke-width="1.1" stroke-linecap="round"/>':'<path d="M29.6 54.2 Q32 56.4 34.4 54.2" fill="none" stroke="#2A3B30" stroke-width="1.2" stroke-linecap="round"/>';
+  const brow=mood==='proud'?'<path d="M25 47.5 l4 -1 M35 46.5 l4 1" stroke="#2A3B30" stroke-width="1" stroke-linecap="round"/>':'';
+  return eye+mouth+brow+'<circle cx="24" cy="54" r="2.2" fill="#F3A5B8" opacity=".6"/><circle cx="40" cy="54" r="2.2" fill="#F3A5B8" opacity=".6"/>';
+}
+function accessory(trait){if(trait==null)return '';const c=CHARACTERS[trait],text=c.symbol.length<=2?c.symbol:c.symbol.slice(0,2);return `<g><circle cx="48" cy="17" r="8" fill="#FFF9E9" stroke="#E9B949" stroke-width="1"/><text x="48" y="20.2" text-anchor="middle" font-size="${text.length>1?5.7:9}" font-family="sans-serif" font-weight="700" fill="#1F4D3A">${text}</text></g>`}
 function art(level,trait,sk){
   const gold=level===11, p=level>=10&&trait!=null?TRAIT[trait]:PETAL[sk], l=LIP[sk];
   const pot=gold?'#E9B949':POT[sk];
@@ -244,9 +305,9 @@ function art(level,trait,sk){
   if(lv===9){g+=st(46,14)+st(18,16)+st(32,6);g+=flower(46,13,5.4,p,l)+flower(18,15,5.4,p,l)+flower(32,7,5.8,p,l)+flower(40,24,4.6,p,l)+flower(24,25,4.6,p,l)}
   if(lv>=10){g+=st(32,18);g+=flower(32,19,13,p,l);g+=`<path d="M52 8 l1.5 3.5 3.5 1.5 -3.5 1.5 -1.5 3.5 -1.5 -3.5 -3.5 -1.5 3.5 -1.5z" fill="#E9B949"/>`}
   if(lv===11)g+=`<path d="M24 6 L27 1 L32 5 L37 1 L40 6 L38 9 H26 Z" fill="#E9B949" stroke="#B88A1E" stroke-width=".6"/>`;
-  const face=`<circle cx="27.5" cy="51" r="1.9" fill="#2A3B30"/><circle cx="36.5" cy="51" r="1.9" fill="#2A3B30"/><path d="M29.6 54.2 Q32 56.4 34.4 54.2" fill="none" stroke="#2A3B30" stroke-width="1.2" stroke-linecap="round"/><circle cx="24" cy="54" r="2.2" fill="#F3A5B8" opacity=".6"/><circle cx="40" cy="54" r="2.2" fill="#F3A5B8" opacity=".6"/>`;
+  const face=characterFace(level>=10?trait:null);
   const dots=sk===3&&lv<10?`<circle cx="22" cy="47" r="1.3" fill="#C99AD6"/><circle cx="43" cy="58" r="1.1" fill="#C99AD6"/><circle cx="41" cy="46" r="1" fill="#C99AD6"/>`:'';
-  return `<svg viewBox="0 0 64 64" aria-hidden="true">${g}<rect x="15" y="41" width="34" height="6" rx="3" fill="${pot}" stroke="rgba(31,77,58,.25)" stroke-width=".8"/><path d="M17 46 H47 L43.5 61 H20.5 Z" fill="${pot}" stroke="rgba(31,77,58,.25)" stroke-width=".8"/>${dots}${face}</svg>`;
+  return `<svg viewBox="0 0 64 64" aria-hidden="true">${g}<rect x="15" y="41" width="34" height="6" rx="3" fill="${pot}" stroke="rgba(31,77,58,.25)" stroke-width=".8"/><path d="M17 46 H47 L43.5 61 H20.5 Z" fill="${pot}" stroke="rgba(31,77,58,.25)" stroke-width=".8"/>${dots}${face}${level>=10?accessory(trait):''}</svg>`;
 }
 
 function spawn(){const open=[];board.forEach((row,r)=>row.forEach((v,c)=>{if(!v)open.push([r,c])}));if(!open.length)return null;const [r,c]=open[Math.floor(Math.random()*open.length)];board[r][c]=Math.random()<.9?1:2;traits[r][c]=null;peak=Math.max(peak,board[r][c]);return r*G+c}
@@ -265,20 +326,45 @@ function draw(merged=new Set(),spawned=null){
 function drawCollection(){
   const dex=$('dex'),cab=$('cabinet');dex.replaceChildren();cab.replaceChildren();
   C.forEach((name,i)=>{
-    const d=document.createElement('div');d.className='card '+(saved.seen[i]?'yes':'no');
-    d.innerHTML=art(10,i,0)+(saved.seen[i]?name:'？？？');dex.append(d);
+    const d=document.createElement(saved.seen[i]?'button':'div');d.className='card '+(saved.seen[i]?'yes':'no');
+    d.innerHTML=art(10,i,0)+(saved.seen[i]?name:'？？？');if(saved.seen[i]){d.type='button';d.setAttribute('aria-label','查看'+name);d.onclick=()=>openCharacter(i)}dex.append(d);
     const k=document.createElement('div');const n=saved.counts[i];k.className='card '+(n?'yes':'no');
     k.innerHTML=art(11,i,0)+(n?name+`<span class="count">×${n}</span>`:'空位');cab.append(k)});
   $('dexcount').textContent=saved.seen.filter(Boolean).length+'/12';
+  const badges=$('routeBadges');badges.replaceChildren();
+  ROUTES.forEach(route=>{const on=routeComplete(route);const b=document.createElement('span');b.className='badge'+(on?' on':'');b.textContent=(on?'✓ ':'○ ')+route.name;badges.append(b)});
   const sk=$('skins');sk.replaceChildren();
   S.forEach((name,i)=>{const b=document.createElement('button');b.className='skin';b.disabled=i<4?i>saved.unlocked:!lineUnlocked;b.setAttribute('aria-pressed',String(i===skin));
     b.innerHTML=`<i style="background:${POT[i]}"></i>${b.disabled?'🔒':name}`;
     if(b.disabled)b.title=i<4?'用任一造型長出三梗花就能解鎖':'加入慶豐官方 LINE 取得解鎖碼';
     b.onclick=()=>{skin=i;drawCollection();draw()};sk.append(b)});
 }
+function routeComplete(route){return route.places.every(place=>saved.seen[CHARACTERS.findIndex(c=>c.place===place)])}
+function completedRoutes(){return new Set(ROUTES.filter(routeComplete).map(r=>r.id))}
+let detailIndex=null;
+function openCharacter(i){
+  const c=CHARACTERS[i];detailIndex=i;$('detailArt').innerHTML=art(10,i,0);$('detailName').textContent=c.name;
+  $('detailAccessory').textContent=c.accessory+(c.secondary?'・'+c.secondary:'');$('detailPersonality').textContent=c.personality;$('detailFact').textContent=c.fact;
+  const dialog=$('characterDetail');if(typeof dialog.showModal==='function')dialog.showModal();else dialog.setAttribute('open','');
+}
+$('detailClose').onclick=()=>$('characterDetail').close();
+$('characterDetail').addEventListener('click',e=>{if(e.target===$('characterDetail'))$('characterDetail').close()});
+$('shareCharacter').onclick=async()=>{if(detailIndex==null)return;const c=CHARACTERS[detailIndex],text='我在慶豐溫室遇見了'+c.name+'！',url=pageUrl()+'?src=character-share';track('share_character',{character:c.slug});if(navigator.share){try{await navigator.share({text,url})}catch{}return}try{await navigator.clipboard.writeText(text+' '+url);toast('已複製，分享給朋友吧')}catch{prompt('複製這段分享給朋友',text+' '+url)}};
 let toastTimer;
 function toast(t){const el=$('toast');el.textContent=t;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),1800)}
 function plus(n){if(!n)return;const el=$('plus');el.textContent='+'+n;el.classList.remove('go');void el.offsetWidth;el.classList.add('go')}
+function chooseCharacter(seen,homeChance,randomValue){
+  if(homeChance)return {index:0,reason:'home'};
+  if(seen.filter(Boolean).length>=6&&!seen[0])return {index:0,reason:'guarantee'};
+  const total=CHARACTERS.reduce((sum,c)=>sum+c.weight,0);let roll=randomValue*total;
+  for(let i=0;i<CHARACTERS.length;i++){roll-=CHARACTERS[i].weight;if(roll<0)return {index:i,reason:'weighted'}}
+  return {index:CHARACTERS.length-1,reason:'weighted'};
+}
+function pickCharacter(){
+  const homeChance=store.get(HOME_CHANCE_KEY)==='1',picked=chooseCharacter(saved.seen,homeChance,Math.random());
+  if(homeChance)store.set(HOME_CHANCE_KEY,'0');
+  return typeof picked==='number'?picked:picked.index;
+}
 
 function move(dir){
   if(ended)return;
@@ -288,7 +374,7 @@ function move(dir){
         arr=coords.map(([r,c])=>({v:board[r][c],t:traits[r][c]})).filter(x=>x.v),out=[];
     for(let j=0;j<arr.length;j++){
       if(arr[j].v<11&&arr[j+1]?.v===arr[j].v){
-        let level=arr[j].v+1,t=level===10?Math.floor(Math.random()*12):level===11?(Math.random()<.5?arr[j].t:arr[j+1].t):null;
+        let level=arr[j].v+1,t=level===10?pickCharacter():level===11?(Math.random()<.5?arr[j].t:arr[j+1].t):null;
         out.push({v:level,t,m:true});add+=2**level;if(level===9)ninth++;if(level===10)tens.push(t);if(level===11)elevens.push(t);j++;
       }else out.push(arr[j]);
     }
@@ -298,12 +384,14 @@ function move(dir){
   if(!changed)return;
   board=next;traits=nt;score+=add;plus(add);
   board.forEach(row=>row.forEach(v=>peak=Math.max(peak,v)));
-  const newFriends=tens.filter(i=>!saved.seen[i]);
+  const routesBefore=completedRoutes(),newFriends=tens.filter(i=>!saved.seen[i]);
   tens.forEach(i=>saved.seen[i]=true);
   elevens.forEach(i=>{if(i!=null){saved.counts[i]++;saved.seen[i]=true}});
   let unlockedNow=false;if(ninth&&saved.unlocked<3){saved.unlocked++;unlockedNow=true}
   if(tens.length||elevens.length||ninth){persist();drawCollection()}
-  if(elevens.length)toast('鎮園蘭擺上展示櫃了');
+  const newRoute=ROUTES.find(r=>!routesBefore.has(r.id)&&routeComplete(r));
+  if(newRoute)toast('收齊路線徽章：'+newRoute.name);
+  else if(elevens.length)toast('鎮園蘭擺上展示櫃了');
   else if(newFriends.length)toast('遇見新夥伴：'+C[newFriends[0]]);
   else if(unlockedNow)toast('解鎖新花盆：'+S[saved.unlocked]);
   else if(peak>sessionPeak&&peak>=4)toast('長成了：'+N[peak-1]);
@@ -334,6 +422,7 @@ $('import').onclick=()=>{try{const incoming=decode($('restore').value);saved.see
 
 /* 挑戰橫幅 */
 if(hasVs){$('vs').textContent=vsName+'在溫室裡長到「'+N[vsLv-1]+'」，拿了 '+vsScore.toLocaleString()+' 分。換你了。';$('vs').hidden=false}
+else if(homeChanceGrantedNow){$('vs').textContent='回到慶豐老家：下一次長到第 10 階，保證遇見北港蘭。';$('vs').hidden=false}
 
 /* 暱稱 */
 $('nick').value=store.get('qf-merge-nick')||'';
@@ -383,6 +472,13 @@ $('unlockBtn').onclick=()=>{
   else toast('解鎖碼不對，看一下官方 LINE 的歡迎訊息');
 };
 ['lineAdd','lineFoot','line'].forEach(id=>$(id).addEventListener('click',()=>track('line_click',{from:id})));
+
+if(params.get('test')==='1')window.__orchidTest={
+  characters:CHARACTERS,routes:ROUTES,encode,decode,chooseCharacter,
+  setCollection(seen){saved.seen=Array.from({length:12},(_,i)=>Boolean(seen[i]));saved.counts=Array(12).fill(0);persist();drawCollection()},
+  collection(){return JSON.parse(JSON.stringify(saved))},
+  setHomeChance(on){store.set(HOME_CHANCE_KEY,on?'1':'0')}
+};
 
 start();
 })();
