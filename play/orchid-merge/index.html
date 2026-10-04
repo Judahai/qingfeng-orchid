@@ -1,6 +1,14 @@
 <!doctype html>
 <html lang="zh-Hant-TW">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5CE68EEX3R"></script>
+<script>
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments)}
+gtag('js',new Date());
+gtag('config','G-5CE68EEX3R');
+</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>合成蘭花｜慶豐溫室小遊戲</title>
@@ -229,7 +237,7 @@ footer a{color:var(--leaf)}
 <script>
 (()=>{'use strict';
 /* ===== 設定區：上線前只需要改這裡 ===== */
-const GA_ID='';                 // Google Analytics 評估 ID（例：G-XXXXXXX），留空就不統計
+const GA_ID='G-5CE68EEX3R';     // Google Analytics 評估 ID
 const LINE_UNLOCK_CODE='QF2026'; // 要和官方 LINE 歡迎訊息裡寫的解鎖碼一樣
 const LINE_OA='%40775yvfxq';
 /* ===================================== */
@@ -271,7 +279,7 @@ const HOME_GRANTED_KEY='qf-merge-home-granted';
 const HOME_CHANCE_KEY='qf-merge-home-chance';
 let homeChanceGrantedNow=false;
 if(SRC==='line'&&store.get(HOME_GRANTED_KEY)!=='1'){store.set(HOME_GRANTED_KEY,'1');store.set(HOME_CHANCE_KEY,'1');homeChanceGrantedNow=true}
-if(GA_ID){const g=document.createElement('script');g.async=true;g.src='https://www.googletagmanager.com/gtag/js?id='+GA_ID;document.head.append(g);window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag('js',new Date());gtag('config',GA_ID)}
+if(GA_ID&&!window.gtag){const g=document.createElement('script');g.async=true;g.src='https://www.googletagmanager.com/gtag/js?id='+GA_ID;document.head.append(g);window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag('js',new Date());gtag('config',GA_ID)}
 function track(e,p={}){try{if(window.gtag)gtag('event',e,Object.assign({src:SRC||'direct'},p))}catch{}}
 const lineMsg=t=>'https://line.me/R/oaMessage/'+LINE_OA+'/?'+encodeURIComponent(t+'｜來源:merge-game'+(SRC?'-'+SRC:''));
 const vsScore=parseInt(params.get('vs'),10),vsLv=parseInt(params.get('lv'),10),vsName=(params.get('n')||'').trim().slice(0,8)||'朋友';
