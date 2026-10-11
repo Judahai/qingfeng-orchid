@@ -51,7 +51,7 @@ h1{margin:2px 0 0;font-family:var(--round);font-weight:700;font-size:clamp(2rem,
 .icon-btn{border:0;background:var(--leaf);color:#fff;width:44px;height:44px;border-radius:50%;font-size:1.3rem;flex:none}
 .help-btn{background:#fff;color:var(--leaf);border:1px solid var(--moss);font-weight:700}
 
-.meta{display:flex;gap:24px;margin:8px 0 9px;font-size:.8rem;color:var(--leaf-soft)}
+.meta{display:flex;gap:18px;margin:8px 0 9px;font-size:.85rem;color:var(--leaf-soft)}
 .meta b{display:block;font-family:var(--round);font-size:1.35rem;color:var(--leaf);font-weight:700;position:relative}
 .plus{position:absolute;left:0;top:-4px;font-size:.9rem;color:var(--orchid);opacity:0;pointer-events:none}
 .plus.go{animation:rise .7s ease-out}
@@ -71,7 +71,7 @@ h1{margin:2px 0 0;font-family:var(--round);font-weight:700;font-size:clamp(2rem,
 .cell svg{position:absolute;inset:4% 6% 18%;width:88%;height:78%}
 .cell .charwrap{position:absolute;inset:0;display:block}
 .cell .character-img{position:absolute;inset:0 1% 15%;width:98%;height:85%;object-fit:contain}
-.cell .nm{position:absolute;left:0;right:0;bottom:4%;text-align:center;font-family:var(--round);font-weight:700;font-size:clamp(.58rem,2.7vw,.78rem);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 2px}
+.cell .nm{position:absolute;left:0;right:0;bottom:4%;text-align:center;font-family:var(--round);font-weight:700;font-size:clamp(.7rem,2.9vw,.85rem);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 2px}
 .cell[data-l="10"]{background:#FFF6DC}
 .cell[data-l="11"]{background:#FBE7A8}
 .cell.spawn{animation:spawn .18s ease-out}
@@ -87,7 +87,7 @@ h1{margin:2px 0 0;font-family:var(--round);font-weight:700;font-size:clamp(2rem,
 .milestone-art svg{width:100%;height:100%}
 .primary{border:0;background:var(--leaf);color:#fff;border-radius:999px;padding:11px 22px;font-weight:500}
 
-.hint{font-size:.76rem;color:var(--leaf-soft);text-align:center;margin:7px 0 0}
+.hint{font-size:.85rem;color:var(--leaf-soft);text-align:center;margin:7px 0 0}
 .arrows{display:none;justify-content:center;gap:6px;margin-top:10px}
 .arrows button{width:44px;height:38px;border-radius:10px;border:1px solid var(--moss);background:#fff}
 @media (hover:hover) and (pointer:fine){.arrows{display:flex}}
@@ -110,13 +110,20 @@ h1{margin:2px 0 0;font-family:var(--round);font-weight:700;font-size:clamp(2rem,
 .card.no .character-img{filter:grayscale(1) brightness(.6);opacity:.22}
 .card.yes{font:inherit;font-weight:700;background:#FFF6DC;border:1px solid #EAD48F;color:var(--leaf);cursor:pointer}
 .card .place{font-size:.7rem;font-weight:400;color:var(--leaf-soft)}
+.card>span:not(.charwrap):not(.place):not(.share-hint){font-size:.9rem}
+.card .share-hint{align-self:flex-end;font-size:.65rem;font-weight:500;color:var(--orchid);line-height:1}
 .card.yes:focus-visible{outline:3px solid var(--orchid);outline-offset:2px}
 .count{display:inline-block;background:var(--gold);color:var(--leaf);border-radius:999px;padding:0 6px;margin-left:2px;font-size:.68rem}
 .badges{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 14px}
 .badge{border:1px solid var(--moss);background:rgba(255,255,255,.55);color:var(--leaf-soft);border-radius:999px;padding:6px 10px;font-size:.75rem}
 .badge.on{border-color:var(--gold);background:#FFF6DC;color:var(--leaf);font-weight:700}
 .badge.active{border-color:var(--leaf);background:var(--leaf);color:#fff}
-.dexnote{font-size:.72rem!important;margin:18px 0 0!important;color:var(--leaf-soft)!important}
+.dexnote{font-size:.85rem!important;margin:18px 0 0!important;color:var(--leaf-soft)!important}
+.achievements{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin:0 0 14px}
+.achievement{min-width:0;border:1px solid var(--moss);border-radius:12px;background:rgba(255,255,255,.55);padding:7px 2px;text-align:center;color:var(--leaf-soft);font-size:.68rem;line-height:1.25;opacity:.48}
+.achievement i{display:block;font-style:normal;font-size:1.15rem;margin-bottom:2px;filter:grayscale(1)}
+.achievement.on{background:#FFF6DC;border-color:#EAD48F;color:var(--leaf);font-weight:700;opacity:1}
+.achievement.on i{filter:none}
 
 .detail{border:0;border-radius:24px;padding:0;width:min(390px,calc(100% - 28px));color:var(--leaf);background:#F7FBF8;box-shadow:0 20px 60px rgba(31,77,58,.28)}
 .detail::backdrop{background:rgba(20,45,34,.55)}
@@ -198,6 +205,7 @@ footer a{color:var(--leaf)}
   <div class="meta">
     <div>分數<b><span id="score">0</span><span id="plus" class="plus"></span></b></div>
     <div>長到<b id="highest">小苗</b></div>
+    <div>最高分<b id="bestScore">0</b></div>
   </div>
 
   <div id="vs" class="vs" hidden></div>
@@ -234,6 +242,7 @@ footer a{color:var(--leaf)}
     <button class="section-toggle" type="button" aria-expanded="false" aria-controls="dexPane" data-pane="dexPane"><span>地方夥伴圖鑑 <b id="dexcount">0/12</b></span><span class="chevron" aria-hidden="true">⌄</span></button>
   <section id="dexPane" class="pane" hidden>
     <p>第一次長到第 7 階「單梗花」時，就會遇見一位地方夥伴。每位只要遇見一次，就會留在這裡。</p>
+    <div id="achievements" class="achievements" aria-label="遊戲成就"></div>
     <div id="routeBadges" class="badges" aria-label="地方路線徽章"></div>
     <div id="dex" class="shelf"></div>
     <p class="dexnote">遊戲角色來自慶豐熟悉的雲嘉生活圈；實際配送範圍與時間請向官方 LINE 確認。</p>
@@ -330,6 +339,9 @@ const TRAIT=CHARACTERS.map(x=>x.color);
 const G=5;
 const $=id=>document.getElementById(id);
 const KEY='qf-merge-preview-v1';
+const HELP_KEY='qf-merge-help-seen-v1';
+const BEST_KEY='qf-merge-best-score-v1';
+const BLOOM_ACHIEVEMENT_KEY='qf-merge-achievement-bloom-v1';
 const params=new URLSearchParams(location.search);
 const SRC=(params.get('src')||'').replace(/[^\w-]/g,'').slice(0,20);
 const store={get(k){try{return localStorage.getItem(k)}catch{return null}},set(k,v){try{localStorage.setItem(k,v)}catch{}}};
@@ -343,7 +355,8 @@ function track(e,p={}){try{if(window.gtag)gtag('event',e,Object.assign({src:SRC|
 const lineMsg=t=>'https://line.me/R/oaMessage/'+LINE_OA+'/?'+encodeURIComponent(t+'｜來源:merge-game'+(SRC?'-'+SRC:''));
 const vsScore=parseInt(params.get('vs'),10),vsLv=parseInt(params.get('lv'),10),vsName=(params.get('n')||'').trim().slice(0,8)||'朋友';
 const hasVs=Number.isSafeInteger(vsScore)&&vsScore>0&&vsLv>=1&&vsLv<=11;
-let board,traits,score,peak,ended,skin=0,sessionPeak=1,bloomMilestoneShown=false;
+let board,traits,score,peak,ended,skin=0,sessionPeak=1,bloomMilestoneShown=false,pendingCharacter=null;
+let bestScore=Math.max(0,parseInt(store.get(BEST_KEY),10)||0);
 const empty=()=>({seen:Array(12).fill(false),counts:Array(12).fill(0),unlocked:0});
 let saved;try{saved=JSON.parse(localStorage.getItem(KEY))||empty()}catch{saved=empty()}
 let activeRoute='all';
@@ -382,7 +395,7 @@ function art(level,trait,sk){
   if(lv===11)g+=`<path d="M24 6 L27 1 L32 5 L37 1 L40 6 L38 9 H26 Z" fill="#E9B949" stroke="#B88A1E" stroke-width=".6"/>`;
   const face=characterFace(level>=10?trait:null);
   const dots=sk===3&&lv<10?`<circle cx="22" cy="47" r="1.3" fill="#C99AD6"/><circle cx="43" cy="58" r="1.1" fill="#C99AD6"/><circle cx="41" cy="46" r="1" fill="#C99AD6"/>`:'';
-  return `<svg viewBox="0 0 64 64" aria-hidden="true">${g}<rect x="15" y="41" width="34" height="6" rx="3" fill="${pot}" stroke="rgba(31,77,58,.25)" stroke-width=".8"/><path d="M17 46 H47 L43.5 61 H20.5 Z" fill="${pot}" stroke="rgba(31,77,58,.25)" stroke-width=".8"/>${dots}${face}${level>=10?accessory(trait):''}</svg>`;
+  return `<svg viewBox="0 0 64 64" aria-hidden="true">${g}<rect x="15" y="41" width="34" height="6" rx="3" fill="${pot}" stroke="rgba(31,77,58,.25)" stroke-width=".8"/><path d="M17 46 H47 L43.5 61 H20.5 Z" fill="${pot}" stroke="rgba(31,77,58,.25)" stroke-width=".8"/>${dots}${face}${level>=7?accessory(trait):''}</svg>`;
 }
 
 function drawGrowthStrip(){
@@ -411,19 +424,31 @@ function draw(merged=new Set(),spawned=null){
     if(v){cell.dataset.l=v;const name=v>=10&&traits[r][c]!=null?C[traits[r][c]]:N[v-1],visual=v>=10&&traits[r][c]!=null?characterMarkup(traits[r][c],v===11):art(v,traits[r][c],skin);cell.setAttribute('aria-label',name);cell.innerHTML=visual+`<span class="nm">${name}</span>`}
     else cell.setAttribute('aria-label','空格');
     host.append(cell)}));
-  $('score').textContent=score.toLocaleString();$('highest').textContent=N[peak-1];
+  if(score>bestScore){bestScore=score;store.set(BEST_KEY,String(bestScore))}
+  $('score').textContent=score.toLocaleString();$('highest').textContent=N[peak-1];$('bestScore').textContent=bestScore.toLocaleString();
+}
+function drawAchievements(){
+  const items=[
+    {icon:'🌸',label:'第一朵初開',on:store.get(BLOOM_ACHIEVEMENT_KEY)==='1'},
+    {icon:'🤝',label:'第一位夥伴',on:saved.seen.some(Boolean)},
+    {icon:'🗺️',label:'收齊一路線',on:completedRoutes().size>0},
+    {icon:'✨',label:'收齊 12 位',on:saved.seen.every(Boolean)},
+    {icon:'👑',label:'長出鎮園蘭',on:saved.counts.some(n=>n>0)}
+  ];
+  $('achievements').innerHTML=items.map(a=>`<div class="achievement${a.on?' on':''}"><i aria-hidden="true">${a.icon}</i>${a.label}</div>`).join('');
 }
 function drawCollection(){
   const dex=$('dex'),cab=$('cabinet');dex.replaceChildren();cab.replaceChildren();
   C.forEach((name,i)=>{
     const d=document.createElement(saved.seen[i]?'button':'div');d.className='card '+(saved.seen[i]?'yes':'no');
-    d.innerHTML=characterMarkup(i)+`<span>${saved.seen[i]?name:'???'}</span><span class="place">${saved.seen[i]?CHARACTERS[i].place:ROUTES.find(r=>r.id===CHARACTERS[i].route).name}</span>`;if(saved.seen[i]){d.type='button';d.setAttribute('aria-label','查看'+name);d.onclick=()=>openCharacter(i)}
+    d.innerHTML=characterMarkup(i)+`<span>${saved.seen[i]?name:'???'}</span><span class="place">${saved.seen[i]?CHARACTERS[i].place:ROUTES.find(r=>r.id===CHARACTERS[i].route).name}</span>${saved.seen[i]?'<span class="share-hint" aria-hidden="true">↗ 分享</span>':''}`;if(saved.seen[i]){d.type='button';d.setAttribute('aria-label','查看並分享'+name);d.onclick=()=>openCharacter(i)}
     if(activeRoute==='all'||CHARACTERS[i].route===activeRoute)dex.append(d);
     const k=document.createElement('div');const n=saved.counts[i];k.className='card '+(n?'yes':'no');
     k.innerHTML=characterMarkup(i,true)+(n?name+`<span class="count">×${n}</span>`:'空位');cab.append(k)});
   $('dexcount').textContent=saved.seen.filter(Boolean).length+'/12';
   const badges=$('routeBadges');badges.replaceChildren();
   [{id:'all',name:'全部'},...ROUTES].forEach(route=>{const on=route.id!=='all'&&routeComplete(route);const b=document.createElement('button');b.type='button';b.className='badge'+(on?' on':'')+(activeRoute===route.id?' active':'');b.textContent=(on?'✓ ':route.id==='all'?'':'○ ')+route.name;b.setAttribute('aria-pressed',String(activeRoute===route.id));b.onclick=()=>{activeRoute=route.id;drawCollection()};badges.append(b)});
+  drawAchievements();
   const sk=$('skins');sk.replaceChildren();
   S.forEach((name,i)=>{const b=document.createElement('button');b.className='skin';b.disabled=i<4?i>saved.unlocked:!lineUnlocked;b.setAttribute('aria-pressed',String(i===skin));
     b.innerHTML=`<i style="background:${POT[i]}"></i>${b.disabled?'🔒':name}`;
@@ -459,6 +484,8 @@ function pickCharacter(){
 
 function showBloomMilestone(){
   bloomMilestoneShown=true;
+  store.set(BLOOM_ACHIEVEMENT_KEY,'1');
+  drawAchievements();
   $('milestoneArt').innerHTML=art(6,null,skin);
   $('milestone').hidden=false;
 }
@@ -501,8 +528,9 @@ function move(dir){
     if(hasVs)t+=score>vsScore?'。你贏過'+vsName+'了！':'。還差'+vsName+' '+(vsScore-score).toLocaleString()+' 分';
     $('result').textContent=t;$('end').hidden=false;track('game_over',{level:peak,score})}
   else if(reachedBloom)showBloomMilestone();
+  if(newFriends.length){if(reachedBloom)pendingCharacter=newFriends[0];else setTimeout(()=>openCharacter(newFriends[0]),260)}
 }
-function start(){$('cardOut').hidden=true;track('game_start');board=emptyBoard();traits=emptyBoard();score=0;peak=1;sessionPeak=1;bloomMilestoneShown=false;ended=false;$('end').hidden=true;$('milestone').hidden=true;spawn();const b=spawn();draw(new Set(),b);drawCollection()}
+function start(){$('cardOut').hidden=true;track('game_start');board=emptyBoard();traits=emptyBoard();score=0;peak=1;sessionPeak=1;bloomMilestoneShown=false;pendingCharacter=null;ended=false;$('end').hidden=true;$('milestone').hidden=true;spawn();const b=spawn();draw(new Set(),b);drawCollection()}
 
 let startXY=null;const host=$('board');
 host.addEventListener('touchstart',e=>{if(e.touches.length===1)startXY=[e.touches[0].clientX,e.touches[0].clientY]},{passive:true});
@@ -536,7 +564,7 @@ const nick=()=>$('nick').value.trim().slice(0,8);
 const pageUrl=()=>location.origin+location.pathname;
 const brag=()=>(nick()||'我')+'在慶豐的溫室長到「'+N[peak-1]+'」，拿了 '+score.toLocaleString()+' 分，你能贏我嗎？';
 
-$('milestoneContinue').onclick=()=>$('milestone').hidden=true;
+$('milestoneContinue').onclick=()=>{$('milestone').hidden=true;if(pendingCharacter!=null){const i=pendingCharacter;pendingCharacter=null;setTimeout(()=>openCharacter(i),120)}};
 $('milestoneShare').onclick=async()=>{
   const W=720,H=900,cv=document.createElement('canvas');cv.width=W;cv.height=H;const x=cv.getContext('2d');
   try{if(document.fonts)await document.fonts.ready}catch{}
@@ -610,7 +638,7 @@ if(params.get('test')==='1')window.__orchidTest={
 };
 
 start();
-setTimeout(openHowto,120);
+if(store.get(HELP_KEY)!=='1'){store.set(HELP_KEY,'1');setTimeout(openHowto,120)}
 })();
 </script>
 </body>
