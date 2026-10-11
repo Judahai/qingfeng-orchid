@@ -37,35 +37,41 @@ gtag('config','G-5CE68EEX3R');
 *{box-sizing:border-box}
 html,body{margin:0;overscroll-behavior:none;background:var(--glass);color:var(--leaf);font-family:var(--sans)}
 body{padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
-.wrap{max-width:460px;margin:auto;padding:18px 18px 40px}
+.wrap{max-width:460px;margin:auto;padding:14px 16px 40px}
 button{font:inherit;cursor:pointer;color:inherit}
 button:focus-visible{outline:3px solid var(--orchid);outline-offset:2px}
 
 .top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.top-actions{display:flex;gap:8px;flex:none}
 .place{margin:0;font-size:.8rem;color:var(--leaf-soft)}
-h1{margin:2px 0 0;font-family:var(--round);font-weight:700;font-size:2.4rem;letter-spacing:.02em;line-height:1.1}
+h1{margin:2px 0 0;font-family:var(--round);font-weight:700;font-size:clamp(2rem,10vw,2.4rem);letter-spacing:.02em;line-height:1.1}
+.title-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.game-kind{display:inline-flex;align-items:center;min-height:26px;padding:3px 9px;border:1px solid var(--moss);border-radius:999px;background:rgba(255,255,255,.65);color:var(--leaf-soft);font-family:var(--sans);font-size:.72rem;font-weight:500;letter-spacing:0}
+.howto{margin:9px 0 10px;padding:8px 11px;border-radius:12px;background:rgba(255,255,255,.68);color:var(--leaf);font-size:.86rem;line-height:1.45}
 .icon-btn{border:0;background:var(--leaf);color:#fff;width:44px;height:44px;border-radius:50%;font-size:1.3rem;flex:none}
+.help-btn{background:#fff;color:var(--leaf);border:1px solid var(--moss);font-weight:700}
 
-.meta{display:flex;gap:18px;margin:14px 0 12px;font-size:.85rem;color:var(--leaf-soft)}
+.meta{display:flex;gap:24px;margin:8px 0 9px;font-size:.8rem;color:var(--leaf-soft)}
 .meta b{display:block;font-family:var(--round);font-size:1.35rem;color:var(--leaf);font-weight:700;position:relative}
 .plus{position:absolute;left:0;top:-4px;font-size:.9rem;color:var(--orchid);opacity:0;pointer-events:none}
 .plus.go{animation:rise .7s ease-out}
 @keyframes rise{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-18px)}}
 
-.skins{display:flex;gap:10px;margin-bottom:14px}
+.skins{display:flex;justify-content:center;gap:10px;margin:10px 0 0}
 .skin{border:0;background:none;padding:0;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.72rem;color:var(--leaf-soft)}
 .skin i{width:30px;height:30px;border-radius:50%;display:block;border:2px solid transparent;box-shadow:inset 0 0 0 1px rgba(31,77,58,.15)}
 .skin[aria-pressed=true] i{border-color:var(--leaf)}
 .skin[aria-pressed=true]{color:var(--leaf)}
 .skin:disabled{opacity:.45;cursor:default}
 
-.stage{position:relative;margin:0 6px}
-.board{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;padding:8px;border-radius:22px;background:var(--moss);aspect-ratio:1;touch-action:none;user-select:none;-webkit-user-select:none}
+.stage{position:relative;margin:0}
+.board{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;padding:7px;width:100%;border-radius:20px;background:var(--moss);aspect-ratio:1;touch-action:none;user-select:none;-webkit-user-select:none}
 .cell{border-radius:14px;background:var(--bench);position:relative;min-width:0;overflow:hidden}
 .cell.full{background:#F7FBF8}
 .cell svg{position:absolute;inset:4% 6% 18%;width:88%;height:78%}
-.cell .character-img{position:absolute;inset:2% 4% 17%;width:92%;height:81%;object-fit:contain}
-.cell .nm{position:absolute;left:0;right:0;bottom:5%;text-align:center;font-family:var(--round);font-weight:700;font-size:clamp(.52rem,2.4vw,.72rem);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 3px}
+.cell .charwrap{position:absolute;inset:0;display:block}
+.cell .character-img{position:absolute;inset:0 1% 15%;width:98%;height:85%;object-fit:contain}
+.cell .nm{position:absolute;left:0;right:0;bottom:4%;text-align:center;font-family:var(--round);font-weight:700;font-size:clamp(.58rem,2.7vw,.78rem);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 2px}
 .cell[data-l="10"]{background:#FFF6DC}
 .cell[data-l="11"]{background:#FBE7A8}
 .cell.spawn{animation:spawn .18s ease-out}
@@ -79,7 +85,7 @@ h1{margin:2px 0 0;font-family:var(--round);font-weight:700;font-size:2.4rem;lett
 .end p{margin:0 0 14px;color:var(--leaf-soft)}
 .primary{border:0;background:var(--leaf);color:#fff;border-radius:999px;padding:11px 22px;font-weight:500}
 
-.hint{font-size:.8rem;color:var(--leaf-soft);text-align:center;margin:10px 0 0}
+.hint{font-size:.76rem;color:var(--leaf-soft);text-align:center;margin:7px 0 0}
 .arrows{display:none;justify-content:center;gap:6px;margin-top:10px}
 .arrows button{width:44px;height:38px;border-radius:10px;border:1px solid var(--moss);background:#fff}
 @media (hover:hover) and (pointer:fine){.arrows{display:flex}}
@@ -87,14 +93,16 @@ h1{margin:2px 0 0;font-family:var(--round);font-weight:700;font-size:2.4rem;lett
 .toast{position:fixed;left:50%;top:calc(14px + env(safe-area-inset-top));transform:translate(-50%,-140%);background:var(--leaf);color:#fff;border-radius:999px;padding:10px 18px;font-size:.9rem;transition:transform .3s ease;z-index:5;white-space:nowrap}
 .toast.show{transform:translate(-50%,0)}
 
-.tabs{display:flex;gap:6px;margin:26px 0 0;border-bottom:1px solid var(--moss)}
-.tab{border:0;background:none;padding:10px 12px;font-size:.92rem;color:var(--leaf-soft);border-bottom:3px solid transparent;margin-bottom:-1px}
-.tab[aria-selected=true]{color:var(--leaf);border-bottom-color:var(--orchid);font-weight:500}
-.pane{padding:16px 0}
+.collections{display:grid;gap:8px;margin-top:24px}
+.section-toggle{width:100%;min-height:48px;border:1px solid var(--moss);border-radius:14px;background:rgba(255,255,255,.72);padding:11px 14px;display:flex;align-items:center;justify-content:space-between;text-align:left;font-weight:600}
+.section-toggle b{margin-left:5px;color:var(--orchid)}
+.section-toggle .chevron{transition:transform .2s ease;color:var(--leaf-soft)}
+.section-toggle[aria-expanded=true] .chevron{transform:rotate(180deg)}
+.pane{padding:8px 2px 14px}
 .pane[hidden]{display:none}
 .pane>p{margin:0 0 12px;font-size:.85rem;color:var(--leaf-soft);line-height:1.6}
 .shelf{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-.card{background:#fff;border-radius:14px;padding:6px 4px 8px;text-align:center;font-size:.72rem;color:var(--leaf-soft)}
+.card{background:#fff;border-radius:12px;padding:5px 3px 7px;aspect-ratio:1/1.08;text-align:center;font-size:.7rem;color:var(--leaf-soft);overflow:hidden}
 .card svg{width:100%;height:auto;display:block}
 .card .character-img{width:100%;aspect-ratio:1;object-fit:contain;display:block}
 .card.no svg{filter:grayscale(1) brightness(1.15);opacity:.35}
@@ -121,6 +129,23 @@ h1{margin:2px 0 0;font-family:var(--round);font-weight:700;font-size:2.4rem;lett
 .detail .personality{font-family:var(--round);font-size:1.05rem;margin:0 0 8px}
 .detail .fact{font-size:.84rem;line-height:1.65;color:var(--leaf-soft);margin:0 0 16px}
 
+.howto-dialog{border:0;border-radius:24px;padding:0;width:min(430px,calc(100% - 28px));max-height:min(720px,calc(100dvh - 28px));overflow:auto;color:var(--leaf);background:#F7FBF8;box-shadow:0 20px 60px rgba(31,77,58,.28)}
+.howto-dialog::backdrop{background:rgba(20,45,34,.58)}
+.howto-box{padding:22px 18px 18px;position:relative}
+.howto-close{position:absolute;right:12px;top:12px;border:0;background:var(--leaf);color:#fff;border-radius:50%;width:36px;height:36px;font-size:1.2rem}
+.howto-dialog h2{font-family:var(--round);font-size:1.65rem;margin:0 44px 6px 0}
+.howto-lead{margin:0 0 14px;color:var(--leaf-soft);font-size:.86rem}
+.rule-list{display:grid;gap:10px;min-width:0;margin:0;padding:0;list-style:none}
+.rule-list li{min-width:0;padding:10px 11px;border-radius:13px;background:#fff;font-size:.84rem;line-height:1.5;overflow-wrap:anywhere}
+.rule-list b{display:block;margin-bottom:2px;color:var(--leaf)}
+.growth-strip{display:flex;gap:7px;width:100%;max-width:100%;overflow-x:auto;padding:7px 1px 3px;scrollbar-width:thin}
+.growth-step{width:55px;flex:0 0 55px;text-align:center;color:var(--leaf-soft);font-size:.64rem}
+.growth-art{height:48px;display:grid;place-items:center;border-radius:10px;background:var(--glass)}
+.growth-art svg{width:45px;height:45px}
+.growth-art .charwrap{display:block;position:relative;width:45px;height:45px}
+.growth-art .character-img{width:45px;height:45px;object-fit:contain}
+.howto-start{display:block;width:100%;margin-top:14px;min-height:46px}
+
 .save label{display:block;font-size:.85rem;margin:16px 0 6px}
 .save input{width:100%;font:inherit;padding:11px 12px;border:1px solid var(--moss);border-radius:12px;background:#fff;color:var(--leaf)}
 .save .row{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
@@ -142,6 +167,14 @@ h1{margin:2px 0 0;font-family:var(--round);font-weight:700;font-size:2.4rem;lett
 .unlock a{display:inline-block;background:#06C755;color:#fff;text-decoration:none;border-radius:999px;padding:9px 16px;font-size:.88rem}
 footer{margin-top:28px;font-size:.78rem;color:var(--leaf-soft);text-align:center;line-height:1.7}
 footer a{color:var(--leaf)}
+@media (max-height:700px){
+  .wrap{padding-top:9px}
+  .place{font-size:.72rem}
+  h1{font-size:1.9rem}
+  .howto{margin:6px 0 7px;padding:6px 9px;font-size:.8rem}
+  .meta{margin:5px 0 7px}
+  .meta b{font-size:1.18rem}
+}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -150,18 +183,20 @@ footer a{color:var(--leaf)}
   <div class="top">
     <div>
       <p class="place">北港慶豐蘭園的溫室</p>
-      <h1>合成蘭花</h1>
+      <div class="title-row"><h1>合成蘭花</h1><span class="game-kind">蘭花版 2048</span></div>
     </div>
-    <button id="restart" class="icon-btn" aria-label="重新開始">↻</button>
+    <div class="top-actions">
+      <button id="help" class="icon-btn help-btn" aria-label="查看怎麼玩">?</button>
+      <button id="restart" class="icon-btn" aria-label="重新開始">↻</button>
+    </div>
   </div>
+
+  <p class="howto">往任何方向滑，兩盆一樣的會合成更大的蘭花。</p>
 
   <div class="meta">
     <div>分數<b><span id="score">0</span><span id="plus" class="plus"></span></b></div>
     <div>長到<b id="highest">小苗</b></div>
-    <div>圖鑑<b id="dexcount">0/12</b></div>
   </div>
-
-  <div id="skins" class="skins" aria-label="花盆造型"></div>
 
   <div id="vs" class="vs" hidden></div>
   <div class="stage">
@@ -173,7 +208,8 @@ footer a{color:var(--leaf)}
       <div class="endbtns"><button id="again" class="primary">再種一盆</button><button id="dare" class="ghost">下戰帖給朋友</button><button id="makeCard" class="ghost">產生成績圖卡</button></div>
     </div>
   </div>
-  <p class="hint">往任何方向滑，兩盆一樣的會長成下一階</p>
+  <p class="hint">手機直接滑動棋盤・電腦可用方向鍵</p>
+  <div id="skins" class="skins" aria-label="花盆造型"></div>
   <section id="cardOut" class="cardout" hidden>
     <img id="cardImg" alt="成績圖卡">
     <p>長按圖片可以儲存，或直接分享</p>
@@ -186,29 +222,28 @@ footer a{color:var(--leaf)}
     <button data-dir="right" aria-label="向右">→</button>
   </div>
 
-  <div class="tabs" role="tablist">
-    <button class="tab" role="tab" aria-selected="true" data-pane="dexPane">圖鑑</button>
-    <button class="tab" role="tab" aria-selected="false" data-pane="cabPane">展示櫃</button>
-    <button class="tab" role="tab" aria-selected="false" data-pane="savePane">保存收藏</button>
-  </div>
-  <section id="dexPane" class="pane">
+  <div class="collections">
+    <button class="section-toggle" type="button" aria-expanded="false" aria-controls="dexPane" data-pane="dexPane"><span>地方夥伴圖鑑 <b id="dexcount">0/12</b></span><span class="chevron" aria-hidden="true">⌄</span></button>
+  <section id="dexPane" class="pane" hidden>
     <p>長到第 10 階時，會遇見一位新夥伴。每位只要遇見一次就會留在這裡。</p>
     <div id="routeBadges" class="badges" aria-label="地方路線徽章"></div>
     <div id="dex" class="shelf"></div>
     <p class="dexnote">遊戲角色來自慶豐熟悉的雲嘉生活圈；實際配送範圍與時間請向官方 LINE 確認。</p>
   </section>
+    <button class="section-toggle" type="button" aria-expanded="false" aria-controls="cabPane" data-pane="cabPane"><span>鎮園蘭展示櫃</span><span class="chevron" aria-hidden="true">⌄</span></button>
   <section id="cabPane" class="pane" hidden>
     <p>兩位第 10 階的夥伴合在一起，會變成鎮園蘭，永久擺在櫃子上。</p>
     <div id="cabinet" class="shelf"></div>
   </section>
+    <button class="section-toggle" type="button" aria-expanded="false" aria-controls="savePane" data-pane="savePane"><span>備份遊戲進度</span><span class="chevron" aria-hidden="true">⌄</span></button>
   <section id="savePane" class="pane save" hidden>
-    <p>收藏存在這支手機的瀏覽器裡。換手機、清除資料，或從 LINE 裡打開，都會看不到。先存一組收藏碼比較保險。</p>
-    <button id="backup" class="primary">產生收藏碼</button>
+    <p>地方夥伴圖鑑、展示櫃與花盆解鎖進度存在這支手機的瀏覽器裡。換手機、清除資料，或從 LINE 裡打開，都可能看不到，建議先存一組備份碼。</p>
+    <button id="backup" class="primary">產生進度備份碼</button>
     <div id="codebox" class="codebox" hidden></div>
     <a id="line" hidden target="_blank" rel="noopener">傳到慶豐官方 LINE 保管</a>
-    <label for="restore">換手機了？輸入收藏碼</label>
+    <label for="restore">換手機了？輸入進度備份碼</label>
     <input id="restore" placeholder="QF1-…" spellcheck="false" autocomplete="off">
-    <div class="row"><button id="import" class="ghost">還原收藏</button></div>
+    <div class="row"><button id="import" class="ghost">還原遊戲進度</button></div>
     <p id="message" class="msg" role="status"></p>
     <div class="unlock">
       <p style="font-size:.85rem;color:var(--leaf-soft);margin:0 0 10px;line-height:1.6">加入慶豐官方 LINE，歡迎訊息裡有一組解鎖碼，可以打開限定的「慶豐」花盆。</p>
@@ -218,10 +253,26 @@ footer a{color:var(--leaf)}
       <div class="row"><button id="unlockBtn" class="ghost">解鎖花盆</button></div>
     </div>
   </section>
+  </div>
 
   <footer>這座溫室是遊戲。<a href="https://chingfeng.tw/">真的蘭花在雲林北港，慶豐蘭園種了 26 年。</a><br><a id="lineFoot" href="https://line.me/R/ti/p/%40775yvfxq" target="_blank" rel="noopener">加入官方 LINE</a></footer>
 </main>
 <div id="toast" class="toast" role="status"></div>
+<dialog id="howto" class="howto-dialog" aria-labelledby="howtoTitle">
+  <div class="howto-box">
+    <button id="howtoClose" class="howto-close" type="button" aria-label="關閉說明">×</button>
+    <h2 id="howtoTitle">怎麼玩</h2>
+    <p class="howto-lead">第一次來，先看這五件事就能開始。</p>
+    <ol class="rule-list">
+      <li><b>1．怎麼操作</b>往上下左右滑，兩盆一樣的會合成下一階。</li>
+      <li><b>2．成長順序</b><div id="growthStrip" class="growth-strip" aria-label="蘭花成長順序"></div></li>
+      <li><b>3．什麼時候結束</b>棋盤滿了，而且沒有相同階段可以再合成時，這一局就結束。</li>
+      <li><b>4．白雪、紅運、黃金等花盆</b>白雪一開始就能用；每次長出三梗花，依序解鎖紅運、黃金和斑點。加入慶豐官方 LINE 後，歡迎訊息的解鎖碼只能解鎖「慶豐」遊戲花盆，不是折扣或實體贈品。</li>
+      <li><b>5．地方夥伴與鎮園蘭</b>合出第 10 階「夥伴蘭」，會隨機遇見一位地方夥伴並登錄圖鑑。兩盆夥伴蘭再合成第 11 階「鎮園蘭」，才會放進展示櫃。「備份遊戲進度」只是換手機時還原紀錄，不是另一種收藏。</li>
+    </ol>
+    <button id="howtoStart" class="primary howto-start" type="button">知道了，開始玩</button>
+  </div>
+</dialog>
 <dialog id="characterDetail" class="detail">
   <div class="detailbox">
     <button id="detailClose" class="detailclose" aria-label="關閉">×</button>
@@ -241,7 +292,7 @@ const GA_ID='G-5CE68EEX3R';     // Google Analytics 評估 ID
 const LINE_UNLOCK_CODE='QF2026'; // 要和官方 LINE 歡迎訊息裡寫的解鎖碼一樣
 const LINE_OA='%40775yvfxq';
 /* ===================================== */
-const N=['小苗','中苗','大苗','抽梗','花苞','初開','單梗花','雙梗花','三梗花','珍藏花','鎮園蘭'];
+const N=['小苗','中苗','大苗','抽梗','花苞','初開','單梗花','雙梗花','三梗花','夥伴蘭','鎮園蘭'];
 const CHARACTERS=[
   {place:'北港',name:'北港蘭',slug:'beigang',image:'characters/beigang.png',accessory:'藝閣彩旗',secondary:'小鑼鼓',symbol:'🚩',personality:'一聽到鑼鼓聲就想出門',fact:'北港以藝閣、糕餅與麻油文化聞名，也是慶豐的老家。',color:'#FFE3A3',expression:'excited',weight:.35,route:'temple'},
   {place:'虎尾',name:'虎尾蘭',slug:'huwei',image:'characters/huwei.png',accessory:'布袋戲帽',secondary:'迷你五分車',symbol:'🎭',personality:'一開口就自帶布袋戲口白',fact:'虎尾的布袋戲與糖業文化，都是地方重要記憶。',color:'#FFB59E',expression:'proud',weight:1,route:'plain'},
@@ -271,6 +322,7 @@ const TRAIT=CHARACTERS.map(x=>x.color);
 const G=5;
 const $=id=>document.getElementById(id);
 const KEY='qf-merge-preview-v1';
+const HELP_KEY='qf-merge-help-seen-v1';
 const params=new URLSearchParams(location.search);
 const SRC=(params.get('src')||'').replace(/[^\w-]/g,'').slice(0,20);
 const store={get(k){try{return localStorage.getItem(k)}catch{return null}},set(k,v){try{localStorage.setItem(k,v)}catch{}}};
@@ -324,6 +376,21 @@ function art(level,trait,sk){
   const dots=sk===3&&lv<10?`<circle cx="22" cy="47" r="1.3" fill="#C99AD6"/><circle cx="43" cy="58" r="1.1" fill="#C99AD6"/><circle cx="41" cy="46" r="1" fill="#C99AD6"/>`:'';
   return `<svg viewBox="0 0 64 64" aria-hidden="true">${g}<rect x="15" y="41" width="34" height="6" rx="3" fill="${pot}" stroke="rgba(31,77,58,.25)" stroke-width=".8"/><path d="M17 46 H47 L43.5 61 H20.5 Z" fill="${pot}" stroke="rgba(31,77,58,.25)" stroke-width=".8"/>${dots}${face}${level>=10?accessory(trait):''}</svg>`;
 }
+
+function drawGrowthStrip(){
+  const host=$('growthStrip');host.replaceChildren();
+  N.forEach((name,i)=>{const step=document.createElement('div');step.className='growth-step';const level=i+1;const visual=level>=10?characterMarkup(0,level===11):art(level,null,0);step.innerHTML=`<span class="growth-art">${visual}</span><span>${name}</span>`;host.append(step)});
+}
+function openHowto(){
+  drawGrowthStrip();
+  const dialog=$('howto');
+  if(typeof dialog.showModal==='function'&&!dialog.open)dialog.showModal();else dialog.setAttribute('open','');
+}
+function closeHowto(){const dialog=$('howto');if(typeof dialog.close==='function'&&dialog.open)dialog.close();else dialog.removeAttribute('open')}
+$('help').onclick=openHowto;
+$('howtoClose').onclick=closeHowto;
+$('howtoStart').onclick=closeHowto;
+$('howto').addEventListener('click',e=>{if(e.target===$('howto'))closeHowto()});
 
 function spawn(){const open=[];board.forEach((row,r)=>row.forEach((v,c)=>{if(!v)open.push([r,c])}));if(!open.length)return null;const [r,c]=open[Math.floor(Math.random()*open.length)];board[r][c]=Math.random()<.9?1:2;traits[r][c]=null;peak=Math.max(peak,board[r][c]);return r*G+c}
 function canMove(){for(let r=0;r<G;r++)for(let c=0;c<G;c++){let v=board[r][c];if(!v||v<11&&((r<G-1&&board[r+1][c]===v)||(c<G-1&&board[r][c+1]===v)))return true}return false}
@@ -427,7 +494,11 @@ document.addEventListener('keydown',e=>{const d={ArrowUp:'up',ArrowDown:'down',A
 document.querySelectorAll('[data-dir]').forEach(b=>b.onclick=()=>move(b.dataset.dir));
 $('restart').onclick=$('again').onclick=start;
 
-document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>{const on=x===t;x.setAttribute('aria-selected',String(on));$(x.dataset.pane).hidden=!on})});
+document.querySelectorAll('.section-toggle').forEach(t=>t.onclick=()=>{
+  const opening=t.getAttribute('aria-expanded')!=='true';
+  document.querySelectorAll('.section-toggle').forEach(x=>{x.setAttribute('aria-expanded','false');$(x.dataset.pane).hidden=true});
+  if(opening){t.setAttribute('aria-expanded','true');$(t.dataset.pane).hidden=false}
+});
 
 function check(s){let x=17;for(const ch of s)x=(x*31+ch.charCodeAt(0))%1296;return x.toString(36).toUpperCase().padStart(2,'0')}
 function encode(x){const mask=x.seen.reduce((a,v,i)=>a|(v?1<<i:0),0).toString(36).toUpperCase().padStart(3,'0');const payload=mask+'.'+x.unlocked.toString(36).toUpperCase()+'.'+x.counts.map(v=>v.toString(36).toUpperCase()).join('.');return 'QF1-'+payload+'-'+check(payload)}
@@ -498,6 +569,7 @@ if(params.get('test')==='1')window.__orchidTest={
 };
 
 start();
+if(store.get(HELP_KEY)!=='1'){store.set(HELP_KEY,'1');setTimeout(openHowto,120)}
 })();
 </script>
 </body>
