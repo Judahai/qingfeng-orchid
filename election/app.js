@@ -12,6 +12,11 @@ let filteredPeople = [];
 let visiblePeopleCount = 60;
 const PEOPLE_PAGE_SIZE = 60;
 
+function trackElectionEvent(eventName, parameters = {}) {
+  if (typeof window.gtag !== 'function') return;
+  window.gtag('event', eventName, parameters);
+}
+
 function normalizeCandidate(candidate) {
   return {
     ...candidate,
@@ -438,7 +443,15 @@ function openPersonCard(personId) {
   if (!candidate || !modal || !content) return;
   content.innerHTML = renderPersonCardDetail(candidate);
   modal.hidden = false;
+  modal.dataset.personId = candidate.Person_ID;
   document.body.classList.add('person-card-open');
+  trackElectionEvent('person_card_open', {
+    person_id: candidate.Person_ID,
+    person_level: candidate.DisplayLevel || candidate.Level || '',
+    person_city: candidate.City || '',
+    person_district: candidate.District || '',
+    open_source: 'site',
+  });
   modal.querySelector('.person-card-close')?.focus();
 }
 
@@ -446,6 +459,7 @@ function closePersonCard() {
   const modal = document.getElementById('personCardModal');
   if (!modal) return;
   modal.hidden = true;
+  delete modal.dataset.personId;
   document.body.classList.remove('person-card-open');
 }
 
@@ -584,6 +598,23 @@ function initEventListeners() {
       return;
     }
     if (event.target.closest('[data-close-person-card]')) closePersonCard();
+  });
+  document.addEventListener('click', event => {
+    const lineLink = event.target.closest('a[href*="line.me"]');
+    if (!lineLink) return;
+    const card = lineLink.closest('.candidate-card');
+    const modal = lineLink.closest('#personCardModal');
+    const context = card
+      ? 'person_list'
+      : modal
+        ? 'person_card'
+        : lineLink.closest('footer')
+          ? 'footer'
+          : 'other';
+    trackElectionEvent('election_line_click', {
+      person_id: card?.dataset.id || modal?.dataset.personId || '',
+      click_context: context,
+    });
   });
   document.addEventListener('keydown', event => {
     if (event.key === 'Escape') closePersonCard();
