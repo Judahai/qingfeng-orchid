@@ -83,6 +83,8 @@ h1{margin:2px 0 0;font-family:var(--round);font-weight:700;font-size:clamp(2rem,
 .end[hidden]{display:none}
 .end h2{font-family:var(--round);margin:0 0 6px;font-size:1.5rem}
 .end p{margin:0 0 14px;color:var(--leaf-soft)}
+.milestone-art{width:116px;height:116px;margin:2px auto 8px}
+.milestone-art svg{width:100%;height:100%}
 .primary{border:0;background:var(--leaf);color:#fff;border-radius:999px;padding:11px 22px;font-weight:500}
 
 .hint{font-size:.76rem;color:var(--leaf-soft);text-align:center;margin:7px 0 0}
@@ -101,19 +103,19 @@ h1{margin:2px 0 0;font-family:var(--round);font-weight:700;font-size:clamp(2rem,
 .pane{padding:8px 2px 14px}
 .pane[hidden]{display:none}
 .pane>p{margin:0 0 12px;font-size:.85rem;color:var(--leaf-soft);line-height:1.6}
-.shelf{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-.card{background:#fff;border-radius:12px;padding:5px 3px 7px;aspect-ratio:1/1.08;text-align:center;font-size:.7rem;color:var(--leaf-soft);overflow:hidden}
-.card svg{width:100%;height:auto;display:block}
-.card .character-img{width:100%;aspect-ratio:1;object-fit:contain;display:block}
-.card.no svg{filter:grayscale(1) brightness(1.15);opacity:.35}
-.card.no .character-img{filter:brightness(0);opacity:.12}
-.card.yes{color:var(--leaf);font-weight:500}
-.card.yes{cursor:pointer;border:0;font:inherit}
+.shelf{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.card{background:#fff;border:1px solid var(--moss);border-radius:14px;padding:8px 4px 10px;text-align:center;font-size:.82rem;color:var(--leaf-soft);display:flex;flex-direction:column;align-items:center;gap:2px}
+.card .charwrap{width:82%;aspect-ratio:1}
+.card .character-img{width:100%;height:100%;object-fit:contain}
+.card.no .character-img{filter:grayscale(1) brightness(.6);opacity:.22}
+.card.yes{font:inherit;font-weight:700;background:#FFF6DC;border:1px solid #EAD48F;color:var(--leaf);cursor:pointer}
+.card .place{font-size:.7rem;font-weight:400;color:var(--leaf-soft)}
 .card.yes:focus-visible{outline:3px solid var(--orchid);outline-offset:2px}
 .count{display:inline-block;background:var(--gold);color:var(--leaf);border-radius:999px;padding:0 6px;margin-left:2px;font-size:.68rem}
 .badges{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 14px}
 .badge{border:1px solid var(--moss);background:rgba(255,255,255,.55);color:var(--leaf-soft);border-radius:999px;padding:6px 10px;font-size:.75rem}
 .badge.on{border-color:var(--gold);background:#FFF6DC;color:var(--leaf);font-weight:700}
+.badge.active{border-color:var(--leaf);background:var(--leaf);color:#fff}
 .dexnote{font-size:.72rem!important;margin:18px 0 0!important;color:var(--leaf-soft)!important}
 
 .detail{border:0;border-radius:24px;padding:0;width:min(390px,calc(100% - 28px));color:var(--leaf);background:#F7FBF8;box-shadow:0 20px 60px rgba(31,77,58,.28)}
@@ -207,6 +209,12 @@ footer a{color:var(--leaf)}
       <input id="nick" maxlength="8" placeholder="你的暱稱（可以不填）" autocomplete="off">
       <div class="endbtns"><button id="again" class="primary">再種一盆</button><button id="dare" class="ghost">下戰帖給朋友</button><button id="makeCard" class="ghost">產生成績圖卡</button></div>
     </div>
+    <div id="milestone" class="end" hidden>
+      <h2>第一朵蘭花開了！</h2>
+      <div id="milestoneArt" class="milestone-art" aria-hidden="true"></div>
+      <p>你合出了第 6 階「初開」。下一階會遇見第一位地方夥伴。</p>
+      <div class="endbtns"><button id="milestoneContinue" class="primary">繼續種</button><button id="milestoneShare" class="ghost">分享過關圖卡</button></div>
+    </div>
   </div>
   <p class="hint">手機直接滑動棋盤・電腦可用方向鍵</p>
   <div id="skins" class="skins" aria-label="花盆造型"></div>
@@ -225,7 +233,7 @@ footer a{color:var(--leaf)}
   <div class="collections">
     <button class="section-toggle" type="button" aria-expanded="false" aria-controls="dexPane" data-pane="dexPane"><span>地方夥伴圖鑑 <b id="dexcount">0/12</b></span><span class="chevron" aria-hidden="true">⌄</span></button>
   <section id="dexPane" class="pane" hidden>
-    <p>長到第 10 階時，會遇見一位新夥伴。每位只要遇見一次就會留在這裡。</p>
+    <p>第一次長到第 7 階「單梗花」時，就會遇見一位地方夥伴。每位只要遇見一次，就會留在這裡。</p>
     <div id="routeBadges" class="badges" aria-label="地方路線徽章"></div>
     <div id="dex" class="shelf"></div>
     <p class="dexnote">遊戲角色來自慶豐熟悉的雲嘉生活圈；實際配送範圍與時間請向官方 LINE 確認。</p>
@@ -268,7 +276,7 @@ footer a{color:var(--leaf)}
       <li><b>2．成長順序</b><div id="growthStrip" class="growth-strip" aria-label="蘭花成長順序"></div></li>
       <li><b>3．什麼時候結束</b>棋盤滿了，而且沒有相同階段可以再合成時，這一局就結束。</li>
       <li><b>4．白雪、紅運、黃金等花盆</b>白雪一開始就能用；每次長出三梗花，依序解鎖紅運、黃金和斑點。加入慶豐官方 LINE 後，歡迎訊息的解鎖碼只能解鎖「慶豐」遊戲花盆，不是折扣或實體贈品。</li>
-      <li><b>5．地方夥伴與鎮園蘭</b>合出第 10 階「夥伴蘭」，會隨機遇見一位地方夥伴並登錄圖鑑。兩盆夥伴蘭再合成第 11 階「鎮園蘭」，才會放進展示櫃。「備份遊戲進度」只是換手機時還原紀錄，不是另一種收藏。</li>
+      <li><b>5．地方夥伴與鎮園蘭</b>合出第 7 階「單梗花」，會遇見一位地方夥伴並登錄圖鑑。夥伴會陪著花繼續成長；兩盆第 10 階夥伴蘭再合成「鎮園蘭」，才會放進展示櫃。「備份遊戲進度」只是換手機時還原紀錄。</li>
     </ol>
     <button id="howtoStart" class="primary howto-start" type="button">知道了，開始玩</button>
   </div>
@@ -336,9 +344,10 @@ function track(e,p={}){try{if(window.gtag)gtag('event',e,Object.assign({src:SRC|
 const lineMsg=t=>'https://line.me/R/oaMessage/'+LINE_OA+'/?'+encodeURIComponent(t+'｜來源:merge-game'+(SRC?'-'+SRC:''));
 const vsScore=parseInt(params.get('vs'),10),vsLv=parseInt(params.get('lv'),10),vsName=(params.get('n')||'').trim().slice(0,8)||'朋友';
 const hasVs=Number.isSafeInteger(vsScore)&&vsScore>0&&vsLv>=1&&vsLv<=11;
-let board,traits,score,peak,ended,skin=0,sessionPeak=1;
+let board,traits,score,peak,ended,skin=0,sessionPeak=1,bloomMilestoneShown=false;
 const empty=()=>({seen:Array(12).fill(false),counts:Array(12).fill(0),unlocked:0});
 let saved;try{saved=JSON.parse(localStorage.getItem(KEY))||empty()}catch{saved=empty()}
+let activeRoute='all';
 function clean(x){const d=empty();if(!x||!Array.isArray(x.seen)||!Array.isArray(x.counts))return d;d.seen=d.seen.map((_,i)=>x.seen[i]===true);d.counts=d.counts.map((_,i)=>Number.isSafeInteger(x.counts[i])&&x.counts[i]>=0?x.counts[i]:0);d.counts.forEach((n,i)=>{if(n)d.seen[i]=true});d.unlocked=Number.isInteger(x.unlocked)?Math.max(0,Math.min(3,x.unlocked)):0;return d}
 saved=clean(saved);
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(saved))}catch{}}
@@ -409,12 +418,13 @@ function drawCollection(){
   const dex=$('dex'),cab=$('cabinet');dex.replaceChildren();cab.replaceChildren();
   C.forEach((name,i)=>{
     const d=document.createElement(saved.seen[i]?'button':'div');d.className='card '+(saved.seen[i]?'yes':'no');
-    d.innerHTML=characterMarkup(i)+(saved.seen[i]?name:'？？？');if(saved.seen[i]){d.type='button';d.setAttribute('aria-label','查看'+name);d.onclick=()=>openCharacter(i)}dex.append(d);
+    d.innerHTML=characterMarkup(i)+`<span>${saved.seen[i]?name:'???'}</span><span class="place">${saved.seen[i]?CHARACTERS[i].place:ROUTES.find(r=>r.id===CHARACTERS[i].route).name}</span>`;if(saved.seen[i]){d.type='button';d.setAttribute('aria-label','查看'+name);d.onclick=()=>openCharacter(i)}
+    if(activeRoute==='all'||CHARACTERS[i].route===activeRoute)dex.append(d);
     const k=document.createElement('div');const n=saved.counts[i];k.className='card '+(n?'yes':'no');
     k.innerHTML=characterMarkup(i,true)+(n?name+`<span class="count">×${n}</span>`:'空位');cab.append(k)});
   $('dexcount').textContent=saved.seen.filter(Boolean).length+'/12';
   const badges=$('routeBadges');badges.replaceChildren();
-  ROUTES.forEach(route=>{const on=routeComplete(route);const b=document.createElement('span');b.className='badge'+(on?' on':'');b.textContent=(on?'✓ ':'○ ')+route.name;badges.append(b)});
+  [{id:'all',name:'全部'},...ROUTES].forEach(route=>{const on=route.id!=='all'&&routeComplete(route);const b=document.createElement('button');b.type='button';b.className='badge'+(on?' on':'')+(activeRoute===route.id?' active':'');b.textContent=(on?'✓ ':route.id==='all'?'':'○ ')+route.name;b.setAttribute('aria-pressed',String(activeRoute===route.id));b.onclick=()=>{activeRoute=route.id;drawCollection()};badges.append(b)});
   const sk=$('skins');sk.replaceChildren();
   S.forEach((name,i)=>{const b=document.createElement('button');b.className='skin';b.disabled=i<4?i>saved.unlocked:!lineUnlocked;b.setAttribute('aria-pressed',String(i===skin));
     b.innerHTML=`<i style="background:${POT[i]}"></i>${b.disabled?'🔒':name}`;
@@ -448,16 +458,24 @@ function pickCharacter(){
   return typeof picked==='number'?picked:picked.index;
 }
 
+function showBloomMilestone(){
+  bloomMilestoneShown=true;
+  $('milestoneArt').innerHTML=art(6,null,skin);
+  $('milestone').hidden=false;
+}
+
 function move(dir){
-  if(ended)return;
-  let next=emptyBoard(),nt=emptyBoard(),changed=false,add=0,ninth=0,tens=[],elevens=[];const merged=new Set();
+  if(ended||!$('milestone').hidden)return;
+  let next=emptyBoard(),nt=emptyBoard(),changed=false,add=0,sevens=[],ninth=0,elevens=[];const merged=new Set();
   for(let axis=0;axis<G;axis++){
     let coords=Array.from({length:G},(_,i)=>dir==='left'?[axis,i]:dir==='right'?[axis,G-1-i]:dir==='up'?[i,axis]:[G-1-i,axis]),
         arr=coords.map(([r,c])=>({v:board[r][c],t:traits[r][c]})).filter(x=>x.v),out=[];
     for(let j=0;j<arr.length;j++){
       if(arr[j].v<11&&arr[j+1]?.v===arr[j].v){
-        let level=arr[j].v+1,t=level===10?pickCharacter():level===11?(Math.random()<.5?arr[j].t:arr[j+1].t):null;
-        out.push({v:level,t,m:true});add+=2**level;if(level===9)ninth++;if(level===10)tens.push(t);if(level===11)elevens.push(t);j++;
+        let level=arr[j].v+1,t=null;
+        if(level===7)t=pickCharacter();
+        else if(level>=8)t=(Math.random()<.5?arr[j].t:arr[j+1].t)??arr[j].t??arr[j+1].t??pickCharacter();
+        out.push({v:level,t,m:true});add+=2**level;if(level===7)sevens.push(t);if(level===9)ninth++;if(level===11)elevens.push(t);j++;
       }else out.push(arr[j]);
     }
     while(out.length<G)out.push({v:0,t:null});
@@ -466,24 +484,26 @@ function move(dir){
   if(!changed)return;
   board=next;traits=nt;score+=add;plus(add);
   board.forEach(row=>row.forEach(v=>peak=Math.max(peak,v)));
-  const routesBefore=completedRoutes(),newFriends=tens.filter(i=>!saved.seen[i]);
-  tens.forEach(i=>saved.seen[i]=true);
+  const routesBefore=completedRoutes(),newFriends=sevens.filter(i=>!saved.seen[i]);
+  sevens.forEach(i=>saved.seen[i]=true);
   elevens.forEach(i=>{if(i!=null){saved.counts[i]++;saved.seen[i]=true}});
   let unlockedNow=false;if(ninth&&saved.unlocked<3){saved.unlocked++;unlockedNow=true}
-  if(tens.length||elevens.length||ninth){persist();drawCollection()}
+  if(sevens.length||elevens.length||ninth){persist();drawCollection()}
   const newRoute=ROUTES.find(r=>!routesBefore.has(r.id)&&routeComplete(r));
   if(newRoute)toast('收齊路線徽章：'+newRoute.name);
   else if(elevens.length)toast('鎮園蘭擺上展示櫃了');
   else if(newFriends.length)toast('遇見新夥伴：'+C[newFriends[0]]);
   else if(unlockedNow)toast('解鎖新花盆：'+S[saved.unlocked]);
   else if(peak>sessionPeak&&peak>=4)toast('長成了：'+N[peak-1]);
+  const reachedBloom=!bloomMilestoneShown&&sessionPeak<6&&peak>=6;
   sessionPeak=Math.max(sessionPeak,peak);
   const sp=spawn();draw(merged,sp);
   if(!canMove()){ended=true;let t='這一盆長到「'+N[peak-1]+'」，分數 '+score.toLocaleString();
     if(hasVs)t+=score>vsScore?'。你贏過'+vsName+'了！':'。還差'+vsName+' '+(vsScore-score).toLocaleString()+' 分';
     $('result').textContent=t;$('end').hidden=false;track('game_over',{level:peak,score})}
+  else if(reachedBloom)showBloomMilestone();
 }
-function start(){$('cardOut').hidden=true;track('game_start');board=emptyBoard();traits=emptyBoard();score=0;peak=1;sessionPeak=1;ended=false;$('end').hidden=true;spawn();const b=spawn();draw(new Set(),b);drawCollection()}
+function start(){$('cardOut').hidden=true;track('game_start');board=emptyBoard();traits=emptyBoard();score=0;peak=1;sessionPeak=1;bloomMilestoneShown=false;ended=false;$('end').hidden=true;$('milestone').hidden=true;spawn();const b=spawn();draw(new Set(),b);drawCollection()}
 
 let startXY=null;const host=$('board');
 host.addEventListener('touchstart',e=>{if(e.touches.length===1)startXY=[e.touches[0].clientX,e.touches[0].clientY]},{passive:true});
@@ -508,7 +528,7 @@ $('import').onclick=()=>{try{const incoming=decode($('restore').value);saved.see
 
 /* 挑戰橫幅 */
 if(hasVs){$('vs').textContent=vsName+'在溫室裡長到「'+N[vsLv-1]+'」，拿了 '+vsScore.toLocaleString()+' 分。換你了。';$('vs').hidden=false}
-else if(homeChanceGrantedNow){$('vs').textContent='回到慶豐老家：下一次長到第 10 階，保證遇見北港蘭。';$('vs').hidden=false}
+else if(homeChanceGrantedNow){$('vs').textContent='回到慶豐老家：下一次長到第 7 階，保證遇見北港蘭。';$('vs').hidden=false}
 
 /* 暱稱 */
 $('nick').value=store.get('qf-merge-nick')||'';
@@ -516,6 +536,28 @@ $('nick').oninput=()=>store.set('qf-merge-nick',$('nick').value.trim().slice(0,8
 const nick=()=>$('nick').value.trim().slice(0,8);
 const pageUrl=()=>location.origin+location.pathname;
 const brag=()=>(nick()||'我')+'在慶豐的溫室長到「'+N[peak-1]+'」，拿了 '+score.toLocaleString()+' 分，你能贏我嗎？';
+
+$('milestoneContinue').onclick=()=>$('milestone').hidden=true;
+$('milestoneShare').onclick=async()=>{
+  const W=720,H=900,cv=document.createElement('canvas');cv.width=W;cv.height=H;const x=cv.getContext('2d');
+  try{if(document.fonts)await document.fonts.ready}catch{}
+  const F='"Chiron GoRound TC","Noto Sans TC",sans-serif';
+  x.fillStyle='#E6F0EA';x.fillRect(0,0,W,H);
+  x.fillStyle='#C9DCCF';x.beginPath();x.roundRect?x.roundRect(60,180,600,440,40):x.rect(60,180,600,440);x.fill();
+  x.textAlign='center';x.fillStyle='#5E7F6E';x.font='500 28px '+F;x.fillText('北港慶豐蘭園的溫室',W/2,78);
+  x.fillStyle='#1F4D3A';x.font='700 58px '+F;x.fillText('第一朵蘭花開了！',W/2,150);
+  const svg=art(6,null,skin).replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" '),img=new Image();
+  await new Promise(ok=>{img.onload=ok;img.onerror=ok;img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)});
+  try{x.drawImage(img,160,190,400,400)}catch{}
+  x.fillStyle='#1F4D3A';x.font='700 46px '+F;x.fillText('我合出了「初開」',W/2,690);
+  x.fillStyle='#C2407A';x.font='700 64px '+F;x.fillText(score.toLocaleString()+' 分',W/2,775);
+  x.fillStyle='#5E7F6E';x.font='500 27px '+F;x.fillText('下一階會遇見地方夥伴',W/2,825);x.fillText(location.host+location.pathname,W/2,864);
+  const blob=await new Promise(ok=>cv.toBlob(ok,'image/png'));if(!blob)return;
+  cardBlob=blob;track('share_card',{kind:'bloom',level:6,score});
+  const file=new File([blob],'orchid-first-bloom.png',{type:'image/png'}),text='我在慶豐溫室合出第一朵蘭花了！';
+  if(navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],text,url:pageUrl()+'?src=first-bloom'})}catch{}return}
+  $('cardImg').src=URL.createObjectURL(blob);$('cardOut').hidden=false;$('milestone').hidden=true;$('cardOut').scrollIntoView({behavior:'smooth',block:'center'});toast('過關圖卡已產生，長按圖片即可儲存');
+};
 
 /* 下戰帖 */
 $('dare').onclick=async()=>{
