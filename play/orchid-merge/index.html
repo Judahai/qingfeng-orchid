@@ -330,7 +330,6 @@ const TRAIT=CHARACTERS.map(x=>x.color);
 const G=5;
 const $=id=>document.getElementById(id);
 const KEY='qf-merge-preview-v1';
-const HELP_KEY='qf-merge-help-seen-v1';
 const params=new URLSearchParams(location.search);
 const SRC=(params.get('src')||'').replace(/[^\w-]/g,'').slice(0,20);
 const store={get(k){try{return localStorage.getItem(k)}catch{return null}},set(k,v){try{localStorage.setItem(k,v)}catch{}}};
@@ -611,7 +610,7 @@ if(params.get('test')==='1')window.__orchidTest={
 };
 
 start();
-if(store.get(HELP_KEY)!=='1'){store.set(HELP_KEY,'1');setTimeout(openHowto,120)}
+setTimeout(openHowto,120);
 })();
 </script>
 </body>
