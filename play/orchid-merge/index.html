@@ -239,7 +239,7 @@ footer a{color:var(--leaf)}
   </div>
 
   <div class="collections">
-    <button class="section-toggle" type="button" aria-expanded="false" aria-controls="dexPane" data-pane="dexPane"><span>地方夥伴圖鑑 <b id="dexcount">0/12</b></span><span class="chevron" aria-hidden="true">⌄</span></button>
+    <button class="section-toggle" type="button" aria-expanded="false" aria-controls="dexPane" data-pane="dexPane"><span>地方夥伴圖鑑 <b id="dexcount">0</b></span><span class="chevron" aria-hidden="true">⌄</span></button>
   <section id="dexPane" class="pane" hidden>
     <p>第一次長到第 7 階「單梗花」時，就會遇見一位地方夥伴。每位只要遇見一次，就會留在這裡。</p>
     <div id="achievements" class="achievements" aria-label="遊戲成就"></div>
@@ -259,7 +259,7 @@ footer a{color:var(--leaf)}
     <div id="codebox" class="codebox" hidden></div>
     <a id="line" hidden target="_blank" rel="noopener">傳到慶豐官方 LINE 保管</a>
     <label for="restore">換手機了？輸入進度備份碼</label>
-    <input id="restore" placeholder="QF1-…" spellcheck="false" autocomplete="off">
+    <input id="restore" placeholder="QF2-…（舊 QF1 也可）" spellcheck="false" autocomplete="off">
     <div class="row"><button id="import" class="ghost">還原遊戲進度</button></div>
     <p id="message" class="msg" role="status"></p>
     <div class="unlock">
@@ -357,11 +357,23 @@ const vsScore=parseInt(params.get('vs'),10),vsLv=parseInt(params.get('lv'),10),v
 const hasVs=Number.isSafeInteger(vsScore)&&vsScore>0&&vsLv>=1&&vsLv<=11;
 let board,traits,score,peak,ended,skin=0,sessionPeak=1,bloomMilestoneShown=false,pendingCharacter=null;
 let bestScore=Math.max(0,parseInt(store.get(BEST_KEY),10)||0);
-const empty=()=>({seen:Array(12).fill(false),counts:Array(12).fill(0),unlocked:0});
+const empty=()=>({seen:[],counts:{},unlocked:0});
 let saved;try{saved=JSON.parse(localStorage.getItem(KEY))||empty()}catch{saved=empty()}
 let activeRoute='all';
-function clean(x){const d=empty();if(!x||!Array.isArray(x.seen)||!Array.isArray(x.counts))return d;d.seen=d.seen.map((_,i)=>x.seen[i]===true);d.counts=d.counts.map((_,i)=>Number.isSafeInteger(x.counts[i])&&x.counts[i]>=0?x.counts[i]:0);d.counts.forEach((n,i)=>{if(n)d.seen[i]=true});d.unlocked=Number.isInteger(x.unlocked)?Math.max(0,Math.min(3,x.unlocked)):0;return d}
-saved=clean(saved);
+function clean(x){
+  const d=empty(),valid=new Set(CHARACTERS.map(c=>c.slug));if(!x||!Array.isArray(x.seen))return d;
+  const oldFormat=Array.isArray(x.counts)||x.seen.some(v=>typeof v==='boolean');
+  if(oldFormat){
+    x.seen.forEach((v,i)=>{if(v===true&&CHARACTERS[i])d.seen.push(CHARACTERS[i].slug)});
+    if(Array.isArray(x.counts))x.counts.forEach((n,i)=>{if(Number.isSafeInteger(n)&&n>0&&CHARACTERS[i])d.counts[CHARACTERS[i].slug]=n});
+  }else{
+    d.seen=[...new Set(x.seen.filter(slug=>typeof slug==='string'&&valid.has(slug)))];
+    if(x.counts&&typeof x.counts==='object')for(const [slug,n] of Object.entries(x.counts))if(valid.has(slug)&&Number.isSafeInteger(n)&&n>0)d.counts[slug]=n;
+  }
+  for(const slug of Object.keys(d.counts))if(!d.seen.includes(slug))d.seen.push(slug);
+  d.unlocked=Number.isInteger(x.unlocked)?Math.max(0,Math.min(3,x.unlocked)):0;return d;
+}
+saved=clean(saved);persist();
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(saved))}catch{}}
 function emptyBoard(){return Array.from({length:G},()=>Array(G).fill(0))}
 
@@ -430,22 +442,22 @@ function draw(merged=new Set(),spawned=null){
 function drawAchievements(){
   const items=[
     {icon:'🌸',label:'第一朵初開',on:store.get(BLOOM_ACHIEVEMENT_KEY)==='1'},
-    {icon:'🤝',label:'第一位夥伴',on:saved.seen.some(Boolean)},
+    {icon:'🤝',label:'第一位夥伴',on:saved.seen.length>0},
     {icon:'🗺️',label:'收齊一路線',on:completedRoutes().size>0},
-    {icon:'✨',label:'收齊 12 位',on:saved.seen.every(Boolean)},
-    {icon:'👑',label:'長出鎮園蘭',on:saved.counts.some(n=>n>0)}
+    {icon:'✨',label:'收齊全部',on:saved.seen.length===CHARACTERS.length},
+    {icon:'👑',label:'長出鎮園蘭',on:Object.values(saved.counts).some(n=>n>0)}
   ];
   $('achievements').innerHTML=items.map(a=>`<div class="achievement${a.on?' on':''}"><i aria-hidden="true">${a.icon}</i>${a.label}</div>`).join('');
 }
 function drawCollection(){
   const dex=$('dex'),cab=$('cabinet');dex.replaceChildren();cab.replaceChildren();
   C.forEach((name,i)=>{
-    const d=document.createElement(saved.seen[i]?'button':'div');d.className='card '+(saved.seen[i]?'yes':'no');
-    d.innerHTML=characterMarkup(i)+`<span>${saved.seen[i]?name:'???'}</span><span class="place">${saved.seen[i]?CHARACTERS[i].place:ROUTES.find(r=>r.id===CHARACTERS[i].route).name}</span>${saved.seen[i]?'<span class="share-hint" aria-hidden="true">↗ 分享</span>':''}`;if(saved.seen[i]){d.type='button';d.setAttribute('aria-label','查看並分享'+name);d.onclick=()=>openCharacter(i)}
+    const slug=CHARACTERS[i].slug,seen=saved.seen.includes(slug),d=document.createElement(seen?'button':'div');d.className='card '+(seen?'yes':'no');
+    d.innerHTML=characterMarkup(i)+`<span>${seen?name:'???'}</span><span class="place">${seen?CHARACTERS[i].place:ROUTES.find(r=>r.id===CHARACTERS[i].route).name}</span>${seen?'<span class="share-hint" aria-hidden="true">↗ 分享</span>':''}`;if(seen){d.type='button';d.setAttribute('aria-label','查看並分享'+name);d.onclick=()=>openCharacter(i)}
     if(activeRoute==='all'||CHARACTERS[i].route===activeRoute)dex.append(d);
-    const k=document.createElement('div');const n=saved.counts[i];k.className='card '+(n?'yes':'no');
+    const k=document.createElement('div');const n=saved.counts[slug]||0;k.className='card '+(n?'yes':'no');
     k.innerHTML=characterMarkup(i,true)+(n?name+`<span class="count">×${n}</span>`:'空位');cab.append(k)});
-  $('dexcount').textContent=saved.seen.filter(Boolean).length+'/12';
+  $('dexcount').textContent=saved.seen.length+'/'+CHARACTERS.length;
   const badges=$('routeBadges');badges.replaceChildren();
   [{id:'all',name:'全部'},...ROUTES].forEach(route=>{const on=route.id!=='all'&&routeComplete(route);const b=document.createElement('button');b.type='button';b.className='badge'+(on?' on':'')+(activeRoute===route.id?' active':'');b.textContent=(on?'✓ ':route.id==='all'?'':'○ ')+route.name;b.setAttribute('aria-pressed',String(activeRoute===route.id));b.onclick=()=>{activeRoute=route.id;drawCollection()};badges.append(b)});
   drawAchievements();
@@ -455,7 +467,7 @@ function drawCollection(){
     if(b.disabled)b.title=i<4?'用任一造型長出三梗花就能解鎖':'加入慶豐官方 LINE 取得解鎖碼';
     b.onclick=()=>{skin=i;drawCollection();draw()};sk.append(b)});
 }
-function routeComplete(route){return route.places.every(place=>saved.seen[CHARACTERS.findIndex(c=>c.place===place)])}
+function routeComplete(route){const members=CHARACTERS.filter(c=>c.route===route.id);return members.length>0&&members.every(c=>saved.seen.includes(c.slug))}
 function completedRoutes(){return new Set(ROUTES.filter(routeComplete).map(r=>r.id))}
 let detailIndex=null;
 function openCharacter(i){
@@ -471,7 +483,8 @@ function toast(t){const el=$('toast');el.textContent=t;el.classList.add('show');
 function plus(n){if(!n)return;const el=$('plus');el.textContent='+'+n;el.classList.remove('go');void el.offsetWidth;el.classList.add('go')}
 function chooseCharacter(seen,homeChance,randomValue){
   if(homeChance)return {index:0,reason:'home'};
-  if(seen.filter(Boolean).length>=6&&!seen[0])return {index:0,reason:'guarantee'};
+  const found=new Set(seen.map((v,i)=>v===true&&CHARACTERS[i]?CHARACTERS[i].slug:v).filter(v=>typeof v==='string'));
+  if(found.size>=6&&!found.has(CHARACTERS[0].slug))return {index:0,reason:'guarantee'};
   const total=CHARACTERS.reduce((sum,c)=>sum+c.weight,0);let roll=randomValue*total;
   for(let i=0;i<CHARACTERS.length;i++){roll-=CHARACTERS[i].weight;if(roll<0)return {index:i,reason:'weighted'}}
   return {index:CHARACTERS.length-1,reason:'weighted'};
@@ -510,9 +523,9 @@ function move(dir){
   if(!changed)return;
   board=next;traits=nt;score+=add;plus(add);
   board.forEach(row=>row.forEach(v=>peak=Math.max(peak,v)));
-  const routesBefore=completedRoutes(),newFriends=sevens.filter(i=>!saved.seen[i]);
-  sevens.forEach(i=>saved.seen[i]=true);
-  elevens.forEach(i=>{if(i!=null){saved.counts[i]++;saved.seen[i]=true}});
+  const routesBefore=completedRoutes(),newFriends=sevens.filter(i=>!saved.seen.includes(CHARACTERS[i].slug));
+  sevens.forEach(i=>{const slug=CHARACTERS[i].slug;if(!saved.seen.includes(slug))saved.seen.push(slug)});
+  elevens.forEach(i=>{if(i!=null){const slug=CHARACTERS[i].slug;saved.counts[slug]=(saved.counts[slug]||0)+1;if(!saved.seen.includes(slug))saved.seen.push(slug)}});
   let unlockedNow=false;if(ninth&&saved.unlocked<3){saved.unlocked++;unlockedNow=true}
   if(sevens.length||elevens.length||ninth){persist();drawCollection()}
   const newRoute=ROUTES.find(r=>!routesBefore.has(r.id)&&routeComplete(r));
@@ -548,10 +561,22 @@ document.querySelectorAll('.section-toggle').forEach(t=>t.onclick=()=>{
 });
 
 function check(s){let x=17;for(const ch of s)x=(x*31+ch.charCodeAt(0))%1296;return x.toString(36).toUpperCase().padStart(2,'0')}
-function encode(x){const mask=x.seen.reduce((a,v,i)=>a|(v?1<<i:0),0).toString(36).toUpperCase().padStart(3,'0');const payload=mask+'.'+x.unlocked.toString(36).toUpperCase()+'.'+x.counts.map(v=>v.toString(36).toUpperCase()).join('.');return 'QF1-'+payload+'-'+check(payload)}
-function decode(input){const m=/^QF1-([0-9A-Z.]+)-([0-9A-Z]{2})$/.exec(input.trim().toUpperCase());if(!m||m[2]!==check(m[1]))throw Error();const p=m[1].split('.');if(p.length!==14||p.some(x=>!/^[0-9A-Z]+$/.test(x)))throw Error();let n=p.map(x=>parseInt(x,36));if(n.some(x=>!Number.isSafeInteger(x))||n[0]>4095||n[1]>3)throw Error();return clean({seen:Array.from({length:12},(_,i)=>Boolean(n[0]&(1<<i))),unlocked:n[1],counts:n.slice(2)})}
+function toBase64Url(text){const bytes=new TextEncoder().encode(text);let binary='';for(const b of bytes)binary+=String.fromCharCode(b);return btoa(binary).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
+function fromBase64Url(text){const base=text.replace(/-/g,'+').replace(/_/g,'/'),binary=atob(base+'='.repeat((4-base.length%4)%4)),bytes=Uint8Array.from(binary,c=>c.charCodeAt(0));return new TextDecoder().decode(bytes)}
+function encode(x){
+  const data=clean(x),seen=CHARACTERS.map(c=>c.slug).filter(slug=>data.seen.includes(slug)),counts={};
+  CHARACTERS.forEach(c=>{if(data.counts[c.slug])counts[c.slug]=data.counts[c.slug]});
+  const payload=toBase64Url(JSON.stringify({s:seen,u:data.unlocked,c:counts}));return 'QF2-'+payload+'-'+check(payload);
+}
+function decode(input){
+  const raw=input.trim(),qf2=/^QF2-([A-Za-z0-9_-]+)-([0-9A-Z]{2})$/.exec(raw);
+  if(qf2){if(qf2[2]!==check(qf2[1]))throw Error();const data=JSON.parse(fromBase64Url(qf2[1]));return clean({seen:data.s,unlocked:data.u,counts:data.c})}
+  const qf1=/^QF1-([0-9A-Z.]+)-([0-9A-Z]{2})$/.exec(raw.toUpperCase());if(!qf1||qf1[2]!==check(qf1[1]))throw Error();
+  const p=qf1[1].split('.');if(p.length!==14||p.some(x=>!/^[0-9A-Z]+$/.test(x)))throw Error();const n=p.map(x=>parseInt(x,36));
+  if(n.some(x=>!Number.isSafeInteger(x))||n[0]>4095||n[1]>3)throw Error();return clean({seen:Array.from({length:12},(_,i)=>Boolean(n[0]&(1<<i))),unlocked:n[1],counts:n.slice(2)});
+}
 $('backup').onclick=()=>{const code=encode(saved);$('codebox').textContent=code;$('codebox').hidden=false;$('line').href=lineMsg('我的收藏碼：'+code);$('line').hidden=false;$('message').textContent='長按上面的碼可以複製，或直接傳到官方 LINE。'};
-$('import').onclick=()=>{try{const incoming=decode($('restore').value);saved.seen=saved.seen.map((v,i)=>v||incoming.seen[i]);saved.counts=saved.counts.map((v,i)=>Math.max(v,incoming.counts[i]));saved.unlocked=Math.max(saved.unlocked,incoming.unlocked);persist();drawCollection();draw();$('message').textContent='收藏還原好了。'}catch{$('message').textContent='這組收藏碼對不上，檢查一下有沒有打錯字。'}};
+$('import').onclick=()=>{try{const incoming=decode($('restore').value);saved.seen=[...new Set([...saved.seen,...incoming.seen])];for(const [slug,n] of Object.entries(incoming.counts))saved.counts[slug]=Math.max(saved.counts[slug]||0,n);saved.unlocked=Math.max(saved.unlocked,incoming.unlocked);persist();drawCollection();draw();$('message').textContent='收藏還原好了。'}catch{$('message').textContent='這組收藏碼對不上，檢查一下有沒有打錯字。'}};
 
 /* 挑戰橫幅 */
 if(hasVs){$('vs').textContent=vsName+'在溫室裡長到「'+N[vsLv-1]+'」，拿了 '+vsScore.toLocaleString()+' 分。換你了。';$('vs').hidden=false}
@@ -632,7 +657,7 @@ $('unlockBtn').onclick=()=>{
 
 if(params.get('test')==='1')window.__orchidTest={
   characters:CHARACTERS,routes:ROUTES,encode,decode,chooseCharacter,
-  setCollection(seen){saved.seen=Array.from({length:12},(_,i)=>Boolean(seen[i]));saved.counts=Array(12).fill(0);persist();drawCollection()},
+  setCollection(seen){saved.seen=seen.map((v,i)=>v===true&&CHARACTERS[i]?CHARACTERS[i].slug:v).filter(v=>typeof v==='string');saved.counts={};persist();drawCollection()},
   collection(){return JSON.parse(JSON.stringify(saved))},
   setHomeChance(on){store.set(HOME_CHANCE_KEY,on?'1':'0')}
 };
