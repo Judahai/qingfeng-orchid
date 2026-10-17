@@ -1367,10 +1367,10 @@
 
         // 固定款：本地圖片，秒開，不讀 Google
         const FIXED_PRODUCTS = [
-            { id: 'level7',     name: '經典款',     price: 2800, note: '產地直送' },
-            { id: 'level10',    name: '進階款',     price: 4000, note: '產地直送' },
-            { id: 'level12',    name: '尊榮款',     price: 4800, note: '產地直送', imageUrl: 'images/products/level12.png' },
-            { id: 'levelhight', name: '頂級款',     price: 6000, note: '產地直送' }
+            { id: 'level7',     name: '經典款',     price: 3500, note: '產地直送' },
+            { id: 'level10',    name: '進階款',     price: 5000, note: '產地直送' },
+            { id: 'level12',    name: '尊榮款',     price: 6000, note: '產地直送', imageUrl: 'images/products/level12.png' },
+            { id: 'levelhight', name: '頂級款',     price: 10000, note: '產地直送' }
         ];
 
         // Google 動態商品：按了「查看更多」才載入
@@ -1383,7 +1383,11 @@
             fetch(GAS_URL + '?action=getProducts')
                 .then(r => r.json())
                 .then(list => {
-                    EXTRA_PRODUCTS = list;
+                    EXTRA_PRODUCTS = list.map(product => {
+                        const originalPrice = Number(product.price);
+                        const price = originalPrice === 6000 ? 10000 : originalPrice * 1.25;
+                        return { ...product, price };
+                    });
                     extraLoaded = true;
                     renderProducts();
                 })
